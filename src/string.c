@@ -14,6 +14,11 @@ struct string *new_string(){
     return string;
 }
 
+struct string *string_free(struct string *string){
+    free(string->content);
+    free(string);
+}
+
 int _string_resize(struct string *string, size_t length){
     ;
 }

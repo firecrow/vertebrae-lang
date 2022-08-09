@@ -8,8 +8,9 @@ struct parse_ctx {
     struct cell *current;
     struct cell *root;
     enum STATES state;
+    enum STATES prevstate;
     bool in_escape;
-    struct string *current_name;
+    struct string *token;
 };
 
 void parse_char(struct parse_ctx *ctx, char c);
@@ -58,6 +59,25 @@ struct cell*parse_file(int fd){
     return ctx->root; 
 }
 
+void finalize_cell(struct parse_ctx *ctx){
+    if(ctx->token){
+        assign_cell_attributes(ctx->current, ctx->token);
+
+        string_free(ctx->token);
+
+        ctx->token = NULL;
+    }
+
+    ctx->state = START;
+    if(ctx->state != START){
+        ctx->prev_state = ctx->state;
+    }
+}
+
+void assign_cell_attributes(){
+    /* set value object and functions symbols etc */
+}
+
 void parse_char(struct parse_ctx *ctx, char c){
 
     write(STDOUT, "-> ", 3);
@@ -67,25 +87,6 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct cell *slot;
     struct symbol *symbol;
 
-    if(ctx->state == START){
-        if(c == '('){
-            if(ctx->root == NULL){
-                ctx->root = new_cell();
-
-                if(ctx->root == NULL){
-                    char msg[] = "Error allocating root cell aborting";
-                    exit(1);
-                }
-
-                ctx->current = ctx-> root;
-            }
-
-            slot = ctx->current;
-            ctx->current = new_cell();
-            slot->next = ctx->current;;
-        }
-    }
-
     if(ctx->state == IN_STRING){
         if(c == '\\' && !ctx->in_escape){
             ctx->in_escape = 1;
@@ -94,11 +95,45 @@ void parse_char(struct parse_ctx *ctx, char c){
 
         if(!ctx->in_escape && c == '"'){
             ctx->state = START;
+            finalize_cell(ctx);
+            return;
         }else{
             symbol = get_or_create_symbol(ctx->current);
             string_append_char(symbol->name, c);
         }
+
+        return;
     }
 
-    string_append_char(ctx->current_name, c);
+    if(c == '('){
+        if(ctx->root == NULL){
+            ctx->root = new_cell();
+
+            if(ctx->root == NULL){
+                char msg[] = "Error allocating root cell aborting";
+                exit(1);
+            }
+
+            ctx->current = ctx-> root;
+        }
+
+        slot = ctx->current;
+        ctx->current = new_cell();
+        slot->next = ctx->current;
+
+        finalize_cell(ctx);
+        return;
+    }
+
+    if(c == ')'){
+        finalize_cell(ctx);
+        return;
+    }
+
+    if(c == ' ' || c == '\t' || c == '\n'){
+        finalize_cell(ctx);
+        return;
+    }
+
+    string_append_char(ctx->token, c);
 }
