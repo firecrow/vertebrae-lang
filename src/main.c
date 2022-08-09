@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define STDIN 0 
-#define STDOUT 1
-#define STDERR 2 
-
 #include "ssimple.h"
+#include "string.c"
+#include "symbol.c"
+#include "cell.c"
 #include "parse.c"
 
 int main() {
