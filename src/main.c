@@ -18,8 +18,12 @@ int main() {
     printf("Root is null? %d\n", root == NULL);
 
     struct cell *cell = root;
-    do {
+    while(cell){
         print_cell(cell);
-    }while(cell = cell->next);
+        if(cell->branch)
+            cell = cell->branch;
+        else
+            cell = cell->next;
+    }
     return 0;
 }

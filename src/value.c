@@ -4,7 +4,7 @@ enum VALUE_TYPES {
     FLOAT = 2,
     CHAR = 3,
     STRING = 4,
-    CUSTOM = 5,
+    /* custom types */
 }
 
 struct value_obj {
@@ -14,6 +14,6 @@ struct value_obj {
         int integer;
         struct string *string;
         char c;
-        void *custome;
+        void *custom;
     } value;
-}
+};
