@@ -23,7 +23,9 @@ struct string *string_free(struct string *string){
 
 int _string_resize(struct string *string, size_t length){
     if(string->allocated < length){
-        while(string->allocated *= 2 < length){}
+        while(string->allocated < length){
+            string->allocated = string->allocated * 2;
+        }
         string->content = realloc(string->content, string->allocated);
         if(string->content == NULL){
             fprintf(stderr, "String reallocation in resize failed, aborting");
