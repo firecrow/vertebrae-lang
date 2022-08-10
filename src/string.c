@@ -1,8 +1,3 @@
-struct string {
-    char *content;
-    int length;
-};
-
 struct string *new_string(){
     struct string *string = malloc(sizeof(struct string));
 
@@ -11,6 +6,13 @@ struct string *new_string(){
     }
 
     memset(string, 0, sizeof(struct string));
+
+    string->content = malloc(STRING_DEFAULT_SIZE);
+    if(string->content == NULL){
+        return NULL;
+    }
+    string->allocated = STRING_DEFAULT_SIZE;
+    
     return string;
 }
 
@@ -20,14 +22,27 @@ struct string *string_free(struct string *string){
 }
 
 int _string_resize(struct string *string, size_t length){
-    ;
+    if(string->allocated < length){
+        while(string->allocated *= 2 < length){}
+        string->content = realloc(string->content, string->allocated);
+        if(string->content == NULL){
+            fprintf(stderr, "String reallocation in resize failed, aborting");
+            exit(1);
+        }
+    }
 }
 
 int string_append(struct string *string, struct string *additional){
-    return 0; 
+    _string_resize(string, string->length+additional->length);
+    memcpy(string->content+(string->length-1), additional->content, additional->length);
+    string->length = string->length+additional->length;
+    return string->length; 
 }
 
 int string_append_char(struct string *string, char c){
+    _string_resize(string, string->length+1);
+    string->content[string->length] = c;
+    string->length++;
     return 0; 
 }
 

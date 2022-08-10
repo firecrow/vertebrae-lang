@@ -1,13 +1,3 @@
-struct cell {
-    int id;
-    struct closure *closure;  
-    struct symbol *symbol; // nullable
-    struct function *function; // nullable
-    struct value *value;
-    struct cell *next;
-    struct cell *branch;
-};
-
 struct symbol *get_or_create_symbol(struct cell *cell){
     if(cell->symbol == NULL){
         cell->symbol = new_symbol();

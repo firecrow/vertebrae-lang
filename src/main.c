@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <regex.h>
 
 #include "ssimple.h"
+#include "regex.c"
+#include "value.c"
 #include "string.c"
 #include "symbol.c"
 #include "cell.c"
@@ -20,10 +23,13 @@ int main() {
     struct cell *cell = root;
     while(cell){
         print_cell(cell);
-        if(cell->branch)
+        if(cell->branch){
             cell = cell->branch;
-        else
+            printf("branch\n");
+        } else {
+            printf("cell\n");
             cell = cell->next;
+        }
     }
     return 0;
 }

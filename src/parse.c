@@ -59,8 +59,8 @@ struct cell*parse_file(int fd){
     return ctx->root; 
 }
 
-void assign_cell_attributes(){
-    /* set value object and functions symbols etc */
+void assign_cell_attributes(struct cell *cell, struct string *token){
+    cell->value = value_from_token(token);
 }
 
 void finalize_cell(struct parse_ctx *ctx){
@@ -85,6 +85,7 @@ void parse_char(struct parse_ctx *ctx, char c){
     write(STDOUT, "\n", 1);
 
     struct cell *slot;
+    struct cell *new;
     struct symbol *symbol;
 
     if(ctx->state == IN_STRING){
@@ -108,20 +109,21 @@ void parse_char(struct parse_ctx *ctx, char c){
     if(c == '('){
         finalize_cell(ctx);
 
-        if(ctx->root == NULL){
-            ctx->root = new_cell();
-            if(ctx->root == NULL){
+        new = new_cell();
+        if(new == NULL){
+            if(new == NULL){
                 char msg[] = "Error allocating root cell aborting";
                 exit(1);
             }
 
-            ctx->current = ctx->root;
         }
 
         slot = ctx->current;
-        ctx->current = new_cell();
-        slot->branch = ctx->current;
-
+        if(!ctx->root){
+            ctx->root = new;
+        }else{
+            slot->branch = new;
+        }
 
         ctx->state = IN_CELL;
         return;
@@ -138,13 +140,19 @@ void parse_char(struct parse_ctx *ctx, char c){
     }
 
     if(ctx->state == START){
-        ctx->root = new_cell();
-        if(ctx->root == NULL){
+        new = new_cell();
+        if(new == NULL){
             char msg[] = "Error allocating root cell aborting";
             exit(1);
         }
 
-        ctx->current = ctx-> root;
+        slot = ctx->current;
+        ctx->current = new;
+        if(!slot){
+            ctx->root = new;
+        }else{
+            slot->next = new;
+        }
         ctx->state = IN_CELL;
     }
 
