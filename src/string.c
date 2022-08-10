@@ -40,6 +40,8 @@ int string_append(struct string *string, struct string *additional){
 }
 
 int string_append_char(struct string *string, char c){
+    printf("appending char\n");
+    fflush(stdout);
     _string_resize(string, string->length+1);
     string->content[string->length] = c;
     string->length++;

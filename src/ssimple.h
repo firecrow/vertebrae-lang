@@ -20,6 +20,14 @@ enum SL_TYPE {
     /* custom types */
 };
 
+enum SL_PARSE_STATE {
+    START = 0,
+    IN_CELL = 0,
+    IN_STRING = 1
+};
+
+
+
 #define bool char
 
 struct string;
@@ -83,6 +91,16 @@ struct cell {
     struct cell *next;
     struct cell *branch;
 };
+
+struct parse_ctx {
+    struct cell *current;
+    struct cell *root;
+    enum SL_PARSE_STATE state;
+    enum SL_PARSE_STATE prev_state;
+    bool in_escape;
+    struct string *token;
+};
+
 
 
 

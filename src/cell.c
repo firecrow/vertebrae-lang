@@ -5,6 +5,13 @@ struct symbol *get_or_create_symbol(struct cell *cell){
     return cell->symbol;
 }
 
+struct value_obj *get_or_create_value(struct cell *cell){
+    if(cell->value == NULL){
+        cell->value = new_value();
+    }
+    return cell->value;
+}
+
 /* this is for debugging */
 int next_cell_id = 0;
 

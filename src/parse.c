@@ -1,18 +1,3 @@
-enum STATES {
-    START = 0,
-    IN_CELL = 0,
-    IN_STRING = 1
-};
-
-struct parse_ctx {
-    struct cell *current;
-    struct cell *root;
-    enum STATES state;
-    enum STATES prev_state;
-    bool in_escape;
-    struct string *token;
-};
-
 void parse_char(struct parse_ctx *ctx, char c);
 
 struct parse_ctx *new_parse_ctx(){
@@ -59,13 +44,13 @@ struct cell*parse_file(int fd){
     return ctx->root; 
 }
 
-void assign_cell_attributes(struct cell *cell, struct string *token){
-    cell->value = value_from_token(token);
+void assign_cell_attributes(enum SL_PARSE_STATE state, struct cell *cell, struct string *token){
+    cell->value = value_from_token(state, token);
 }
 
 void finalize_cell(struct parse_ctx *ctx){
     if(ctx->token){
-        assign_cell_attributes(ctx->current, ctx->token);
+        assign_cell_attributes(ctx->state, ctx->current, ctx->token);
 
         string_free(ctx->token);
 
@@ -76,13 +61,13 @@ void finalize_cell(struct parse_ctx *ctx){
     if(ctx->state != START){
         ctx->prev_state = ctx->state;
     }
+    ctx->token = new_string();
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
 
-    write(STDOUT, "-> ", 3);
-    write(STDOUT, &c, 1);
-    write(STDOUT, "\n", 1);
+    printf("%c, ", c);
+    fflush(stdout);
 
     struct cell *slot;
     struct cell *new;
@@ -90,6 +75,7 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(ctx->state == IN_STRING){
         if(c == '\\' && !ctx->in_escape){
+            finalize_cell(ctx);
             ctx->in_escape = 1;
             return;
         }
@@ -99,8 +85,7 @@ void parse_char(struct parse_ctx *ctx, char c){
             finalize_cell(ctx);
             return;
         }else{
-            symbol = get_or_create_symbol(ctx->current);
-            string_append_char(symbol->name, c);
+            string_append_char(ctx->token, c);
         }
 
         return;
@@ -155,6 +140,13 @@ void parse_char(struct parse_ctx *ctx, char c){
         }
         ctx->state = IN_CELL;
     }
+
+    if(c == '"'){
+       ctx->state = IN_STRING; 
+       return;
+    }
+
+
 
     string_append_char(ctx->token, c);
 }

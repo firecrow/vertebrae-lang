@@ -14,9 +14,14 @@ struct value_obj *new_value(){
    return value;
 }
 
-struct value_obj *value_from_token(struct string *token){
+struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
     struct value_obj *value = new_value();
     struct string *int_pattern = string_from_cstring("^[0-9]+$");
+
+    if(state == IN_STRING){
+        value->type = SL_TYPE_STRING;
+        value->value.string = string_from_cstring(token->content);
+    }
 
     if(regex_match(int_pattern, token)){
         value->type = SL_TYPE_INT;

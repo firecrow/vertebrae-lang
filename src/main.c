@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <regex.h>
+#include <fcntl.h>
 
 #include "ssimple.h"
 #include "regex.c"
@@ -14,8 +15,9 @@
 
 #include "debug.c"
 
-int main() {
-    struct cell *root = parse_file(STDIN);
+int main(int argc, char *argv[]) {
+    int source = open(argv[1], O_RDONLY);
+    struct cell *root = parse_file(source);
     char msg[] = "Root is null?";
 
     printf("Root is null? %d\n", root == NULL);
