@@ -126,7 +126,9 @@ void parse_char(struct parse_ctx *ctx, char c){
         if(!ctx->root){
             ctx->root = new;
         }else{
-            slot->branch = new;
+            if(slot){
+                slot->branch = new;
+            }
         }
 
         ctx->state = IN_CELL;
@@ -135,6 +137,7 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(c == ')'){
         finalize_cell(ctx);
+        ctx->current = NULL;
         return;
     }
 
@@ -155,7 +158,9 @@ void parse_char(struct parse_ctx *ctx, char c){
         if(!ctx->root){
             ctx->root = new;
         }else{
-            slot->next = new;
+            if(slot){
+                slot->next = new;
+            }
         }
         ctx->state = IN_CELL;
     }

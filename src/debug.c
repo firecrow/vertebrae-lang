@@ -36,6 +36,9 @@ void print_cell(struct cell *cell){
     if(cell->value){
         print_value(cell->value);
     }
+    if(cell->next && cell->next->value){
+        print_value(cell->next->value);
+    }
     printf(">\n");
     fflush(stdout);
 }
