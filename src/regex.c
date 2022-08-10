@@ -1,9 +1,9 @@
-bool regex_match(struct string *pattern, struct string *source){
+bool regex_match(char *pattern, struct string *source){
     regex_t regex_object;
     int result;
     char buffer[100];
 
-    result = regcomp(&regex_object, pattern->content, 0);
+    result = regcomp(&regex_object, pattern, 0);
     if (result) {
         fprintf(stderr, "Could not compile regex, aborting\n");
         exit(1);

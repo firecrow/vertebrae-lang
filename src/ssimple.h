@@ -17,13 +17,15 @@ enum SL_TYPE {
     SL_TYPE_CELL,
     SL_TYPE_CLOSURE,
     SL_TYPE_FUNCTION,
+    SL_TYPE_COMMENT,
     /* custom types */
 };
 
 enum SL_PARSE_STATE {
     START = 0,
-    IN_CELL = 0,
-    IN_STRING = 1
+    IN_CELL,
+    IN_COMMENT,
+    IN_STRING
 };
 
 
@@ -98,6 +100,7 @@ struct parse_ctx {
     enum SL_PARSE_STATE state;
     enum SL_PARSE_STATE prev_state;
     bool in_escape;
+    bool has_comment_char;
     struct string *token;
 };
 

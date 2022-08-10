@@ -52,8 +52,6 @@ void finalize_cell(struct parse_ctx *ctx){
     if(ctx->token){
         assign_cell_attributes(ctx->state, ctx->current, ctx->token);
 
-        string_free(ctx->token);
-
         ctx->token = NULL;
     }
 
@@ -61,7 +59,12 @@ void finalize_cell(struct parse_ctx *ctx){
     if(ctx->state != START){
         ctx->prev_state = ctx->state;
     }
-    ctx->token = new_string();
+}
+
+struct string *get_or_create_token(struct parse_ctx *ctx){
+    if(!ctx->token)
+        ctx->token = new_string();
+    return ctx->token;
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
@@ -72,6 +75,20 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct cell *slot;
     struct cell *new;
     struct symbol *symbol;
+    
+    if(ctx->state == IN_COMMENT){
+        if(c == '\n'){
+            finalize_cell(ctx);
+            ctx->state = START;
+
+            return;
+        }else{
+            string_append_char(get_or_create_token(ctx), c);
+        }
+
+        return;
+    }
+
 
     if(ctx->state == IN_STRING){
         if(c == '\\' && !ctx->in_escape){
@@ -81,11 +98,12 @@ void parse_char(struct parse_ctx *ctx, char c){
         }
 
         if(!ctx->in_escape && c == '"'){
-            ctx->state = START;
             finalize_cell(ctx);
+            ctx->state = START;
+
             return;
         }else{
-            string_append_char(ctx->token, c);
+            string_append_char(get_or_create_token(ctx), c);
         }
 
         return;
@@ -104,6 +122,7 @@ void parse_char(struct parse_ctx *ctx, char c){
         }
 
         slot = ctx->current;
+        ctx->current = new;
         if(!ctx->root){
             ctx->root = new;
         }else{
@@ -133,7 +152,7 @@ void parse_char(struct parse_ctx *ctx, char c){
 
         slot = ctx->current;
         ctx->current = new;
-        if(!slot){
+        if(!ctx->root){
             ctx->root = new;
         }else{
             slot->next = new;
@@ -146,7 +165,13 @@ void parse_char(struct parse_ctx *ctx, char c){
        return;
     }
 
+    if(c == '/'){
+       if(ctx->has_comment_char){
+          ctx->state = IN_COMMENT;
+       }
+       ctx->has_comment_char = 1; 
+       return;
+    }
 
-
-    string_append_char(ctx->token, c);
+    string_append_char(get_or_create_token(ctx), c);
 }
