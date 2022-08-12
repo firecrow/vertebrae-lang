@@ -84,6 +84,17 @@ struct value_obj {
     } value;
 };
 
+struct operator_ifc {
+    int type;
+    void (*handle)(struct operator_ifc *op, struct head *head, struct cell *cell);
+};
+
+struct op_ctx {
+    struct operator_ifc *op;
+    struct value *value;
+    struct cell *head;
+};
+
 struct cell {
     int id;
     struct closure *closure;  
