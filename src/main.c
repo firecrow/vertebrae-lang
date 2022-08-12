@@ -33,11 +33,17 @@ int main(int argc, char *argv[]) {
     struct stack_item *stack = NULL;
 
     struct cell *cell = root;
+    struct cell *head = NULL;
     while(cell){
         print_space();
         print_cell(cell);
+        if(head){
+            print_value(head->value);
+            printf("\n");
+        }
         if(cell->head){
-            stack = push_stack(stack, cell);
+            stack = push_stack(stack, cell, head);
+            head = cell->head;
             cell = cell->head;
             spacing += 4;
         }else if(cell->next){
@@ -46,6 +52,7 @@ int main(int argc, char *argv[]) {
             cell = NULL;
             while(stack && cell == NULL){
                 cell = stack->cell->next;
+                head = stack->head;
                 stack = stack->previous;
                 spacing -= 4;
             }

@@ -107,6 +107,7 @@ struct parse_ctx {
 
 struct stack_item {
     struct cell *cell;
+    struct cell *head;
     struct stack_item *previous;
 };
 

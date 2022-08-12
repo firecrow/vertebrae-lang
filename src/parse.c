@@ -124,7 +124,7 @@ void parse_char(struct parse_ctx *ctx, char c){
         slot = ctx->current;
 
         ctx->current = new;
-        ctx->stack = push_stack(ctx->stack, stack_cell);
+        ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
 
         if(!ctx->root){
             ctx->root = stack_cell;
