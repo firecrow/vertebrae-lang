@@ -16,29 +16,28 @@ char *debug_SL_TYPE[] = {
 
 
 void print_value(struct value_obj *value){
-    printf("V[%d](%s)", value->id, debug_SL_TYPE[value->type]);
     if(value->type == SL_TYPE_SYMBOL){
-        printf("=%s", value->value.string->content);
+        printf("\x1b[33m%s\x1b[0m", value->value.string->content);
     }
     if(value->type == SL_TYPE_STRING){
-        printf("=\"%s\"", value->value.string->content);
+        printf("\x1b[35m\"%s\"\x1b[0m", value->value.string->content);
     }
     if(value->type == SL_TYPE_INT){
-        printf("=%d", value->value.integer);
+        printf("\x1b[36m%d\x1b[0m", value->value.integer);
     }
     if(value->type == SL_TYPE_COMMENT){
-        printf("=%s", value->value.string->content);
+        printf("\x1b[34m%s\x1b[0m", value->value.string->content);
     }
+
+    printf(" %s%d", debug_SL_TYPE[value->type], value->id);
 }
 
 void print_cell(struct cell *cell){
-    printf("<C[%d] %s %d ", cell->id, cell->symbol ? cell->symbol->name->content : "", cell->next == NULL);
+    printf("<C%d ", cell->id);
     if(cell->value){
         print_value(cell->value);
     }
-    if(cell->next && cell->next->value){
-        print_value(cell->next->value);
-    }
+    printf(" %s n%d/h%d", cell->symbol ? cell->symbol->name->content : "", cell->next != NULL, cell->head != NULL);
     printf(">\n");
     fflush(stdout);
 }

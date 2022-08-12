@@ -74,6 +74,7 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     struct cell *slot;
     struct cell *new;
+    struct cell *stack_cell;
     struct symbol *symbol;
     
     if(ctx->state == IN_COMMENT){
@@ -113,21 +114,23 @@ void parse_char(struct parse_ctx *ctx, char c){
         finalize_cell(ctx);
 
         new = new_cell();
-        if(new == NULL){
-            if(new == NULL){
-                char msg[] = "Error allocating root cell aborting";
-                exit(1);
-            }
-
+        stack_cell = new_cell();
+        if(new == NULL || stack_cell == NULL){
+            fprintf(stderr, "Error allocating root cell aborting");
+            exit(1);
         }
 
+        stack_cell->head = new;
         slot = ctx->current;
+
         ctx->current = new;
+        ctx->stack = push_stack(ctx->stack, stack_cell);
+
         if(!ctx->root){
-            ctx->root = new;
+            ctx->root = stack_cell;
         }else{
             if(slot){
-                slot->branch = new;
+                slot->next = stack_cell;
             }
         }
 
@@ -137,7 +140,12 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(c == ')'){
         finalize_cell(ctx);
-        ctx->current = NULL;
+        if(ctx->stack){
+            ctx->current = ctx->stack->cell;
+            ctx->stack = ctx->stack->previous;
+        }else{
+            ctx->current = NULL;
+        }
         return;
     }
 

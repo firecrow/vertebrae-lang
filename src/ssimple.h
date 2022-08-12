@@ -91,12 +91,13 @@ struct cell {
     struct function *function; // nullable
     struct value_obj *value;
     struct cell *next;
-    struct cell *branch;
+    struct cell *head;
 };
 
 struct parse_ctx {
     struct cell *current;
     struct cell *root;
+    struct stack_item *stack;
     enum SL_PARSE_STATE state;
     enum SL_PARSE_STATE prev_state;
     bool in_escape;
@@ -104,7 +105,10 @@ struct parse_ctx {
     struct string *token;
 };
 
+struct stack_item {
+    struct cell *cell;
+    struct stack_item *previous;
+};
 
-
-
+void print_cell(struct cell *cell);
 struct string *string_from_cstring(char *cstring);
