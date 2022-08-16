@@ -35,7 +35,6 @@ struct string;
 struct tree_node;
 struct tree;
 struct tree_iter;
-struct symbol;
 struct closure;
 struct function;
 struct cell;
@@ -92,21 +91,16 @@ struct value_obj {
     } value;
 };
 
+void (*operator_handle_func)(struct operator_ifc *_op, struct cell *head, struct cell *cell);
 struct operator_ifc {
     int type;
-    void (*handle)(struct operator_ifc *op, struct cell *head, struct cell *cell);
-};
-
-struct op_ctx {
-    struct operator_ifc *op;
-    struct value *value;
-    struct cell *head;
+    void(*new)();
+    operator_handle_func *handle;
 };
 
 struct cell {
     int id;
     struct closure *closure;  
-    struct symbol *symbol; // nullable
     struct function *function; // nullable
     struct value_obj *value;
     struct cell *next;
@@ -132,3 +126,8 @@ struct stack_item {
 
 void print_cell(struct cell *cell);
 struct string *string_from_cstring(char *cstring);
+
+struct head {
+    struct value *value;
+    struct operator_ifc *op;
+};

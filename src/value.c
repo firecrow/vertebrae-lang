@@ -14,6 +14,11 @@ struct value_obj *new_value(){
    return value;
 }
 
+struct value_obj *clone_value(struct value *value){
+   /* TODO: not yet implemented */
+   return value;
+}
+
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
     struct value_obj *value = new_value();
 

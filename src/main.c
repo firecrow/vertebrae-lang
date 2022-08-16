@@ -34,6 +34,8 @@ int main(int argc, char *argv[]) {
 
     struct cell *cell = root;
     struct cell *head = NULL;
+    struct closure_entry *entry;
+    struct operator_ifc *op  = NULL;
     while(cell){
         print_space();
         print_cell(cell);
@@ -43,7 +45,12 @@ int main(int argc, char *argv[]) {
         }
         if(cell->head){
             stack = push_stack(stack, cell, head);
-            head = cell->head;
+            entry = lookup_symbol(closure, cell->value->value.string);
+            if(entry->type == FUNCTION){
+               op = entry->body.function->new(); 
+            } else {
+                fprintf(stderr, "head cell found with no functino symbol");
+            }
             cell = cell->head;
             spacing += 4;
         }else if(cell->next){

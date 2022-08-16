@@ -16,6 +16,23 @@ struct string *new_string(){
     return string;
 }
 
+struct string *clone_string(struct string *string){
+    struct string *new = new_string();
+    if(new == NULL){
+        fprintf(stderr, "Error allocating string for clone");
+        exit(1);
+    }
+    new->length = string->length;
+    new->content = malloc(sizeof(string->length));
+    if(new->content == NULL){
+        fprintf(stderr, "Error allocating string for clone");
+        exit(1);
+    }
+    mempcpy(new->content, string->content, string->length);
+    
+    return new;
+}
+
 struct string *string_free(struct string *string){
     free(string->content);
     free(string);
