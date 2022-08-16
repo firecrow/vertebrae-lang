@@ -17,7 +17,8 @@ enum SL_TYPE {
     SL_TYPE_CELL,
     SL_TYPE_CLOSURE,
     SL_TYPE_FUNCTION,
-    SL_TYPE_COMMENT,
+    SL_TYPE_VALUE,
+    SL_TYPE_COMMENT
     /* custom types */
 };
 
@@ -27,8 +28,6 @@ enum SL_PARSE_STATE {
     IN_COMMENT,
     IN_STRING
 };
-
-
 
 #define bool char
 
@@ -42,8 +41,10 @@ struct function;
 struct cell;
 
 struct tree_node {
-    int is_black;
     void *content;
+    unsigned long hash;
+    struct tree_node *right;
+    struct tree_node *left;
 };
 
 struct tree {
@@ -57,13 +58,20 @@ struct tree_iter {
     struct tree_node *current; 
 };
 
+struct closure_entry {
+    struct closure *closure;
+    struct string *name;
+    enum SL_TYPE type;
+    union {
+        struct cell *cell;
+        struct value *value;
+        struct operator_ifc *function;
+    } body;
+};
+
 struct closure {
     struct parent *closure;
     struct tree *symbols;
-};
-
-struct function {
-   void (*operator)(struct function *self, struct cell); 
 };
 
 struct string {
@@ -86,7 +94,7 @@ struct value_obj {
 
 struct operator_ifc {
     int type;
-    void (*handle)(struct operator_ifc *op, struct head *head, struct cell *cell);
+    void (*handle)(struct operator_ifc *op, struct cell *head, struct cell *cell);
 };
 
 struct op_ctx {
