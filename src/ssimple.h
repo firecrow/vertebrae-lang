@@ -32,29 +32,30 @@ enum SL_PARSE_STATE {
 #define bool char
 
 struct string;
-struct tree_node;
+struct tree_entry;
 struct tree;
 struct tree_iter;
 struct closure;
 struct function;
 struct cell;
 
-struct tree_node {
+struct tree_entry {
     void *content;
     unsigned long hash;
-    struct tree_node *right;
-    struct tree_node *left;
+    struct string *key;
+    struct tree_entry *right;
+    struct tree_entry *left;
 };
 
 struct tree {
     enum SL_TYPE type;
-    struct root *tree_node; 
+    struct tree_entry *root; 
     int count;
 };
 
 struct tree_iter {
     struct tree *tree;
-    struct tree_node *current; 
+    struct tree_entry *current; 
 };
 
 struct closure_entry {
@@ -69,7 +70,7 @@ struct closure_entry {
 };
 
 struct closure {
-    struct parent *closure;
+    struct closure *parent;
     struct tree *symbols;
 };
 

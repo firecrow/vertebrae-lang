@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../core/core.h"
+#include "types.h"
+
 struct tree *new_tree(){
     struct tree *tree = malloc(sizeof(struct tree));
     if(tree == NULL){
@@ -6,7 +11,7 @@ struct tree *new_tree(){
     return tree;
 }
 
-struct tree_entry *new_tree_entry(SL_TYPE type){
+struct tree_entry *new_tree_entry(){
     struct tree_entry *entry = malloc(sizeof(struct tree_entry));
     if(entry == NULL){
         return NULL;
@@ -26,8 +31,8 @@ unsigned long djb2_hash(struct string *string){
 
 void *tree_get(struct tree *tree, struct string *key){
     unsigned long hash = djb2_hash(key); 
-    if(tree->root == null){
-        return NULL
+    if(tree->root == NULL){
+        return NULL;
     } else {
         struct tree_entry *node = tree->root;
         while(node){
@@ -48,20 +53,21 @@ void *tree_get(struct tree *tree, struct string *key){
     }
 }
 
-tree_add(struct tree *tree, struct string *key){
+void tree_add(struct tree *tree, struct string *key, void *value){
     struct tree_entry *entry = new_tree_entry();
+    entry->content = value;
     entry->hash = djb2_hash(key);
     if(entry == NULL){
         fprintf(stderr, "Tree add recieved a NULL entry");
         return;
     }
-    if(tree->root == null){
+    if(tree->root == NULL){
         tree->root = entry;
         return;
     } else {
         struct tree_entry *node = tree->root;
         while(node){
-            if(hash >= node->hash){
+            if(entry->hash >= node->hash){
                 if(!node->right){
                     node->right = entry;
                     return;

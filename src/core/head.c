@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../types/types.h"
+#include "core.h"
+
 struct head *new_head(struct cell *branch, struct head *current_head){
     struct value_obj *value;
 

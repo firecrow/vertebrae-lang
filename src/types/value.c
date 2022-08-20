@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../core/core.h"
+#include "types.h"
+
 /* this is for debugging */
 int next_value_id = 0;
 

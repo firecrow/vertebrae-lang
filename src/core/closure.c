@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../types/types.h"
+#include "core.h"
+
 struct closure *new_closure(struct closure *parent){
     struct closure *closure = malloc(sizeof(struct closure));
     if(closure == NULL){
@@ -16,8 +21,9 @@ struct closure_entry *new_closure_entry(struct closure *closure, bool is_functio
     if(entry == NULL){
         return NULL;
     }
+    memset(entry, 0, sizeof(struct closure_entry));
+
     entry->closure = closure;
-    entry->is_function = is_function
     return entry;
 }
 

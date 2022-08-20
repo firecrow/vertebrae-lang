@@ -1,5 +1,9 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../types/types.h"
+#include "core.h"
 
-char *debug_SL_TYPE[] = {
+static char *debug_SL_TYPE[] = {
     "NONE",
     "SYMBOL",
     "INT",
@@ -12,8 +16,6 @@ char *debug_SL_TYPE[] = {
     "FUNCTION",
     "COMMENT"
 };
-
-
 
 void print_value(struct value_obj *value){
     if(!value || !value->type){

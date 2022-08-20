@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../core/core.h"
+#include "types.h"
+
 bool regex_match(char *pattern, struct string *source){
     regex_t regex_object;
     int result;

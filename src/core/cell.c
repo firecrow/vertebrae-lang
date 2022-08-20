@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../types/types.h"
+#include "core.h"
+
 struct value_obj *get_or_create_value(struct cell *cell){
     if(cell->value == NULL){
         cell->value = new_value();

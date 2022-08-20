@@ -1,3 +1,8 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../core/core.h"
+#include "types.h"
+
 struct string *new_string(){
     struct string *string = malloc(sizeof(struct string));
 

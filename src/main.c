@@ -1,22 +1,8 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <regex.h>
-#include <fcntl.h>
+#include "external.h"
 
-#include "core/ssimple.h"
-#include "types/regex.c"
-#include "types/value.c"
-#include "types/string.c"
-#include "core/head.c"
-#include "core/cell.c"
-/*#include "core/closure.c"*/
-#include "core/stack.c"
-#include "core/parse.c"
-#include "core/debug.c"
-
-
+#include "ssimple.h"
+#include "core/core.h"
+#include "types/types.h"
 
 int spacing = 0;
 
