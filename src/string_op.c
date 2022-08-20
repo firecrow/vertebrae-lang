@@ -38,10 +38,10 @@ int string_concat_handle(struct operator_ifc *_op, struct cell *head, struct cel
     }
 
     if(head->value.string == NULL){
-        head->value.string = clone_string(cell->value->value.string);     
+        head->value.string = clone_string(cell->value->slot.string);     
         return;
     }else{
-        string_append(head->value.string, cell->value->value.string); 
+        string_append(head->value.string, cell->value->slot.string); 
     }
 }
 

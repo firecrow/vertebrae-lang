@@ -25,7 +25,7 @@ int arithmatic_handle(struct operator_ifc *_op, struct cell *head, struct cell *
         return;
     }
 
-    int new_value = cell->value->value.integer;
+    int new_value = cell->value->slot.integer;
     if(op->arithmatic_type == ADD){
         head->value += new_value;
     }else if(op->arithmatic_type == SUBTRACT){

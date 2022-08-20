@@ -13,7 +13,7 @@ struct head *new_head(struct cell *branch, struct head *current_head){
 
     if((value = value_if_type(branch->value, SL_TYPE_FUNCTION)) != NULL){
         printf("\x1b[31msetup operator\x1b[0m");
-        head->operator = value->value.operator->new();
+        head->operator = value->slot.operator->new();
         return head;
     }
 

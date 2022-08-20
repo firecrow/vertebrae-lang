@@ -89,7 +89,7 @@ struct value_obj {
         struct operator_ifc *operator;
         char c;
         void *custom;
-    } value;
+    } slot;
 };
 
 typedef void (*operator_handle_func)(struct operator_ifc *_op, struct cell *head, struct cell *cell);

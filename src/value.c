@@ -32,24 +32,24 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 
     if(state == IN_STRING){
         value->type = SL_TYPE_STRING;
-        value->value.string = token;
+        value->slot.string = token;
         return value;
     }
 
     if(state == IN_COMMENT){
         value->type = SL_TYPE_COMMENT;
-        value->value.string = token;
+        value->slot.string = token;
         return value;
     }
 
     if(regex_match("^[0-9]\\+$", token)){
         value->type = SL_TYPE_INT;
-        value->value.integer = atoi(token->content);
+        value->slot.integer = atoi(token->content);
         return value;
     }
 
     value->type = SL_TYPE_SYMBOL;
-    value->value.string = token;
+    value->slot.string = token;
 
     return value;
 }
