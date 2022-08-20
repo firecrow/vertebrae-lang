@@ -1,10 +1,3 @@
-struct symbol *get_or_create_symbol(struct cell *cell){
-    if(cell->symbol == NULL){
-        cell->symbol = new_symbol();
-    }
-    return cell->symbol;
-}
-
 struct value_obj *get_or_create_value(struct cell *cell){
     if(cell->value == NULL){
         cell->value = new_value();

@@ -120,7 +120,7 @@ void parse_char(struct parse_ctx *ctx, char c){
             exit(1);
         }
 
-        stack_cell->head = new;
+        stack_cell->branch = new;
         slot = ctx->current;
 
         ctx->current = new;

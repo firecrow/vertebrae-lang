@@ -86,25 +86,25 @@ struct value_obj {
         float float_value;
         int integer;
         struct string *string;
+        struct operator_ifc *operator;
         char c;
         void *custom;
     } value;
 };
 
-void (*operator_handle_func)(struct operator_ifc *_op, struct cell *head, struct cell *cell);
+typedef void (*operator_handle_func)(struct operator_ifc *_op, struct cell *head, struct cell *cell);
+
 struct operator_ifc {
     int type;
-    void(*new)();
+    struct operator_ifc *(*new)();
     operator_handle_func *handle;
 };
 
 struct cell {
     int id;
-    struct closure *closure;  
-    struct function *function; // nullable
     struct value_obj *value;
     struct cell *next;
-    struct cell *head;
+    struct cell *branch;
 };
 
 struct parse_ctx {
@@ -120,7 +120,7 @@ struct parse_ctx {
 
 struct stack_item {
     struct cell *cell;
-    struct cell *head;
+    struct head *head;
     struct stack_item *previous;
 };
 
@@ -128,6 +128,7 @@ void print_cell(struct cell *cell);
 struct string *string_from_cstring(char *cstring);
 
 struct head {
-    struct value *value;
-    struct operator_ifc *op;
+    struct operator_ifc *operator;
+    struct closure *closure;  
+    struct value_obj *value;
 };

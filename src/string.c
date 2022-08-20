@@ -28,7 +28,7 @@ struct string *clone_string(struct string *string){
         fprintf(stderr, "Error allocating string for clone");
         exit(1);
     }
-    mempcpy(new->content, string->content, string->length);
+    memcpy(new->content, string->content, string->length);
     
     return new;
 }

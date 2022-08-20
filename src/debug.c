@@ -37,7 +37,7 @@ void print_cell(struct cell *cell){
     if(cell->value){
         print_value(cell->value);
     }
-    printf(" %s n%d/h%d", cell->symbol ? cell->symbol->name->content : "", cell->next != NULL, cell->head != NULL);
-    printf(">\n");
+    printf("C(n%d/h%d", cell->next != NULL, cell->branch != NULL);
+    printf(")\n");
     fflush(stdout);
 }

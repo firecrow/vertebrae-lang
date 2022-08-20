@@ -10,6 +10,7 @@
 #include "value.c"
 #include "string.c"
 #include "symbol.c"
+#include "head.c"
 #include "cell.c"
 #include "stack.c"
 #include "parse.c"
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
     struct stack_item *stack = NULL;
 
     struct cell *cell = root;
-    struct cell *head = NULL;
+    struct head *head = NULL;
     struct closure_entry *entry;
     struct operator_ifc *op  = NULL;
     while(cell){
@@ -43,15 +44,10 @@ int main(int argc, char *argv[]) {
             print_value(head->value);
             printf("\n");
         }
-        if(cell->head){
+        if(cell->branch){
+            struct head *head = new_head(cell->branch);
             stack = push_stack(stack, cell, head);
-            entry = lookup_symbol(closure, cell->value->value.string);
-            if(entry->type == FUNCTION){
-               op = entry->body.function->new(); 
-            } else {
-                fprintf(stderr, "head cell found with no functino symbol");
-            }
-            cell = cell->head;
+            cell = cell->branch;
             spacing += 4;
         }else if(cell->next){
             cell = cell->next;
