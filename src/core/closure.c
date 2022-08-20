@@ -42,5 +42,8 @@ void closure_add_value(struct closure *closure, struct string *key, struct value
 void closure_add_function(struct closure *closure, struct string *key, struct operator_ifc *op){
     struct closure_entry *entry = new_closure_entry(closure, 1);
     entry->body.function = op;
-    tree_add(closure->symbols, key, (void *)op);
+    struct value_obj *value = new_value();
+    value->type = SL_TYPE_FUNCTION;
+    value->slot.operator = op;
+    tree_add(closure->symbols, key, value);
 }

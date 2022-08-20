@@ -29,7 +29,7 @@ unsigned long djb2_hash(struct string *string){
     return hash;
 }
 
-void *tree_get(struct tree *tree, struct string *key){
+struct value_obj *tree_get(struct tree *tree, struct string *key){
     unsigned long hash = djb2_hash(key); 
     if(tree->root == NULL){
         return NULL;
@@ -53,8 +53,9 @@ void *tree_get(struct tree *tree, struct string *key){
     }
 }
 
-void tree_add(struct tree *tree, struct string *key, void *value){
+void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
     struct tree_entry *entry = new_tree_entry();
+    entry->key = key;
     entry->content = value;
     entry->hash = djb2_hash(key);
     if(entry == NULL){
@@ -63,6 +64,7 @@ void tree_add(struct tree *tree, struct string *key, void *value){
     }
     if(tree->root == NULL){
         tree->root = entry;
+        tree->count++;
         return;
     } else {
         struct tree_entry *node = tree->root;
@@ -70,12 +72,14 @@ void tree_add(struct tree *tree, struct string *key, void *value){
             if(entry->hash >= node->hash){
                 if(!node->right){
                     node->right = entry;
+                    tree->count++;
                     return;
                 }
                 node = node->right;
             }else {
                 if(!node->left){
                     node->left = entry;
+                    tree->count++;
                     return;
                 }
                 node = node->left;

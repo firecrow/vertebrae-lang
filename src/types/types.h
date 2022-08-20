@@ -20,5 +20,5 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 /* tree */
 struct tree *new_tree();
 struct tree_entry *new_tree_entry();
-void *tree_get(struct tree *tree, struct string *key);
-void tree_add(struct tree *tree, struct string *key, void *value);
+struct value_obj *tree_get(struct tree *tree, struct string *key);
+void tree_add(struct tree *tree, struct string *key, struct value_obj *value);

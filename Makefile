@@ -14,7 +14,7 @@ OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 all: ssimple
 
 ssimple: dir $(OBJECTS)
-	$(CC) -o bin/ssimple src/main.c $(OBJECTS)
+	$(CC) -g -o bin/ssimple src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
 	$(CC) -c  $<  -o $@
@@ -36,3 +36,6 @@ clean:
 
 debug:
 	gdb --args bin/ssimple script/example.sl 
+
+run:
+	./bin/ssimple script/example.sl

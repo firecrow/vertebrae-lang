@@ -3,6 +3,8 @@
 #include "ssimple.h"
 #include "core/core.h"
 #include "types/types.h"
+#include "operators/operator.h"
+#include "library/library.h"
 
 int spacing = 0;
 
@@ -20,23 +22,36 @@ int main(int argc, char *argv[]) {
     struct stack_item *stack = NULL;
 
     struct cell *cell = root;
-    struct head *head = NULL;
+    struct head *head = new_head(NULL, NULL);
+
+    init_basic_library(head->closure); 
+
     struct closure_entry *entry;
     struct operator_ifc *op  = NULL;
     while(cell){
         print_space();
         print_cell(cell);
+
         if(head){
-            printf("head value: ");
             print_value(head->value);
-            printf("\n");
+            if(head->operator){
+                head->operator->handle(head->operator, head, cell);
+            }
         }
+
         if(cell->branch){
+            /* creating the head will effectively process the cell */
             head = new_head(cell->branch, head);
             stack = push_stack(stack, cell, head);
             cell = cell->branch;
+
+            print_space();
+            print_cell(cell);
+
             spacing += 4;
-        }else if(cell->next){
+        }
+
+        if(cell->next){
             cell = cell->next;
         }else{
             cell = NULL;

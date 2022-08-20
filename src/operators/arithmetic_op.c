@@ -16,7 +16,7 @@ void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct cell 
         fprintf(stderr, "Cannot do arithmetic on non integer value");
         exit(1);
     }
-    struct arithmetic_operator *op = (struct arithmetic_operator*)op;
+    struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
         head->value = clone_value(cell->value);
         return;
