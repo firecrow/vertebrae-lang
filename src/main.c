@@ -5,17 +5,17 @@
 #include <regex.h>
 #include <fcntl.h>
 
-#include "ssimple.h"
-#include "regex.c"
-#include "value.c"
-#include "string.c"
-#include "symbol.c"
-#include "head.c"
-#include "cell.c"
-#include "stack.c"
-#include "parse.c"
+#include "core/ssimple.h"
+#include "types/regex.c"
+#include "types/value.c"
+#include "types/string.c"
+#include "core/head.c"
+#include "core/cell.c"
+/*#include "core/closure.c"*/
+#include "core/stack.c"
+#include "core/parse.c"
+#include "core/debug.c"
 
-#include "debug.c"
 
 
 int spacing = 0;
