@@ -14,3 +14,4 @@ struct operator_ifc {
     operator_handle_func *handle;
 };
 
+struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);

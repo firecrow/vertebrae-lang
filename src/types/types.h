@@ -6,6 +6,7 @@ int _string_resize(struct string *string, size_t length);
 int string_append(struct string *string, struct string *additional);
 int string_append_char(struct string *string, char c);
 struct string *string_from_cstring(char *cstring);
+#define str(XARG) string_from_cstring((XARG))
 
 /* regex */
 bool regex_match(char *pattern, struct string *source);

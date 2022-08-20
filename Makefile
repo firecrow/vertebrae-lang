@@ -7,7 +7,9 @@ TYPESOBJ := build/string.o build/regex.o build/tree.o \
 
 OPOBJ := build/arithmetic_op.o
 
-OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ)
+LIBRARYOBJ := build/default_library.o
+
+OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
 all: ssimple
 
@@ -21,6 +23,9 @@ build/%.o: src/types/%.c
 	$(CC) -c  $<  -o $@
 
 build/%.o: src/operators/%.c
+	$(CC) -c  $<  -o $@
+
+build/%.o: src/library/%.c
 	$(CC) -c  $<  -o $@
 
 dir:

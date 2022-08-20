@@ -1,21 +1,29 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../core/core.h"
+#include "../types/types.h"
+#include "../operators/operator.h"
+
 struct closure *init_basic_library(struct closure *closure){
-    /** ========== variabls ========= */
-    closure_add_function(closure, "var", new_definition_operator(VARIABLE);
-    closure_add_function(closure, "func", new_definition_operator(FUNCTION);
+    /** ========== variabls ========= 
+    closure_add_function(closure, str("var"), new_definition_operator(VARIABLE));
+    closure_add_function(closure, str("func"), new_definition_operator(FUNCTION));
+    */
 
     /** ========== arithemtic ========= */
     /* + */
-    closur_add_function(closure, "+", new_arithmatic_operator(ADD));
+    closure_add_function(closure, str("+"), new_arithmetic_operator(ADD));
     /* - */
-    closur_add_function(closure, "-", new_arithmatic_operator(SUBTRACT));
+    closure_add_function(closure, str("-"), new_arithmetic_operator(SUBTRACT));
     /* / */
-    closur_add_function(closure, "/", new_arithmatic_operator(DIVIDE));
+    closure_add_function(closure, str("/"), new_arithmetic_operator(DIVIDE));
     /* * */
-    closur_add_function(closure, "*", new_arithmatic_operator(MULTIPLY));
+    closure_add_function(closure, str("*"), new_arithmetic_operator(MULTIPLY));
 
     /* ========== string ========== */
-    /* print */
-    closur_add_function(closure, "print", new_print_operator();
+    /* print 
+    closure_add_function(closure, "print", new_print_operator();
+    */
     /* concat */
     /* substr */
     /* to upper */
