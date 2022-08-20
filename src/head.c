@@ -1,13 +1,21 @@
-struct head *new_head(struct cell *branch){
+struct head *new_head(struct cell *branch, struct head *current_head){
     struct value_obj *value;
-    if((value = value_if_type(branch->value, SL_TYPE_FUNCTION)) == NULL){
-        fprintf(stderr, "Error TYPE mismatch expected %d got %d", SL_TYPE_FUNCTION, branch->value->type);
-        return NULL;
-    }
+
     struct head *head = malloc(sizeof(struct head));
     if(head == NULL){
         return NULL;
     }
-    head->operator = value->value.operator->new();
-    return head;
+
+    if((value = value_if_type(branch->value, SL_TYPE_STRING)) != NULL){
+        printf("\x1b[31msearching for string\x1b[0m");
+        return head;
+    }
+
+    if((value = value_if_type(branch->value, SL_TYPE_FUNCTION)) != NULL){
+        printf("\x1b[31msetup operator\x1b[0m");
+        head->operator = value->value.operator->new();
+        return head;
+    }
+
+    return NULL;
 }

@@ -41,11 +41,12 @@ int main(int argc, char *argv[]) {
         print_space();
         print_cell(cell);
         if(head){
+            printf("head value: ");
             print_value(head->value);
             printf("\n");
         }
         if(cell->branch){
-            struct head *head = new_head(cell->branch);
+            head = new_head(cell->branch, head);
             stack = push_stack(stack, cell, head);
             cell = cell->branch;
             spacing += 4;

@@ -16,6 +16,10 @@ char *debug_SL_TYPE[] = {
 
 
 void print_value(struct value_obj *value){
+    if(!value || !value->type){
+        printf("\x1b[33mNONE\x1b[0m");
+        return;
+    }
     if(value->type == SL_TYPE_SYMBOL){
         printf("\x1b[33m%s\x1b[0m", value->value.string->content);
     }

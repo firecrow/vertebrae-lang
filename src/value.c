@@ -50,5 +50,6 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 
     value->type = SL_TYPE_SYMBOL;
     value->value.string = token;
+
     return value;
 }

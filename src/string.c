@@ -11,6 +11,7 @@ struct string *new_string(){
     if(string->content == NULL){
         return NULL;
     }
+    memset(string->content, 0, sizeof(STRING_DEFAULT_SIZE));
     string->allocated = STRING_DEFAULT_SIZE;
     
     return string;
