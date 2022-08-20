@@ -12,6 +12,11 @@ struct head *new_head(struct cell *branch, struct head *current_head){
     }
 
     if((value = value_if_type(branch->value, SL_TYPE_STRING)) != NULL){
+        printf("\x1b[31msetting value for string\x1b[0m");
+        return head;
+    }
+
+    if((value = value_if_type(branch->value, SL_TYPE_STRING)) != NULL){
         printf("\x1b[31msearching for string\x1b[0m");
         return head;
     }

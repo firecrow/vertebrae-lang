@@ -25,3 +25,7 @@ struct cell *new_cell(){
 
    return cell;
 }
+
+bool is_branch_cell(struct cell *cell){
+    return cell->branch != NULL;
+}

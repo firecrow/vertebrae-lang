@@ -1,4 +1,8 @@
 struct closure *init_basic_library(struct closure *closure){
+    /** ========== variabls ========= */
+    closure_add_function(closure, "var", new_definition_operator(VARIABLE);
+    closure_add_function(closure, "func", new_definition_operator(FUNCTION);
+
     /** ========== arithemtic ========= */
     /* + */
     closur_add_function(closure, "+", new_arithmatic_operator(ADD));
