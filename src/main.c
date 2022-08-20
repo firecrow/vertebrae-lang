@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
         print_cell(cell);
 
         if(head){
-            print_value(head->value);
             if(head->operator){
                 head->operator->handle(head->operator, head, cell);
             }

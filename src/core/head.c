@@ -11,6 +11,8 @@ struct head *new_head(struct cell *branch, struct head *current_head){
     if(head == NULL){
         return NULL;
     }
+    memset(head, 0, sizeof(struct head));
+
     struct closure *current = NULL;
     if(current_head && current_head->closure)
         current = current_head->closure;
