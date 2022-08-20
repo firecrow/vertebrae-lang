@@ -36,8 +36,10 @@ struct tree_entry;
 struct tree;
 struct tree_iter;
 struct closure;
+struct closure_entry;
 struct function;
 struct cell;
+struct head;
 
 struct tree_entry {
     void *content;
@@ -91,14 +93,6 @@ struct value_obj {
         char c;
         void *custom;
     } slot;
-};
-
-typedef void (*operator_handle_func)(struct operator_ifc *_op, struct cell *head, struct cell *cell);
-
-struct operator_ifc {
-    int type;
-    struct operator_ifc *(*new)();
-    operator_handle_func *handle;
 };
 
 struct cell {

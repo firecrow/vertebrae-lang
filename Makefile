@@ -1,8 +1,13 @@
 CC := cc
-OBJECTS := build/parse.o build/cell.o build/head.o \
-	build/closure.o build/debug.o build/stack.o \
-	build/string.o build/regex.o build/tree.o \
-	build/value.o \
+COREOBJ := build/parse.o build/cell.o build/head.o \
+	build/closure.o build/debug.o build/stack.o
+
+TYPESOBJ := build/string.o build/regex.o build/tree.o \
+	build/value.o
+
+OPOBJ := build/arithmetic_op.o
+
+OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ)
 
 all: ssimple
 
@@ -15,8 +20,11 @@ build/%.o: src/core/%.c
 build/%.o: src/types/%.c
 	$(CC) -c  $<  -o $@
 
+build/%.o: src/operators/%.c
+	$(CC) -c  $<  -o $@
+
 dir:
-	mkdir build
+	mkdir -p  build
 
 clean:
 	rm -Rf ./build

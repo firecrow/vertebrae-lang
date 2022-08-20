@@ -1,6 +1,7 @@
 #include "../external.h"
 #include "../ssimple.h"
 #include "../types/types.h"
+#include "../operators/operator.h"
 #include "core.h"
 
 struct head *new_head(struct cell *branch, struct head *current_head){
@@ -23,7 +24,8 @@ struct head *new_head(struct cell *branch, struct head *current_head){
 
     if((value = value_if_type(branch->value, SL_TYPE_FUNCTION)) != NULL){
         printf("\x1b[31msetup operator\x1b[0m");
-        head->operator = value->slot.operator->new();
+        enum OPERATOR_TYPE optype = value->slot.operator->type;
+        head->operator = value->slot.operator->new(optype);
         return head;
     }
 
