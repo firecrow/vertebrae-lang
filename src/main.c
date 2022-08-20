@@ -14,6 +14,14 @@ void print_space(){
     }
 }
 
+void passthrough(struct head *head, struct head *previous){
+    if(head && previous){
+        if(head->value && head->value->type == previous->value->type){
+            head->operator->handle(head->operator, head, previous->value);
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct cell *root = parse_file(source);
@@ -23,6 +31,7 @@ int main(int argc, char *argv[]) {
 
     struct cell *cell = root;
     struct head *head = new_head(NULL, NULL);
+    struct head *previous_head = head;
 
     init_basic_library(head->closure); 
 
@@ -32,11 +41,6 @@ int main(int argc, char *argv[]) {
         print_space();
         print_cell(cell);
 
-        if(head){
-            if(head->operator){
-                head->operator->handle(head->operator, head, cell);
-            }
-        }
 
         if(cell->branch){
             /* creating the head will effectively process the cell */
@@ -48,16 +52,28 @@ int main(int argc, char *argv[]) {
             print_cell(cell);
 
             spacing += 4;
+        }else if(head){
+            if(head->operator){
+                head->operator->handle(head->operator, head, cell->value);
+                print_value(head->value);
+                print_space();
+                printf("\n");
+            }
         }
 
         if(cell->next){
             cell = cell->next;
         }else{
             cell = NULL;
+            if(head){
+                previous_head = head;
+            }
+            head = NULL;
             while(stack && cell == NULL){
                 cell = stack->cell->next;
                 head = stack->head;
                 stack = stack->previous;
+                passthrough(head, previous_head);
                 spacing -= 4;
             }
         }

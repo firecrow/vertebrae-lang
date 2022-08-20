@@ -11,22 +11,24 @@ struct arithmetic_operator {
     struct value *value;
 };
 
-void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct cell *cell){
-    if(cell->value->type != SL_TYPE_INT){
+void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
+    if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Cannot do arithmetic on non integer value");
         exit(1);
     }
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
-        head->value = clone_value(cell->value);
+        head->value = clone_value(value);
         return;
     }
 
-    int new_value = cell->value->slot.integer;
+    int new_value = value->slot.integer;
 
     if(op->type == ADD){
+        printf("ADDITINON\n");
         head->value->slot.integer += new_value; 
     }else if(op->type == SUBTRACT){
+        printf("SUB\n");
         head->value->slot.integer -= new_value;
     }else if(op->type == DIVIDE){
         head->value->slot.integer = head->value->slot.integer / new_value;

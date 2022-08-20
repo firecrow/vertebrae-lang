@@ -6,7 +6,7 @@ enum OPERATOR_TYPE {
     MULTIPLY
 };
 
-typedef void (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct cell *cell);
+typedef void (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct value_obj *value);
 
 struct operator_ifc {
     int type;

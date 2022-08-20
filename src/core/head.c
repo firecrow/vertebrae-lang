@@ -23,7 +23,6 @@ struct head *new_head(struct cell *branch, struct head *current_head){
     }
 
     if((value = value_if_type(branch->value, SL_TYPE_STRING)) != NULL){
-        printf("\x1b[31msetting value for string\x1b[0m");
         return head;
     }
 
@@ -37,7 +36,6 @@ struct head *new_head(struct cell *branch, struct head *current_head){
                     closure = closure->parent;
                 }
                 if(value && value->type == SL_TYPE_FUNCTION){
-                    printf("assigning the opp");
                     head->operator = value->slot.operator;
                 }
                 return head;
