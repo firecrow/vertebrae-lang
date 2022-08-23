@@ -7,7 +7,12 @@ enum OPERATOR_TYPE {
     PRINT
 };
 
-typedef void (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct value_obj *value);
+enum SL_BRANCH_TYPE {
+    SL_CONTINUE =0,
+    SL_BREAK
+};
+
+typedef enum SL_BRANCH_TYPE (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct value_obj *value);
 
 struct operator_ifc {
     int type;

@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
 
     struct stack_item *stack = NULL;
 
+    enum SL_BRANCH_TYPE = branch_type;
+
     struct cell *cell = root;
     struct head *head = new_head(NULL, NULL);
     struct head *previous_head = head;
@@ -54,7 +56,15 @@ int main(int argc, char *argv[]) {
             spacing += 4;
         }else if(head){
             if(head->operator){
-                head->operator->handle(head->operator, head, cell->value);
+                branch_type = head->operator->handle(head->operator, head, cell->value);
+                /* if the handle has communicated that it no longer wants to 
+                 * run the rest of the cells, setting cell->next to NULL here
+                 * will cause the if/else branch following to pull from the
+                 * previous stack entry
+                 */
+                if(branch_type == SL_BREAK){
+                    cell->next = NULL;
+                }
             }
         }
 
