@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
                 previous_head = head;
             }
             head = NULL;
+            stack = stack->previous;
             while(stack && cell == NULL){
                 cell = stack->cell->next;
                 head = stack->head;
