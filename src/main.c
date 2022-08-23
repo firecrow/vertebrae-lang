@@ -15,7 +15,7 @@ void print_space(){
 }
 
 void passthrough(struct head *head, struct head *previous){
-    if(head && head->operator && previous && previous->operator){
+    if(head && head->operator && previous && previous->operator && previous->value){
         head->operator->handle(head->operator, head, previous->value);
     }
 }

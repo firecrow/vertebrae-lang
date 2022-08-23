@@ -40,7 +40,7 @@ static struct string *string_to_string(struct value_obj *value){
     if(value->type != SL_TYPE_STRING){
         fprintf(stderr, "Type not string for int to string\n");
     }
-    return new_string_xprintf("%s", value->slot.string->content);
+    return value->slot.string;
 }
 
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){

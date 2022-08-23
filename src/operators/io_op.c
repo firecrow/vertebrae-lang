@@ -18,7 +18,6 @@ static void print_handle(struct operator_ifc *_op, struct head *head, struct val
         fprintf(stderr, "Cannot print non string value");
         exit(1);
     }
-
 }
 
 struct print_operator *print_singleton;
