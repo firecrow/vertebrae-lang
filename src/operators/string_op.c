@@ -1,32 +1,7 @@
-/* =========== print ==========*/
-struct print_operator {
-    int type;
-    operator_ifc (*new)();
-    operator_handle_func *handle;
-}
-
-static int print_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
-    if(cell->value->type != STRING){
-        fprintf(stderr, "Cannot print non string value");
-        exit(1);
-    }
-
-    printf("%s", cell->value.string->content);
-}
-
-struct print_operator *print_singleton = NULL;
-struct operator_ifc * new_print_operator() {
-    if(!print_singleton){
-        print_singleton = malloc(sizeof(struct print_operator));
-        print_singleton->handle = print_handle;
-        print_singletn->new = new_print_operator();
-    }
-    return (struct operator_ifc *)print_singleton;
-}
 /* =========== concat ==========*/
 struct string_concat_operator {
     int type;
-    operator_ifc (*new)();
+    struct operator_ifc (*new)();
     operator_handle_func *handle;
     struct string *string;
 }
