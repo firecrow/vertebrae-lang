@@ -13,6 +13,7 @@ void closure_add_function(struct closure *closure, struct string *key, struct op
 /* debug.c */
 void print_value(struct value_obj *value);
 void print_cell(struct cell *cell);
+void print_head(struct head *head);
 
 /* head.c */
 struct head *new_head(struct cell *branch, struct head *current_head);

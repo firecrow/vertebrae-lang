@@ -3,7 +3,8 @@ enum OPERATOR_TYPE {
     ADD,
     SUBTRACT,
     DIVIDE,
-    MULTIPLY
+    MULTIPLY,
+    PRINT
 };
 
 typedef void (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct value_obj *value);
@@ -15,3 +16,4 @@ struct operator_ifc {
 };
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);

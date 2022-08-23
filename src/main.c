@@ -15,10 +15,8 @@ void print_space(){
 }
 
 void passthrough(struct head *head, struct head *previous){
-    if(head && previous){
-        if(head->value && head->value->type == previous->value->type){
-            head->operator->handle(head->operator, head, previous->value);
-        }
+    if(head && head->operator && previous && previous->operator){
+        head->operator->handle(head->operator, head, previous->value);
     }
 }
 
@@ -26,7 +24,6 @@ int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct cell *root = parse_file(source);
 
-    printf("Root is null? %d\n", root == NULL);
     struct stack_item *stack = NULL;
 
     struct cell *cell = root;
@@ -38,9 +35,10 @@ int main(int argc, char *argv[]) {
     struct closure_entry *entry;
     struct operator_ifc *op  = NULL;
     while(cell){
+        /*
         print_space();
         print_cell(cell);
-
+        */
 
         if(cell->branch){
             /* creating the head will effectively process the cell */
@@ -48,16 +46,15 @@ int main(int argc, char *argv[]) {
             stack = push_stack(stack, cell, head);
             cell = cell->branch;
 
+            /*
             print_space();
             print_cell(cell);
+            */
 
             spacing += 4;
         }else if(head){
             if(head->operator){
                 head->operator->handle(head->operator, head, cell->value);
-                print_value(head->value);
-                print_space();
-                printf("\n");
             }
         }
 

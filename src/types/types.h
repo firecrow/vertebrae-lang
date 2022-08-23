@@ -14,7 +14,7 @@ bool regex_match(char *pattern, struct string *source);
 
 /* value_obj */
 struct value_obj *new_value();
-struct value_obj *value_if_type(struct value_obj *value, enum SL_TYPE type);
+bool is_type(struct value_obj *value, enum SL_TYPE type);
 struct value_obj *clone_value(struct value_obj *value);
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token);
 

@@ -18,15 +18,17 @@ struct head *new_head(struct cell *branch, struct head *current_head){
         current = current_head->closure;
     head->closure = new_closure(current);
 
+
     if(!branch){
         return head;
     }
 
-    if((value = value_if_type(branch->value, SL_TYPE_STRING)) != NULL){
+    if(is_type(branch->value, SL_TYPE_STRING)){
+        printf("nope");
         return head;
     }
 
-    if((value = value_if_type(branch->value, SL_TYPE_SYMBOL)) != NULL){
+    if(is_type(branch->value, SL_TYPE_SYMBOL)){
         if(current_head){
             struct closure *closure = current_head->closure;
             if(closure){
@@ -43,7 +45,7 @@ struct head *new_head(struct cell *branch, struct head *current_head){
         }
     }
 
-    if((value = value_if_type(branch->value, SL_TYPE_FUNCTION)) != NULL){
+    if(is_type(value, SL_TYPE_FUNCTION)){
         enum OPERATOR_TYPE optype = value->slot.operator->type;
         head->operator = value->slot.operator->new(optype);
         return head;

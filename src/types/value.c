@@ -19,12 +19,8 @@ struct value_obj *new_value(){
    return value;
 }
 
-struct value_obj *value_if_type(struct value_obj *value, enum SL_TYPE type){
-    if(value->type == type){
-        return value;
-    }else{
-        return NULL;
-    }
+bool is_type(struct value_obj *value, enum SL_TYPE type){
+    return value->type == type;
 }
 
 struct value_obj *clone_value(struct value_obj *value){
@@ -36,14 +32,15 @@ static struct string *int_to_string(struct value_obj *value){
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Type not int for int to string");
     }
-    return new_string_xprintf("%d", value->slot.integer);
+    struct string *s = new_string_xprintf("%d", value->slot.integer);
+    return s;
 }
 
 static struct string *string_to_string(struct value_obj *value){
     if(value->type != SL_TYPE_STRING){
-        fprintf(stderr, "Type not string for int to string");
+        fprintf(stderr, "Type not string for int to string\n");
     }
-    return new_string_xprintf("%d", value->slot.string);
+    return new_string_xprintf("%s", value->slot.string->content);
 }
 
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){

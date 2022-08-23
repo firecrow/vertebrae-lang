@@ -20,10 +20,11 @@ struct closure *init_basic_library(struct closure *closure){
     /* * */
     closure_add_function(closure, str("*"), new_arithmetic_operator(MULTIPLY));
 
+    /* ========== io ========== */
+    /* print */
+    closure_add_function(closure, str("print"), new_print_operator(PRINT));
+
     /* ========== string ========== */
-    /* print 
-    closure_add_function(closure, "print", new_print_operator();
-    */
     /* concat */
     /* substr */
     /* to upper */

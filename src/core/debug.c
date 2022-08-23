@@ -1,6 +1,7 @@
 #include "../external.h"
 #include "../ssimple.h"
 #include "../types/types.h"
+#include "../operators/operator.h"
 #include "core.h"
 
 static char *debug_SL_TYPE[] = {
@@ -45,5 +46,14 @@ void print_cell(struct cell *cell){
     }
     printf("C(n%d/h%d", cell->next != NULL, cell->branch != NULL);
     printf(")\n");
+    fflush(stdout);
+}
+
+void print_head(struct head *head){
+    printf("<H");
+    if(head->operator){
+        printf(" %d", head->operator->type);
+    }
+    printf(">\n");
     fflush(stdout);
 }
