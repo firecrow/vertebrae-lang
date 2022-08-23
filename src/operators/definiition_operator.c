@@ -7,7 +7,7 @@ struct definition_operator {
     bool is_function;
 }
 
-int definition_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
+static int definition_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
     struct value_obj *value = cell->value;
     if(is_branch_cell(cell)){
         value = new_value();

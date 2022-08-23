@@ -5,7 +5,7 @@ struct print_operator {
     operator_handle_func *handle;
 }
 
-int print_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
+static int print_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
     if(cell->value->type != STRING){
         fprintf(stderr, "Cannot print non string value");
         exit(1);

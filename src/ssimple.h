@@ -93,6 +93,8 @@ struct value_obj {
         char c;
         void *custom;
     } slot;
+    struct string *(*to_string)(struct value_obj *value);
+    bool (*truthy)(struct value_obj *value);
 };
 
 struct cell {

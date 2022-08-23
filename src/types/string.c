@@ -97,3 +97,36 @@ struct string *string_from_cstring(char *cstring){
     return string;
 }
 
+struct string* new_string_xprintf(const char *restrict format, ...){
+  /* save the args to for later becuase we need to do two passes */
+  va_list args;
+  va_list args_copy;
+  va_start(args, format);
+  va_copy(args_copy, args);
+
+  /* make a 1 character string with the intention of it 
+   * failing and telling us how long in _should_ be
+   */
+  char x[] = " ";
+  int length = vsnprintf(x, 1, format, args)+1;
+  /* allocate the proper amount */
+  char *content = malloc(length+1);
+  if(content == NULL){
+    fprintf(stderr, "Error allocating string in xprintf");
+    exit(1);
+  }
+
+  /* call the print function with the copy of the args
+   * and the proper length
+   */
+  vsnprintf(content, length, format, args_copy);
+  content[length] = '\0';  
+
+  va_end(args);
+  va_end(args_copy);
+
+  struct string *string = new_string();
+  string_append(string, string_from_cstring(content));
+
+  return string;
+}

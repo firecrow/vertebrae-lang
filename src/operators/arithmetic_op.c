@@ -11,7 +11,7 @@ struct arithmetic_operator {
     struct value *value;
 };
 
-void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
+static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Cannot do arithmetic on non integer value");
         exit(1);
