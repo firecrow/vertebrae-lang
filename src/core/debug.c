@@ -15,7 +15,10 @@ static char *debug_SL_TYPE[] = {
     "CELL",
     "CLOSURE",
     "FUNCTION",
-    "COMMENT"
+    "VALUE",
+    "COMMENT",
+    "QUOTE",
+    "KEY"
 };
 
 void print_value(struct value_obj *value){
@@ -26,8 +29,14 @@ void print_value(struct value_obj *value){
     if(value->type == SL_TYPE_SYMBOL){
         printf("\x1b[33m%s\x1b[0m", value->slot.string->content);
     }
-    if(value->type == SL_TYPE_STRING ||  value->type == SL_TYPE_QUOTE  || value->type == SL_TYPE_QUOTE){
+    if(value->type == SL_TYPE_STRING){
         printf("\x1b[35m\"%s\"\x1b[0m", value->slot.string->content);
+    }
+    if(value->type == SL_TYPE_KEY){
+        printf("\x1b[32m:%s\x1b[0m", value->slot.string->content);
+    }
+    if(value->type == SL_TYPE_QUOTE){
+        printf("\x1b[0m'%s\x1b[0m", value->slot.string->content);
     }
     if(value->type == SL_TYPE_INT){
         printf("\x1b[36m%d\x1b[0m", value->slot.integer);
@@ -36,7 +45,7 @@ void print_value(struct value_obj *value){
         printf("\x1b[34m%s\x1b[0m", value->slot.string->content);
     }
 
-    printf(" %s%d", debug_SL_TYPE[value->type], value->id);
+    printf(" %s %d", debug_SL_TYPE[value->type], value->id);
 }
 
 void print_cell(struct cell *cell){
