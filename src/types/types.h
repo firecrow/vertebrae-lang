@@ -19,6 +19,15 @@ struct value_obj *clone_value(struct value_obj *value);
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token);
 
 /* tree */
+struct order_entry;
+struct tree_entry;
+struct tree {
+    enum SL_TYPE type;
+    struct tree_entry *root; 
+    struct order_entry *order; 
+    struct order_entry *_last_order; 
+    int count;
+};
 struct tree *new_tree();
 struct tree_entry *new_tree_entry();
 struct value_obj *tree_get(struct tree *tree, struct string *key);

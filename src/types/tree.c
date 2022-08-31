@@ -3,6 +3,21 @@
 #include "../core/core.h"
 #include "types.h"
 
+struct order_entry {
+    struct tree_entry *entry;
+    struct tree_entry *next;
+    struct tree_entry *previous;
+    int nth_inserted;
+}
+
+struct tree_entry {
+    void *content;
+    unsigned long hash;
+    struct string *key;
+    struct tree_entry *right;
+    struct tree_entry *left;
+};
+
 struct tree *new_tree(){
     struct tree *tree = malloc(sizeof(struct tree));
     if(tree == NULL){
@@ -11,7 +26,7 @@ struct tree *new_tree(){
     return tree;
 }
 
-struct tree_entry *new_tree_entry(){
+static struct tree_entry *new_tree_entry(){
     struct tree_entry *entry = malloc(sizeof(struct tree_entry));
     if(entry == NULL){
         return NULL;
@@ -19,7 +34,7 @@ struct tree_entry *new_tree_entry(){
     return entry;
 }
 
-unsigned long djb2_hash(struct string *string){
+static unsigned long djb2_hash(struct string *string){
     unsigned long hash = 5381;
     int c;
     for(int i = 0; i < string->length; i++){
@@ -27,6 +42,27 @@ unsigned long djb2_hash(struct string *string){
 
     }
     return hash;
+}
+
+static _push_order(struct tree *tree, struct tree_entry *new){
+    struct order_entry *order_entry = malloc(sizeof(struct order_entry));
+    if(order_entry == NULL){
+        fprint(stderr, "Error allocating order entry\n");
+        exit(1);
+    }
+    if(tree->order == NULL){
+        tree->order = order_entry;
+    } else {
+        order_entry->previous = tree->_latest_order;
+        tree->_latest_order->next = order_entry;
+    }
+    tree->_latest_order = order_entry;
+}
+
+static void _set_entry(struct tree *tree, struct tree_entry **target, struct entry *new){
+    *target = new;
+    tree->count++;
+    _push_order(tree, new);
 }
 
 struct value_obj *tree_get(struct tree *tree, struct string *key){
@@ -63,26 +99,23 @@ void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
         return;
     }
     if(tree->root == NULL){
-        tree->root = entry;
-        tree->count++;
+        _set_entry(tree, &(tree->root), entry);
         return;
     } else {
         struct tree_entry *node = tree->root;
         while(node){
             if(entry->hash >= node->hash){
                 if(!node->right){
-                    node->right = entry;
-                    tree->count++;
+                    _set_entry(tree, &(node->right), entry);
                     return;
                 }
                 node = node->right;
             }else {
                 if(!node->left){
-                    node->left = entry;
-                    tree->count++;
+                    _set_entry(tree, &(node->left), entry);
                     return;
                 }
-                node = node->left;
+                _set_entry(tree, &(node->left), entry);
             }
         }
     }
