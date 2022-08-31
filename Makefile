@@ -11,7 +11,7 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-TESTOBJECTS = build/tree.o
+TESTOBJECTS = $(TYPESOBJ)
 
 all: ssimple
 

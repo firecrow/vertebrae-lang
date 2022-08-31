@@ -17,10 +17,23 @@ struct value_obj *new_value();
 bool is_type(struct value_obj *value, enum SL_TYPE type);
 struct value_obj *clone_value(struct value_obj *value);
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token);
+struct value_obj *new_string_value_obj(struct string *string);
 
 /* tree */
-struct order_entry;
-struct tree_entry;
+struct order_entry {
+    struct tree_entry *entry;
+    struct order_entry *next;
+    struct order_entry *previous;
+    int nth_inserted;
+};
+
+struct tree_entry {
+    void *content;
+    unsigned long hash;
+    struct string *key;
+    struct tree_entry *right;
+    struct tree_entry *left;
+};
 struct tree {
     enum SL_TYPE type;
     struct tree_entry *root; 

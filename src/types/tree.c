@@ -3,20 +3,6 @@
 #include "../core/core.h"
 #include "types.h"
 
-struct order_entry {
-    struct tree_entry *entry;
-    struct order_entry *next;
-    struct order_entry *previous;
-    int nth_inserted;
-};
-
-struct tree_entry {
-    void *content;
-    unsigned long hash;
-    struct string *key;
-    struct tree_entry *right;
-    struct tree_entry *left;
-};
 
 struct tree *new_tree(){
     struct tree *tree = malloc(sizeof(struct tree));
@@ -46,6 +32,7 @@ static unsigned long djb2_hash(struct string *string){
 
 static void _push_order(struct tree *tree, struct tree_entry *new){
     struct order_entry *order_entry = malloc(sizeof(struct order_entry));
+    order_entry->entry = new;
     if(order_entry == NULL){
         fprintf(stderr, "Error allocating order entry\n");
         exit(1);

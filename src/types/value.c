@@ -43,16 +43,21 @@ static struct string *string_to_string(struct value_obj *value){
     return value->slot.string;
 }
 
-struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
+struct value_obj *new_string_value_obj(struct string *string){
     struct value_obj *value = new_value();
+    value->type = SL_TYPE_STRING;
+    value->slot.string = string;
+    value->to_string = string_to_string;
+    return value;
+}
+
+struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
 
     if(state == IN_STRING){
-        value->type = SL_TYPE_STRING;
-        value->slot.string = token;
-        value->to_string = string_to_string;
-        return value;
+        return new_string_value_obj(token);
     }
 
+    struct value_obj *value = new_value();
     if(state == IN_COMMENT){
         value->type = SL_TYPE_COMMENT;
         value->slot.string = token;
