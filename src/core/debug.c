@@ -26,7 +26,7 @@ void print_value(struct value_obj *value){
     if(value->type == SL_TYPE_SYMBOL){
         printf("\x1b[33m%s\x1b[0m", value->slot.string->content);
     }
-    if(value->type == SL_TYPE_STRING){
+    if(value->type == SL_TYPE_STRING ||  value->type == SL_TYPE_QUOTE  || value->type == SL_TYPE_QUOTE){
         printf("\x1b[35m\"%s\"\x1b[0m", value->slot.string->content);
     }
     if(value->type == SL_TYPE_INT){
@@ -56,4 +56,14 @@ void print_head(struct head *head){
     }
     printf(">\n");
     fflush(stdout);
+}
+
+void print_tree(struct tree *tree){
+    struct order_entry *oentry = tree->order;
+    while(oentry){
+        printf("key:%s", oentry->entry->key->content);
+        print_value(oentry->entry->content);
+        printf("\n");
+        oentry = oentry->next;
+    }
 }

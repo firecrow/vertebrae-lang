@@ -4,7 +4,8 @@ enum OPERATOR_TYPE {
     SUBTRACT,
     DIVIDE,
     MULTIPLY,
-    PRINT
+    PRINT,
+    DEFINITION
 };
 
 enum SL_BRANCH_TYPE {
@@ -20,5 +21,6 @@ struct operator_ifc {
     operator_handle_func *handle;
 };
 
+struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);

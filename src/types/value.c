@@ -57,6 +57,18 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
         return new_string_value_obj(token);
     }
 
+    if(state == IN_QUOTE){
+        struct value_obj *value = new_string_value_obj(token);
+        value->type = SL_TYPE_QUOTE;
+        return value;
+    }
+
+    if(state == IN_KEY){
+        struct value_obj *value = new_string_value_obj(token);
+        value->type = SL_TYPE_KEY;
+        return value;
+    }
+
     struct value_obj *value = new_value();
     if(state == IN_COMMENT){
         value->type = SL_TYPE_COMMENT;

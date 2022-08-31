@@ -46,4 +46,5 @@ void closure_add_function(struct closure *closure, struct string *key, struct op
     value->type = SL_TYPE_FUNCTION;
     value->slot.operator = op;
     tree_add(closure->symbols, key, value);
+    return;
 }

@@ -18,7 +18,9 @@ enum SL_TYPE {
     SL_TYPE_CLOSURE,
     SL_TYPE_FUNCTION,
     SL_TYPE_VALUE,
-    SL_TYPE_COMMENT
+    SL_TYPE_COMMENT,
+    SL_TYPE_QUOTE,
+    SL_TYPE_KEY
     /* custom types */
 };
 
@@ -26,7 +28,9 @@ enum SL_PARSE_STATE {
     START = 0,
     IN_CELL,
     IN_COMMENT,
-    IN_STRING
+    IN_STRING,
+    IN_QUOTE,
+    IN_KEY
 };
 
 #define bool char
@@ -93,6 +97,7 @@ struct parse_ctx {
     bool in_escape;
     bool has_comment_char;
     struct string *token;
+    char closing_char;
 };
 
 struct stack_item {

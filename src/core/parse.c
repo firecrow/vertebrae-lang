@@ -100,7 +100,7 @@ void parse_char(struct parse_ctx *ctx, char c){
             return;
         }
 
-        if(!ctx->in_escape && c == '"'){
+        if(!ctx->in_escape && c == ctx->closing_char){
             finalize_cell(ctx);
             ctx->state = START;
 
@@ -109,6 +109,18 @@ void parse_char(struct parse_ctx *ctx, char c){
             string_append_char(get_or_create_token(ctx), c);
         }
 
+        return;
+    }
+
+    if(ctx->state == IN_QUOTE || ctx->state == IN_KEY){
+        if(c == ' ' || c == ')'){
+            finalize_cell(ctx);
+            ctx->state = START;
+
+            return;
+        }else{
+            string_append_char(get_or_create_token(ctx), c);
+        }
         return;
     }
 
@@ -177,6 +189,19 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(c == '"'){
        ctx->state = IN_STRING; 
+       ctx->closing_char = '"';
+       return;
+    }
+
+    if(c == '\''){
+       ctx->state = IN_QUOTE; 
+       ctx->closing_char = ' ';
+       return;
+    }
+
+    if(c == ':'){
+       ctx->state = IN_KEY; 
+       ctx->closing_char = ' ';
        return;
     }
 

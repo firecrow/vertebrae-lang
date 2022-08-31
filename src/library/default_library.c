@@ -5,10 +5,8 @@
 #include "../operators/operator.h"
 
 struct closure *init_basic_library(struct closure *closure){
-    /** ========== variabls ========= 
-    closure_add_function(closure, str("var"), new_definition_operator(VARIABLE));
-    closure_add_function(closure, str("func"), new_definition_operator(FUNCTION));
-    */
+    /** ========== variabls =========*/
+    closure_add_function(closure, str("#def"), new_definition_operator(DEFINITION));
 
     /** ========== arithemtic ========= */
     /* + */

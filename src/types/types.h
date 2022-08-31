@@ -28,7 +28,7 @@ struct order_entry {
 };
 
 struct tree_entry {
-    void *content;
+    struct value_obj *content;
     unsigned long hash;
     struct string *key;
     struct tree_entry *right;

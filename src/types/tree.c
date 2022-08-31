@@ -3,7 +3,6 @@
 #include "../core/core.h"
 #include "types.h"
 
-
 struct tree *new_tree(){
     struct tree *tree = malloc(sizeof(struct tree));
     if(tree == NULL){
@@ -102,7 +101,7 @@ void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
                     _set_entry(tree, &(node->left), entry);
                     return;
                 }
-                _set_entry(tree, &(node->left), entry);
+                node = node->left;
             }
         }
     }
