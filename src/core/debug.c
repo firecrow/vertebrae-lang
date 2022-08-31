@@ -38,9 +38,6 @@ void print_value(struct value_obj *value){
     if(value->type == SL_TYPE_QUOTE){
         printf("\x1b[0m'%s\x1b[0m", value->slot.string->content);
     }
-    if(value->type == SL_TYPE_INT){
-        printf("\x1b[36m%d\x1b[0m", value->slot.integer);
-    }
     if(value->type == SL_TYPE_COMMENT){
         printf("\x1b[34m%s\x1b[0m", value->slot.string->content);
     }

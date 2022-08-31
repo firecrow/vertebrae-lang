@@ -15,10 +15,10 @@ struct definition_operator {
 };
 
 static enum SL_BRANCH_TYPE definition_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
-    printf("def op called\n");
+    printf("def op called with null?:%d\n", _op == NULL);
     struct definition_operator *op = (struct definition_operator *)_op;
 
-    if(value->type == SL_TYPE_KEY){
+    if(value && value->type == SL_TYPE_KEY){
         op->key_for_next = value;
     }else if(op->key_for_next){
         tree_add(op->local->symbols, op->key_for_next->slot.string, value);
