@@ -37,5 +37,12 @@ clean:
 debug:
 	gdb --args bin/ssimple script/example.sl 
 
+
+test: bin/test test/unit.c
+	./bin/test
+
+bin/test:
+	$(CC) -o bin/test test/unit.c
+
 run:
 	./bin/ssimple script/example.sl
