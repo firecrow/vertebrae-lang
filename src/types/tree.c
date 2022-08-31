@@ -5,10 +5,10 @@
 
 struct order_entry {
     struct tree_entry *entry;
-    struct tree_entry *next;
-    struct tree_entry *previous;
+    struct order_entry *next;
+    struct order_entry *previous;
     int nth_inserted;
-}
+};
 
 struct tree_entry {
     void *content;
@@ -24,7 +24,7 @@ struct tree *new_tree(){
         return NULL;
     }
     return tree;
-}
+};
 
 static struct tree_entry *new_tree_entry(){
     struct tree_entry *entry = malloc(sizeof(struct tree_entry));
@@ -44,22 +44,22 @@ static unsigned long djb2_hash(struct string *string){
     return hash;
 }
 
-static _push_order(struct tree *tree, struct tree_entry *new){
+static void _push_order(struct tree *tree, struct tree_entry *new){
     struct order_entry *order_entry = malloc(sizeof(struct order_entry));
     if(order_entry == NULL){
-        fprint(stderr, "Error allocating order entry\n");
+        fprintf(stderr, "Error allocating order entry\n");
         exit(1);
     }
     if(tree->order == NULL){
         tree->order = order_entry;
     } else {
-        order_entry->previous = tree->_latest_order;
-        tree->_latest_order->next = order_entry;
+        order_entry->previous = tree->_last_order;
+        tree->_last_order->next = order_entry;
     }
-    tree->_latest_order = order_entry;
+    tree->_last_order = order_entry;
 }
 
-static void _set_entry(struct tree *tree, struct tree_entry **target, struct entry *new){
+static void _set_entry(struct tree *tree, struct tree_entry **target, struct tree_entry *new){
     *target = new;
     tree->count++;
     _push_order(tree, new);

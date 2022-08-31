@@ -29,6 +29,5 @@ struct tree {
     int count;
 };
 struct tree *new_tree();
-struct tree_entry *new_tree_entry();
 struct value_obj *tree_get(struct tree *tree, struct string *key);
 void tree_add(struct tree *tree, struct string *key, struct value_obj *value);

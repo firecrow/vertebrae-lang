@@ -1,5 +1,11 @@
 #include "../src/external.h"
 
+#include "../src/ssimple.h"
+#include "../src/core/core.h"
+#include "../src/types/types.h"
+#include "../src/operators/operator.h"
+#include "../src/library/library.h"
+
 char NUETRAL[] = "\x1b[0m";
 char RED[] = "\x1b[31m";
 char GREEN[] = "\x1b[32m";
@@ -48,6 +54,13 @@ int main(){
 
     /***************** TEST SUITE *************/
     suite = new_suite("Test Suite");
+    test(suite, 1, "Testing success");
+    test(suite, 0, "Testing failure");
+    summerize(suite);
+
+    /***************** TEST SUITE *************/
+    suite = new_suite("Tree");
+    struct tree *tree = new_tree();
     test(suite, 1, "Testing success");
     test(suite, 0, "Testing failure");
     summerize(suite);
