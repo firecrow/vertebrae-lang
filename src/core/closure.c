@@ -10,10 +10,20 @@ struct closure *new_closure(struct closure *parent){
     }
     closure->parent = parent;
     closure->symbols = new_tree();
+    closure->lookup = closure_lookup;
     if(!closure->symbols){
         return NULL;
     }
     return closure;
+}
+
+struct value_obj *closure_lookup(struct closure *closure, struct string *key){
+    struct value_obj *value = NULL;
+    while(closure && !value){
+        value = tree_get(closure->symbols, key);
+        closure = closure->parent;
+    }
+    return value;
 }
 
 struct closure_entry *new_closure_entry(struct closure *closure, bool is_function) {

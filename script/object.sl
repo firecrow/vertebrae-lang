@@ -1,11 +1,11 @@
 (global 
     (#def 
         :y "yellow"
-        :x '(#obj 
+        :x '(#def
             :alpha "apple" 
             :bravo "beat" 
             :charlie "carrot")
         :r "red")
-        (print (x :alpha here))
+        (print x)
 
     (print "after things"))

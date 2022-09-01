@@ -9,6 +9,7 @@ struct closure_entry *new_closure_entry(struct closure *closure, bool is_functio
 void closure_add_cell(struct closure *closure, struct string *key, struct cell *cell);
 void closure_add_value(struct closure *closure, struct string *key, struct value *value);
 void closure_add_function(struct closure *closure, struct string *key, struct operator_ifc *op);
+struct value_obj *closure_lookup(struct closure *closure, struct string *key);
 
 /* debug.c */
 void print_value(struct value_obj *value);

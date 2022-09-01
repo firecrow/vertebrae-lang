@@ -54,7 +54,6 @@ int main(int argc, char *argv[]) {
             spacing += 4;
         }else if(head){
             if(head->operator){
-                printf("yes there is an op\n");
                 branch_type = head->operator->handle(head->operator, head, cell->value);
                 /* if the handle has communicated that it no longer wants to 
                  * run the rest of the cells, setting cell->next to NULL here
