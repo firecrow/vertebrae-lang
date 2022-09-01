@@ -7,4 +7,5 @@
             :charlie "carrot")
         :r "red")
         (print y)
+        (print x)
         (print "after things"))
