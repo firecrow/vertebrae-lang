@@ -1,7 +1,7 @@
 (global 
     (#def 
         :y "yellow"
-        :x (#obj 
+        :x '(#obj 
             :alpha "apple" 
             :bravo "beat" 
             :charlie "carrot")

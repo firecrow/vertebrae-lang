@@ -60,7 +60,9 @@ void finalize_cell(struct parse_ctx *ctx){
         ctx->token = NULL;
     }
 
-    ctx->state = START;
+    if(ctx->state != IN_QUOTE){
+        ctx->state = START;
+    }
     if(ctx->state != START){
         ctx->prev_state = ctx->state;
     }
@@ -77,6 +79,7 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct cell *slot;
     struct cell *new;
     struct cell *stack_cell;
+    struct cell *enclosing;
     struct symbol *symbol;
     
     if(ctx->state == IN_COMMENT){
@@ -112,7 +115,7 @@ void parse_char(struct parse_ctx *ctx, char c){
         return;
     }
 
-    if(ctx->state == IN_QUOTE || ctx->state == IN_KEY){
+    if(ctx->state == IN_KEY){
         if(c == ' ' || c == ')'){
             finalize_cell(ctx);
             ctx->state = START;
@@ -127,24 +130,43 @@ void parse_char(struct parse_ctx *ctx, char c){
     if(c == '('){
         finalize_cell(ctx);
 
-        new = new_cell();
-        stack_cell = new_cell();
-        if(new == NULL || stack_cell == NULL){
-            fprintf(stderr, "Error allocating root cell aborting");
-            exit(1);
-        }
+        if(ctx->state == IN_QUOTE){
+            new = new_cell();
+            enclosing = new_cell();
+            stack_cell = new_cell();
+            if(new == NULL || stack_cell == NULL || enclosing == NULL){
+                fprintf(stderr, "Error allocating root cell aborting");
+                exit(1);
+            }
 
-        stack_cell->branch = new;
-        slot = ctx->current;
+            stack_cell->branch = new;
+            slot = ctx->current;
+            ctx->current->value = new_value();
+            ctx->current->value->type = SL_TYPE_CELL;
+            ctx->current->value->slot.cell = stack_cell;
 
-        ctx->current = new;
-        ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
-
-        if(!ctx->root){
-            ctx->root = stack_cell;
+            ctx->current = new;
+            
         }else{
-            if(slot){
-                slot->next = stack_cell;
+            new = new_cell();
+            stack_cell = new_cell();
+            if(new == NULL || stack_cell == NULL){
+                fprintf(stderr, "Error allocating root cell aborting");
+                exit(1);
+            }
+
+            stack_cell->branch = new;
+            slot = ctx->current;
+
+            ctx->current = new;
+            ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
+
+            if(!ctx->root){
+                ctx->root = stack_cell;
+            }else{
+                if(slot){
+                    slot->next = stack_cell;
+                }
             }
         }
 
@@ -195,7 +217,6 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(c == '\''){
        ctx->state = IN_QUOTE; 
-       ctx->closing_char = ' ';
        return;
     }
 

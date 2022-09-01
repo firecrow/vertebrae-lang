@@ -15,9 +15,7 @@ void print_space(){
 }
 
 void passthrough(struct head *head, struct head *previous){
-    printf("called\n");
     if(head && head->operator){
-        printf("inside\n");
         head->operator->handle(head->operator, head, previous->value);
     }
 }

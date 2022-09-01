@@ -7,7 +7,7 @@ struct string_concat_operator {
 }
 
 int string_concat_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
-    if(cell->value->type != STRING){
+    if(!cell->value || cell->value->type != STRING){
         fprintf(stderr, "Cannot concatonate non string value");
         exit(1);
     }

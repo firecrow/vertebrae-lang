@@ -73,6 +73,7 @@ struct value_obj {
         float float_value;
         int integer;
         struct string *string;
+        struct cell *cell;
         struct operator_ifc *operator;
         char c;
         void *custom;

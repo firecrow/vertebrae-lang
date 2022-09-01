@@ -15,7 +15,6 @@ struct definition_operator {
 };
 
 static enum SL_BRANCH_TYPE definition_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
-    printf("def op called with null?:%d\n", _op == NULL);
     struct definition_operator *op = (struct definition_operator *)_op;
 
     if(value && value->type == SL_TYPE_KEY){

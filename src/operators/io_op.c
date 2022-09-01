@@ -12,10 +12,10 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
-    if(value->to_string){
+    if(value && value->to_string){
         printf("%s", value->to_string(value)->content);
     }else{
-        fprintf(stderr, "Cannot print non string value");
+        fprintf(stderr, "Cannot print non string value\n");
         exit(1);
     }
 }
