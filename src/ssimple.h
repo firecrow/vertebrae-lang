@@ -58,7 +58,7 @@ struct closure_entry {
 struct closure {
     struct closure *parent;
     struct tree *symbols;
-    struct value_obj* (*lookup)(struct closure *closure, struct string *key);
+    struct value_obj* (*lookup)(struct closure *closure, struct value_obj *value);
 };
 
 struct string {

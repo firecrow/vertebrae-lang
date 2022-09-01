@@ -17,13 +17,16 @@ struct closure *new_closure(struct closure *parent){
     return closure;
 }
 
-struct value_obj *closure_lookup(struct closure *closure, struct string *key){
-    struct value_obj *value = NULL;
-    while(closure && !value){
-        value = tree_get(closure->symbols, key);
+struct value_obj *closure_lookup(struct closure *closure, struct value_obj *value){
+    if(!is_string_class(value)){
+        return value;
+    }
+    struct value_obj *result = NULL;
+    while(closure && !result){
+        result = tree_get(closure->symbols, value->slot.string);
         closure = closure->parent;
     }
-    return value;
+    return result;
 }
 
 struct closure_entry *new_closure_entry(struct closure *closure, bool is_function) {

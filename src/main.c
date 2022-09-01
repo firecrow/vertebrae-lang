@@ -20,6 +20,11 @@ void passthrough(struct head *head, struct head *previous){
     }
 }
 
+struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
+    struct value_obj *result = closure->lookup(closure, value);
+    return result;
+}
+
 int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct cell *root = parse_file(source);
@@ -31,6 +36,7 @@ int main(int argc, char *argv[]) {
     struct cell *cell = root;
     struct head *head = new_head(NULL, NULL);
     struct head *previous_head = head;
+    struct value_obj *value = NULL;
 
     init_basic_library(head->closure); 
 
@@ -54,7 +60,11 @@ int main(int argc, char *argv[]) {
             spacing += 4;
         }else if(head){
             if(head->operator){
-                branch_type = head->operator->handle(head->operator, head, cell->value);
+                value = swap_for_symbol(head->closure, cell->value);
+                if(value && value->type == SL_TYPE_CELL){
+                    value = value->slot.cell->value;
+                }
+                branch_type = head->operator->handle(head->operator, head, value);
                 /* if the handle has communicated that it no longer wants to 
                  * run the rest of the cells, setting cell->next to NULL here
                  * will cause the if/else branch following to pull from the

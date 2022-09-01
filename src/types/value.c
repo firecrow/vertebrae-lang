@@ -19,6 +19,13 @@ struct value_obj *new_value(){
    return value;
 }
 
+bool is_string_class(struct value_obj *value){
+    return value->type == SL_TYPE_SYMBOL || 
+        value->type == SL_TYPE_STRING ||
+        value->type == SL_TYPE_QUOTE ||
+        value->type == SL_TYPE_KEY;
+}
+
 bool is_type(struct value_obj *value, enum SL_TYPE type){
     return value->type == type;
 }

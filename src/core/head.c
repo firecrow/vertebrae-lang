@@ -32,7 +32,8 @@ struct head *new_head(struct cell *branch, struct head *current_head){
         if(current_head){
             struct closure *closure = current_head->closure;
             if(closure){
-                struct value_obj *result = closure->lookup(closure, branch->value->slot.string);
+                struct value_obj *result = closure->lookup(closure, branch->value);
+                printf("after lookup");
                 if(result && result->type == SL_TYPE_FUNCTION){
                     head->operator = result->slot.operator;
                 }
