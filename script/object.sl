@@ -1,4 +1,4 @@
-(global 
+(closure
     (#def 
         :y "yellow"
         :x '(#def
@@ -6,6 +6,5 @@
             :bravo "beat" 
             :charlie "carrot")
         :r "red")
-        (print x)
-
-    (print "after things"))
+        (print y)
+        (print "after things"))

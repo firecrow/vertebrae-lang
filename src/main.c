@@ -22,7 +22,10 @@ void passthrough(struct head *head, struct head *previous){
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
     struct value_obj *result = closure->lookup(closure, value);
-    return result;
+    if(result){
+        return result;
+    }
+    return value;
 }
 
 int main(int argc, char *argv[]) {
@@ -35,6 +38,8 @@ int main(int argc, char *argv[]) {
 
     struct cell *cell = root;
     struct head *head = new_head(NULL, NULL);
+    head->closure = new_closure(NULL);
+
     struct head *previous_head = head;
     struct value_obj *value = NULL;
 

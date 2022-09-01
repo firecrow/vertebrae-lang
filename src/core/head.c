@@ -14,10 +14,9 @@ struct head *new_head(struct cell *branch, struct head *current_head){
     memset(head, 0, sizeof(struct head));
 
     struct closure *current = NULL;
-    if(current_head && current_head->closure)
-        current = current_head->closure;
-    head->closure = new_closure(current);
-
+    if(current_head && current_head->closure){
+        head->closure = current_head->closure;
+    }
 
     if(!branch){
         return head;
@@ -33,7 +32,6 @@ struct head *new_head(struct cell *branch, struct head *current_head){
             struct closure *closure = current_head->closure;
             if(closure){
                 struct value_obj *result = closure->lookup(closure, branch->value);
-                printf("after lookup");
                 if(result && result->type == SL_TYPE_FUNCTION){
                     head->operator = result->slot.operator;
                 }

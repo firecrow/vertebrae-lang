@@ -23,6 +23,8 @@ struct value_obj *closure_lookup(struct closure *closure, struct value_obj *valu
     }
     struct value_obj *result = NULL;
     while(closure && !result){
+        printf("--------------------------\n");
+        print_tree(closure->symbols);
         result = tree_get(closure->symbols, value->slot.string);
         closure = closure->parent;
     }
