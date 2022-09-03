@@ -141,17 +141,49 @@ int main(){
     summerize(suite);
 
     /***************** STEP TESTS *************/
-    /*
     suite = new_suite("Step tests");
+    struct crw_state *state = NULL;
 
-    struct cell *root = parse_all(str("(global (print (+ 1 3 5)))"));
-    struct closure *global = new_closure(NULL);
-    struct stack_item *stack = new_stack_item(NULL, root, head);
+    struct cell *root = NULL;
+    struct closure *global = NULL;
+    struct stack_item *stack = NULL;
+    struct cell *second = NULL;
+    struct cell *third = NULL;
+    struct cell *fourth = NULL;
 
-    struct clsp_state *state = crw_new_state_context(root, global, stack);
+    head = new_head();
+    root = new_cell();
+    global = new_closure(NULL);
+    stack = new_stack_item(NULL, root, head);
+    state = crw_new_state_context(root, global, stack);
+
+    test(suite, state->cell == root, "Cell are assinged");
+    test(suite, state->closure == global, "Global are assinged");
+    test(suite, state->stack == stack, "Stack are assinged");
+
+    head = new_head();
+    root = new_cell();
+    second = new_cell();
+    third = new_cell();
+    fourth = new_cell();
+    root->next = second;
+    second->next = third;
+    third->next = fourth;
+
+    global = new_closure(NULL);
+    stack = new_stack_item(NULL, root, head);
+    state = crw_new_state_context(root, global, stack);
+
+    crw_next_step(state);
+    test(suite, state->cell == second, "Second cell should be current cell after step");
+
+    crw_next_step(state);
+    test(suite, state->cell == third, "Third cell should be current cell after step");
+
+    crw_next_step(state);
+    test(suite, state->cell == fourth, "Fourth cell should be current cell after step");
 
     summerize(suite);
-    */
 
     return 0;
 }
