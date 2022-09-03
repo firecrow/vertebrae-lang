@@ -20,6 +20,9 @@ struct value_obj *new_value(){
 }
 
 bool is_string_class(struct value_obj *value){
+    if(!value){
+        return 0;
+    }
     return value->type == SL_TYPE_SYMBOL || 
         value->type == SL_TYPE_STRING ||
         value->type == SL_TYPE_QUOTE ||
@@ -27,7 +30,7 @@ bool is_string_class(struct value_obj *value){
 }
 
 bool is_type(struct value_obj *value, enum SL_TYPE type){
-    return value->type == type;
+    return value && value->type == type;
 }
 
 struct value_obj *clone_value(struct value_obj *value){
