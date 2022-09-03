@@ -14,7 +14,7 @@ struct head *new_head(){
 }
 
 void setup_head(struct head *head, struct cell *cell, struct head *closure){
-    struct value_obj *value = swap_for_symbol(closure, value);
+    struct value_obj *value = swap_for_symbol(closure, cell->value);
 
     struct closure *current = NULL;
 

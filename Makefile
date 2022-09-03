@@ -12,7 +12,7 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o
+TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o build/arithmetic_op.o
 
 all: crow-lisp
 

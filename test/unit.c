@@ -21,6 +21,7 @@ static struct suite *new_suite(char *name){
     struct suite *suite = malloc(sizeof(struct suite));
     memset(suite, 0, sizeof(struct suite));
     suite->name = name;
+    printf("SUITE ************ %s ************\n", name);
     return suite;
 }
 
@@ -106,13 +107,35 @@ int main(){
     struct head *head = NULL;
     struct cell *cell = NULL;
     struct closure *closure = NULL;
-    struct head *current_head = NULL;
+    struct value_obj *value = NULL;
+    struct operator_ifc *op;
+    struct string *op_name;
 
     cell = new_cell();
     closure = new_closure(NULL);
-    current_head = new_head();
+    head = new_head();
 
     setup_head(head, cell, closure);
+    test(suite, head->operator == NULL, "No operator if cell has no value");
+
+    value = new_value();
+    value->type == SL_TYPE_STRING;
+    cell->value = value;
+
+    setup_head(head, cell, closure);
+    test(suite, head->operator == NULL, "Operator should not be set if value is not function");
+
+    op = new_arithmetic_operator(ADD);
+    op_name = str("test-op");
+
+    closure_add_function(closure, op_name, op);
+
+    cell->value = new_value();
+    cell->value->type = SL_TYPE_SYMBOL;
+    cell->value->slot.string = op_name;
+
+    setup_head(head, cell, closure);
+    test(suite, head->operator != NULL, "Operator should be set from closure");
 
     summerize(suite);
 
