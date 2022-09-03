@@ -13,7 +13,7 @@ struct head *new_head(){
     return head;
 }
 
-void setup_head(struct head *head, struct cell *cell, struct head *closure){
+void setup_head(struct head *head, struct cell *cell, struct closure *closure){
     struct value_obj *value = swap_for_symbol(closure, cell->value);
 
     struct closure *current = NULL;

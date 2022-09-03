@@ -1,11 +1,18 @@
+#include "../external.h"
+#include "../ssimple.h"
+#include "../types/types.h"
+#include "../core/core.h"
+#include "../operators/operator.h"
+#include "run.h"
+
 static void passthrough(struct head *head, struct head *previous){
     if(head && head->operator){
         head->operator->handle(head->operator, head, previous->value);
     }
 }
 
-struct crw_state *new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack){
-   struct crw_state *state = malloc(sizeof(struct state)); 
+struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack){
+   struct crw_state *state = malloc(sizeof(struct crw_state)); 
 
    if(state == NULL){
       return NULL;
@@ -16,49 +23,51 @@ struct crw_state *new_state_context(struct cell* root, struct closure *closure, 
    state->closure = closure;
    state->cell = root;
    state->stack = stack;
-   state->status = CRW_STATUS_CONTINUE;
+   state->status = CRW_CONTINUE;
 
    return state;
 }
 
-bool crw_next_step(struct step_state *state){
+static void pop_stack(struct crw_state *ctx){
+    struct head *previous = ctx->head;
+    ctx->stack = ctx->stack->previous;
+    ctx->cell = ctx->stack->cell->next;
+    ctx->head = ctx->stack->head;
+    ctx->stack = ctx->stack->previous;
+    passthrough(ctx->head, previous);
+}
+
+bool crw_next_step(struct crw_state *ctx){
     if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
-        head = new_head(cell->branch, head);
-        stack = push_stack(stack, cell, head);
-        cell = cell->branch;
-
-        spacing += 4;
+        ctx->head = new_head(ctx->cell->branch, ctx->head);
+        ctx->stack = push_stack(ctx->stack, ctx->cell, ctx->head);
+        ctx->cell = ctx->cell->branch;
     }else if(ctx->head){
         if(ctx->head->operator){
             struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
             if(value && value->type == SL_TYPE_CELL){
                 value = value->slot.cell->value;
             }
-            branch_type = ctx->head->operator->handle(head->operator, ctx->head, value);
+            enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 
              * run the rest of the cells, setting cell->next to NULL here
              * will cause the if/else branch following to pull from the
              * previous stack entry
              */
             if(branch_type == SL_BREAK){
-                cell->next = NULL;
+                pop_stack(ctx);
+                return CRW_CONTINUE;
             }
         }
     }
 
-    ctx->cell = cell->next;
+    ctx->cell = ctx->cell->next;
 
     if(ctx->cell == NULL){
-        struct head *previous = ctx->head;
-        ctx->stack = stack->previous;
         while(ctx->cell == NULL && ctx->stack){
-            ctx->cell = ctx->stack->cell->next;
-            ctx->head = ctx->stack->head;
-            ctx->stack = ctx->stack->previous;
-            passthrough(ctx->head, previous_head);
-            spacing -= 4;
+            pop_stack(ctx);
         }
     }
-    return ctx->cell != NULL ? CRW_STATUS_CONTINUE : CRW_STATUS_DONE;
+    return ctx->cell != NULL ? CRW_CONTINUE : CRW_DONE;
 }

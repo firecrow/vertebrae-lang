@@ -3,6 +3,7 @@
 #include "../src/ssimple.h"
 #include "../src/core/core.h"
 #include "../src/types/types.h"
+#include "../src/run/run.h"
 #include "../src/operators/operator.h"
 #include "../src/library/library.h"
 
@@ -138,6 +139,19 @@ int main(){
     test(suite, head->operator != NULL, "Operator should be set from closure");
 
     summerize(suite);
+
+    /***************** STEP TESTS *************/
+    /*
+    suite = new_suite("Step tests");
+
+    struct cell *root = parse_all(str("(global (print (+ 1 3 5)))"));
+    struct closure *global = new_closure(NULL);
+    struct stack_item *stack = new_stack_item(NULL, root, head);
+
+    struct clsp_state *state = crw_new_state_context(root, global, stack);
+
+    summerize(suite);
+    */
 
     return 0;
 }

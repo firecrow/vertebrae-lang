@@ -19,7 +19,7 @@ void print_tree(struct tree *tree);
 
 /* head.c */
 struct head *new_head();
-void setup_head(struct head *head, struct cell *branch, struct head *current_head);
+void setup_head(struct head *head, struct cell *branch, struct closure *closure);
 
 /* parse.c */
 struct parse_ctx *new_parse_ctx();
