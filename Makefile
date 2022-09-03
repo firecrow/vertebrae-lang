@@ -12,12 +12,12 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-TESTOBJECTS = $(TYPESOBJ)
+TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o
 
-all: ssimple
+all: crow-lisp
 
-ssimple: dir $(OBJECTS)
-	$(CC) -g -o bin/ssimple src/main.c $(OBJECTS)
+crow-lisp: dir $(OBJECTS)
+	$(CC) -g -o bin/crow-lisp src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
 	$(CC) -c  $<  -o $@
@@ -49,4 +49,4 @@ bin/test: test/unit.c dir $(TESTOBJECTS)
 	$(CC) -g -o bin/test test/unit.c $(TESTOBJECTS)
 
 run:
-	./bin/ssimple script/example.sl
+	./bin/crow-lisp script/example.sl

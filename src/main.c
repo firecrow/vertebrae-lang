@@ -20,14 +20,6 @@ void passthrough(struct head *head, struct head *previous){
     }
 }
 
-struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
-    struct value_obj *result = closure->lookup(closure, value);
-    if(result){
-        return result;
-    }
-    return value;
-}
-
 int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct cell *root = parse_file(source);

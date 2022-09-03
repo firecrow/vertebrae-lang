@@ -46,7 +46,7 @@ static void summerize(struct suite *suite){
     }else{
         printf("%sSUITE FAIL:", RED);
     }
-    printf("%d PASSED, %d FAILED %s%s\n", suite->passed, suite->failed, suite->name, NUETRAL);
+    printf(" *%s* %d PASSED, %d FAILED %s%s\n", suite->name, suite->passed, suite->failed, suite->name, NUETRAL);
 }
 
 struct suite *suite = NULL;
@@ -61,7 +61,7 @@ int main(){
     summerize(suite);
     */
 
-    /***************** TEST SUITE *************/
+    /***************** TREE SUITE *************/
     suite = new_suite("Tree");
     struct tree *tree = new_tree();
 
@@ -100,5 +100,21 @@ int main(){
     test(suite, !strncmp(result->slot.string->content, charlie->slot.string->content, 4096), "Retrieved result matches"); 
 
     summerize(suite);
+
+    /***************** TREE SUITE *************/
+    suite = new_suite("Head tests");
+    struct head *head = NULL;
+    struct cell *cell = NULL;
+    struct closure *closure = NULL;
+    struct head *current_head = NULL;
+
+    cell = new_cell();
+    closure = new_closure(NULL);
+    current_head = new_head();
+
+    setup_head(head, cell, closure);
+
+    summerize(suite);
+
     return 0;
 }

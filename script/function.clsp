@@ -1,0 +1,5 @@
+(#global (#def 
+            :show-name 
+            '(print name))
+    (show-name :name "evan")
+    (show-name :name "exelerman"))

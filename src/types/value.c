@@ -96,3 +96,13 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 
     return value;
 }
+
+struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
+    struct value_obj *result = closure->lookup(closure, value);
+    if(result){
+        return result;
+    }
+    return value;
+}
+
+
