@@ -1,6 +1,7 @@
 CC := cc
 COREOBJ := build/parse.o build/cell.o build/head.o \
-	build/closure.o build/debug.o build/stack.o
+	build/closure.o build/debug.o build/stack.o \
+	build/state.o 
 
 TYPESOBJ := build/string.o build/regex.o build/tree.o \
 	build/value.o

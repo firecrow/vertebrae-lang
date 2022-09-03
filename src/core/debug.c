@@ -46,6 +46,10 @@ void print_value(struct value_obj *value){
 }
 
 void print_cell(struct cell *cell){
+    if(!cell){
+        printf("C(NULL)\n");
+        return;
+    }
     printf("<C%d ", cell->id);
     if(cell->value){
         print_value(cell->value);

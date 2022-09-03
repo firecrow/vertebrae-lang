@@ -141,7 +141,6 @@ int main(){
     summerize(suite);
 
     /***************** STEP TESTS *************/
-    suite = new_suite("Step tests");
     struct crw_state *state = NULL;
 
     struct cell *root = NULL;
@@ -150,6 +149,7 @@ int main(){
     struct cell *second = NULL;
     struct cell *third = NULL;
     struct cell *fourth = NULL;
+    struct cell *fifth = NULL;
 
     head = new_head();
     root = new_cell();
@@ -162,6 +162,10 @@ int main(){
     test(suite, state->stack == stack, "Stack are assinged");
 
     head = new_head();
+
+    /* test a few next steps */
+    suite = new_suite("Basic step tests");
+
     root = new_cell();
     second = new_cell();
     third = new_cell();
@@ -174,14 +178,55 @@ int main(){
     stack = new_stack_item(NULL, root, head);
     state = crw_new_state_context(root, global, stack);
 
-    crw_next_step(state);
+    state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
-    crw_next_step(state);
+    state->next(state);
     test(suite, state->cell == third, "Third cell should be current cell after step");
 
-    crw_next_step(state);
+    state->next(state);
     test(suite, state->cell == fourth, "Fourth cell should be current cell after step");
+    
+    summerize(suite);
+
+    /* test pop_stack */
+    suite = new_suite("Pop stack branch tests");
+
+    root = new_cell();
+    root->value = new_string_value_obj(str("root"));
+
+    second = new_cell();
+    second->value = new_string_value_obj(str("second"));
+
+    third = new_cell();
+    third->value = new_string_value_obj(str("third"));
+
+    fourth = new_cell();
+    fourth->value = new_string_value_obj(str("fourth"));
+    
+    fifth = new_cell();
+    fifth->value = new_string_value_obj(str("fifth"));
+
+    root->next = second;
+    second->next = third;
+    second->branch = fourth;
+    third->next = fifth;
+
+    global = new_closure(NULL);
+    stack = new_stack_item(NULL, root, head);
+    state = crw_new_state_context(root, global, stack);
+
+    state->next(state);
+    test(suite, state->cell == second, "Second cell should be current cell after step");
+
+    state->next(state);
+    test(suite, state->cell == fourth, "Third step is branch cell(fourth)");
+
+    state->next(state);
+    test(suite, state->cell == third, "Fourth cell should be on main path again (Third)");
+
+    state->next(state);
+    test(suite, state->cell == fifth, "Fifth cell should be on main path as well (Fifth)");
 
     summerize(suite);
 

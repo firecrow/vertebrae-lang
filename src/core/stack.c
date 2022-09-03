@@ -9,6 +9,8 @@ struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell
         fprintf(stderr, "Error allocating stack item");
         exit(1);
     }
+    memset(stack_item, 0, sizeof(struct stack_item));
+
     stack_item->cell = cell;
     stack_item->head = head;
     stack_item->previous = existing;

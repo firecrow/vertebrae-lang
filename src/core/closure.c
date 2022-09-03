@@ -8,6 +8,7 @@ struct closure *new_closure(struct closure *parent){
     if(closure == NULL){
         return NULL;
     }
+    memset(closure, 0, sizeof(closure));
     closure->parent = parent;
     closure->symbols = new_tree();
     closure->lookup = closure_lookup;
