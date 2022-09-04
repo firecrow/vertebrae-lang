@@ -1,6 +1,6 @@
 enum CRW_STATUS {
     CRW_CONTINUE = 0,
-    CRW_DONE
+    CRW_DONE = 1
 };
 
 struct crw_state {

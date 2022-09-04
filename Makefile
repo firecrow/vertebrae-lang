@@ -13,7 +13,7 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o build/arithmetic_op.o build/state.o build/stack.o build/parse.o build/debug.o
+#TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o build/arithmetic_op.o build/state.o build/stack.o build/parse.o build/debug.o
 
 all: crow-lisp
 
@@ -49,8 +49,8 @@ test: bin/test
 	./bin/test
 	rm ./bin/test
 
-bin/test: test/unit.c dir $(TESTOBJECTS)
-	$(CC) -g -o bin/test test/unit.c $(TESTOBJECTS)
+bin/test: test/unit.c dir $(OBJECTS)
+	$(CC) -g -o bin/test test/unit.c $(OBJECTS)
 
 run:
 	./bin/crow-lisp script/example.sl

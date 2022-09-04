@@ -189,7 +189,7 @@ int main(){
     
     summerize(suite);
 
-    /* test pop_stack */
+    /********************************* test pop_stack ********************/
     suite = new_suite("Pop stack branch tests");
 
     root = new_cell();
@@ -229,6 +229,42 @@ int main(){
     test(suite, state->cell == fifth, "Fifth cell should be on main path as well (Fifth)");
 
     summerize(suite);
+
+    /********************************* test arithmetic ********************/
+    suite = new_suite("Arithmetic tests");
+
+    head = new_head();
+    root = new_cell();
+    global = new_closure(NULL);
+
+    init_basic_library(global); 
+
+    root = new_cell();
+    root->value = new_symbol_value_obj(str("+"));
+
+    second = new_cell();
+    second->value = new_int_value_obj(1);
+
+    third = new_cell();
+    third->value = new_int_value_obj(3);
+
+    fourth = new_cell();
+    fourth->value = new_int_value_obj(-2);
+
+    root->next = second;
+    second->next = third;
+    third->next = fourth;
+
+    stack = new_stack_item(NULL, NULL, head);
+    state = crw_new_state_context(root, global, stack);
+
+    while(state->status != CRW_DONE){
+       state->next(state); 
+    }
+    print_value(state->head->value);
+    /*
+    test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
+    */
 
     return 0;
 }

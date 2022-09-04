@@ -18,6 +18,8 @@ bool is_type(struct value_obj *value, enum SL_TYPE type);
 struct value_obj *clone_value(struct value_obj *value);
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token);
 struct value_obj *new_string_value_obj(struct string *string);
+struct value_obj *new_symbol_value_obj(struct string *string);
+struct value_obj *new_int_value_obj(struct string *string);
 bool is_string_class(struct value_obj *value);
 
 /* tree */

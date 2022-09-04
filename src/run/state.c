@@ -5,7 +5,7 @@
 #include "../operators/operator.h"
 #include "run.h"
 
-static bool next_step(struct crw_state *ctx);
+static void next_step(struct crw_state *ctx);
 
 static void passthrough(struct head *head, struct head *previous){
     if(head && head->operator){
@@ -34,12 +34,18 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 static void pop_stack(struct crw_state *ctx){
     struct head *previous = ctx->head;
     ctx->head = ctx->stack->head;
-    ctx->cell = ctx->stack->cell->next;
+    if(ctx->stack->cell){
+        ctx->cell = ctx->stack->cell->next;
+    }else{
+        ctx->cell = NULL;
+    }
     ctx->stack = ctx->stack->previous;
     passthrough(ctx->head, previous);
 }
 
-static bool next_step(struct crw_state *ctx){
+static void next_step(struct crw_state *ctx){
+    printf("1\n");
+    print_cell(ctx->cell);
     if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
         ctx->head = new_head(ctx->cell->branch, ctx->head);
@@ -62,6 +68,7 @@ static bool next_step(struct crw_state *ctx){
             }
         }
     }
+    printf("2\n");
 
     if(ctx->cell->branch){
         ctx->cell = ctx->cell->branch;
@@ -69,10 +76,16 @@ static bool next_step(struct crw_state *ctx){
         ctx->cell = ctx->cell->next;
     }
 
+    printf("3\n");
     if(ctx->cell == NULL){
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }
     }
-    return ctx->cell != NULL ? CRW_CONTINUE : CRW_DONE;
+    printf("4 %d\n", ctx->cell == NULL);
+    if(!ctx->cell){
+        ctx->status = CRW_DONE;
+        return;
+    }
+    ctx->status =  CRW_CONTINUE;
 }

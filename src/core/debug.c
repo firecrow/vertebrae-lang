@@ -22,7 +22,11 @@ static char *debug_SL_TYPE[] = {
 };
 
 void print_value(struct value_obj *value){
-    if(!value || !value->type){
+    if(!value){
+        printf("\x1b[33mNULL\x1b[0m");
+        return;
+    }
+    if(!value->type){
         printf("\x1b[33mNONE\x1b[0m");
         return;
     }
@@ -31,6 +35,9 @@ void print_value(struct value_obj *value){
     }
     if(value->type == SL_TYPE_STRING){
         printf("\x1b[35m\"%s\"\x1b[0m", value->slot.string->content);
+    }
+    if(value->type == SL_TYPE_INT){
+        printf("\x1b[33m%d\x1b[0m", value->slot.integer);
     }
     if(value->type == SL_TYPE_KEY){
         printf("\x1b[32m:%s\x1b[0m", value->slot.string->content);
