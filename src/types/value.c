@@ -61,6 +61,13 @@ struct value_obj *new_string_value_obj(struct string *string){
     return value;
 }
 
+struct value_obj *new_cell_value_obj(struct cell *cell){
+    struct value_obj *value = new_value();
+    value->type = SL_TYPE_CELL;
+    value->slot.cell = cell;
+    return value;
+}
+
 struct value_obj *new_symbol_value_obj(struct string *string){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_SYMBOL;

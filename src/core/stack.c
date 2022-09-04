@@ -1,6 +1,8 @@
 #include "../external.h"
 #include "../ssimple.h"
 #include "../types/types.h"
+#include "../run/run.h"
+#include "../operators/operator.h"
 #include "core.h"
 
 struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell, struct head *head){
@@ -17,7 +19,4 @@ struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell
     return stack_item;
 }
 
-struct stack_item *push_stack(struct stack_item *existing, struct cell *cell, struct head *head){
-    struct stack_item *item = new_stack_item(existing, cell, head);
-    return item;
-}
+

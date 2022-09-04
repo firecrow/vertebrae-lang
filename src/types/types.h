@@ -21,6 +21,7 @@ struct value_obj *new_string_value_obj(struct string *string);
 struct value_obj *new_symbol_value_obj(struct string *string);
 struct value_obj *new_key_value_obj(struct string *string);
 struct value_obj *new_int_value_obj(int intval);
+struct value_obj *new_cell_value_obj(struct cell *cell);
 bool is_string_class(struct value_obj *value);
 
 /* tree */

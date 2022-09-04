@@ -5,8 +5,6 @@
 #include "../operators/operator.h"
 #include "run.h"
 
-static void next_step(struct crw_state *ctx);
-
 static void passthrough(struct head *head, struct head *previous){
     if(head->operator){
         head->operator->handle(head->operator, head, previous->value);
@@ -14,6 +12,28 @@ static void passthrough(struct head *head, struct head *previous){
         head->value = previous->value;
     }
 }
+
+static struct stack_item *push_stack(struct crw_state *ctx){
+    ctx->nesting++;
+    struct stack_item *item = new_stack_item(ctx->stack, ctx->cell, ctx->head);
+    return item;
+}
+
+static void pop_stack(struct crw_state *ctx){
+    struct head *previous = ctx->head;
+    ctx->head = ctx->stack->head;
+    if(ctx->stack->cell){
+        ctx->cell = ctx->stack->cell->next;
+    }else{
+        ctx->cell = NULL;
+    }
+    ctx->stack = ctx->stack->previous;
+    passthrough(ctx->head, previous);
+    ctx->nesting--;
+}
+
+
+static void next_step(struct crw_state *ctx);
 
 struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
@@ -33,24 +53,12 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    return state;
 }
 
-static void pop_stack(struct crw_state *ctx){
-    struct head *previous = ctx->head;
-    ctx->head = ctx->stack->head;
-    if(ctx->stack->cell){
-        ctx->cell = ctx->stack->cell->next;
-    }else{
-        ctx->cell = NULL;
-    }
-    ctx->stack = ctx->stack->previous;
-    passthrough(ctx->head, previous);
-}
-
 static void next_step(struct crw_state *ctx){
     if(ctx->head == NULL){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
     }else if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
-        ctx->stack = push_stack(ctx->stack, ctx->cell, ctx->head);
+        ctx->stack = push_stack(ctx);
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
     }else{
         if(ctx->head->operator){

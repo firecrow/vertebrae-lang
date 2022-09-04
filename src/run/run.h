@@ -10,6 +10,8 @@ struct crw_state {
     struct stack_item *stack;
     struct closure *closure;
     bool (*next)(struct crw_state *ctx);
+    /* for debugging */
+    int nesting;
 };
 
 struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack);

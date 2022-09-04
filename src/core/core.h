@@ -29,4 +29,3 @@ void parse_char(struct parse_ctx *ctx, char c);
 
 /* stack.c */
 struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell, struct head *head);
-struct stack_item *push_stack(struct stack_item *existing, struct cell *cell, struct head *head);

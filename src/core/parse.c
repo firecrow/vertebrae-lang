@@ -15,6 +15,12 @@ struct parse_ctx *new_parse_ctx(){
     return ctx;
 }
 
+static struct stack_item *push_stack(struct stack_item *existing, struct cell *cell, struct head *head){
+    struct stack_item *item = new_stack_item(existing, cell, head);
+    return item;
+}
+
+
 
 struct cell *parse_all(struct string *string){
     struct parse_ctx *ctx = new_parse_ctx();

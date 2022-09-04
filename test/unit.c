@@ -152,7 +152,7 @@ int main(){
     struct cell *fifth = NULL;
     struct cell *sixth = NULL;
     struct cell *seventh = NULL;
-    struct cell *eighth = NULL;
+    struct cell *eigth = NULL;
     struct cell *ninth = NULL;
     struct cell *tenth = NULL;
 
@@ -319,6 +319,53 @@ int main(){
     test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
     test(suite, state->head->value->slot.integer == 3, "Final value reflects variable value");
 
+    summerize(suite);
+    
+    /********************************* Quoted function pointer test ********************/
+    suite = new_suite("Quoted function test");
+
+    root = new_cell();
+    global = new_closure(NULL);
+
+    init_basic_library(global); 
+
+    root = new_cell();
+    root->value = new_symbol_value_obj(str("let"));
+
+    /* this is the symbol that will store the function branch */
+    second = new_cell();
+    second->value = new_key_value_obj(str("show"));
+
+        /* this is the beginig of the function body */
+        fourth = new_cell();
+        fourth->value = new_symbol_value_obj(str("print"));
+
+        fifth = new_cell();
+        fifth->value = new_symbol_value_obj(str("message"));
+
+    /* atach the new function */
+    third = new_cell();
+    third->value = new_cell_value_obj(fourth);
+
+    seventh = new_cell();
+    seventh->value = new_symbol_value_obj(str("show"));
+
+    eigth = new_cell();
+    eigth->value = new_key_value_obj(str("message"));
+
+    eigth = new_cell();
+    eigth->value = new_string_value_obj(str("hello there"));
+
+    sixth = new_cell();
+    sixth->branch = seventh;
+
+    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
+    state = crw_new_state_context(root, global, stack);
+
+    while(state->status != CRW_DONE){
+       state->next(state); 
+       print_state(state);
+    }
 
     summerize(suite);
 

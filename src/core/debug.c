@@ -2,6 +2,7 @@
 #include "../ssimple.h"
 #include "../types/types.h"
 #include "../operators/operator.h"
+#include "../run/run.h"
 #include "core.h"
 
 static char *debug_SL_TYPE[] = {
@@ -73,6 +74,16 @@ void print_head(struct head *head){
     }
     print_value(head->value);
     printf(">\n");
+    fflush(stdout);
+}
+
+void print_state(struct crw_state *ctx){
+    printf("[[[");
+    print_head(ctx->head);
+    printf(" - ");
+    print_cell(ctx->cell);
+    print_tree(ctx->closure->symbols);
+    printf("]]]");
     fflush(stdout);
 }
 
