@@ -21,6 +21,8 @@ static enum SL_BRANCH_TYPE definition_handle(struct operator_ifc *_op, struct he
     }else if(op->key_for_next){
         tree_add(head->closure->symbols, op->key_for_next->slot.string, value);
         op->key_for_next = NULL;
+    }else{
+        head->value = value;
     }
     return SL_CONTINUE;
 }

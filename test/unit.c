@@ -314,6 +314,7 @@ int main(){
 
     while(state->status != CRW_DONE){
        state->next(state); 
+       print_head(state->head);
     }
 
     test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
