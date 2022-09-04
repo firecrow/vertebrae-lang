@@ -212,10 +212,14 @@ int main(){
     fifth = new_cell();
     fifth->value = new_string_value_obj(str("fifth"));
 
+    sixth = new_cell();
+    sixth->value = new_string_value_obj(str("sixth"));
+
     root->next = second;
     second->next = third;
     second->branch = fourth;
-    third->next = fifth;
+    fourth->next = fifth;
+    third->next = sixth;
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
@@ -225,13 +229,13 @@ int main(){
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
     state->next(state);
-    test(suite, state->cell == fourth, "Third step is branch cell(fourth)");
+    test(suite, state->cell == fifth, "Fifth step is the next after the branch cell(fourth)");
 
     state->next(state);
     test(suite, state->cell == third, "Fourth cell should be on main path again (Third)");
 
     state->next(state);
-    test(suite, state->cell == fifth, "Fifth cell should be on main path as well (Fifth)");
+    test(suite, state->cell == sixth, "Sixth cell should be on main path as well (Fifth)");
 
     summerize(suite);
 
@@ -303,10 +307,10 @@ int main(){
     third->next = fourth;
     fourth->branch = fifth;
     fifth->next = sixth;
+    sixth->next = seventh;
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
     state = crw_new_state_context(root, global, stack);
-
 
     while(state->status != CRW_DONE){
        state->next(state); 

@@ -13,7 +13,7 @@ struct arithmetic_operator {
 
 static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
     if(value->type != SL_TYPE_INT){
-        fprintf(stderr, "Cannot do arithmetic on non integer value");
+        fprintf(stderr, "Cannot do arithmetic on non integer value recieved %d", value->type);
         exit(1);
     }
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;

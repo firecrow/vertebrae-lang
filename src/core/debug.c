@@ -71,6 +71,7 @@ void print_head(struct head *head){
     if(head->operator){
         printf(" %d", head->operator->type);
     }
+    print_value(head->value);
     printf(">\n");
     fflush(stdout);
 }

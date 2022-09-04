@@ -50,7 +50,7 @@ static void next_step(struct crw_state *ctx){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
     }else if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
-        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
+        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
         ctx->stack = push_stack(ctx->stack, ctx->cell, ctx->head);
     }else{
         if(ctx->head->operator){
@@ -72,7 +72,7 @@ static void next_step(struct crw_state *ctx){
     }
 
     if(ctx->cell->branch){
-        ctx->cell = ctx->cell->branch;
+        ctx->cell = ctx->cell->branch->next;
     }else{
         ctx->cell = ctx->cell->next;
     }
