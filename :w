@@ -19,15 +19,18 @@ struct closure *new_closure(struct closure *parent){
 }
 
 struct value_obj *closure_lookup(struct closure *closure, struct value_obj *key){
+    printf("hi\n");
     if(!is_string_class(key)){
         return key;
     }
+    printf("hi\n");
     struct value_obj *result = NULL;
     while(closure && !result){
         result = tree_get(closure->symbols, key->slot.string);
         closure = closure->parent;
     }
     if(result){
+        printf("1");
         return result;
     }
     return key;

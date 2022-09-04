@@ -150,6 +150,11 @@ int main(){
     struct cell *third = NULL;
     struct cell *fourth = NULL;
     struct cell *fifth = NULL;
+    struct cell *sixth = NULL;
+    struct cell *seventh = NULL;
+    struct cell *eighth = NULL;
+    struct cell *ninth = NULL;
+    struct cell *tenth = NULL;
 
     head = new_head();
     root = new_cell();
@@ -262,6 +267,54 @@ int main(){
     }
 
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
+
+    summerize(suite);
+
+    /********************************* Variable Assignment Tests ********************/
+    suite = new_suite("Variable assignment tests");
+
+    root = new_cell();
+    global = new_closure(NULL);
+
+    init_basic_library(global); 
+
+    root = new_cell();
+    root->value = new_symbol_value_obj(str("let"));
+
+    second = new_cell();
+    second->value = new_key_value_obj(str("one"));
+
+    third = new_cell();
+    third->value = new_int_value_obj(1);
+
+    fourth = new_cell();
+
+    fifth = new_cell();
+    fifth->value = new_symbol_value_obj(str("+"));
+
+    sixth = new_cell();
+    sixth->value = new_int_value_obj(2);
+
+    seventh = new_cell();
+    seventh->value = new_symbol_value_obj(str("one"));
+
+    root->next = second;
+    second->next = third;
+    third->next = fourth;
+    fourth->branch = fifth;
+    fifth->next = sixth;
+
+    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
+    state = crw_new_state_context(root, global, stack);
+
+
+    while(state->status != CRW_DONE){
+       state->next(state); 
+    }
+
+    test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
+
+    summerize(suite);
 
     return 0;
 }
