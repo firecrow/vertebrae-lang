@@ -331,40 +331,57 @@ int main(){
 
     root = new_cell();
     root->value = new_symbol_value_obj(str("let"));
+    root->id = 1;
 
     /* this is the symbol that will store the function branch */
     second = new_cell();
     second->value = new_key_value_obj(str("show"));
+    second->id = 2;
 
         /* this is the beginig of the function body */
         fourth = new_cell();
         fourth->value = new_symbol_value_obj(str("print"));
+        fourth->id = 4;
 
         fifth = new_cell();
         fifth->value = new_symbol_value_obj(str("message"));
+        fifth->id = 5;
 
     /* atach the new function */
     third = new_cell();
     third->value = new_cell_value_obj(fourth);
+    third->id = 3;
 
     seventh = new_cell();
     seventh->value = new_symbol_value_obj(str("show"));
+    seventh->id = 7;
 
     eigth = new_cell();
     eigth->value = new_key_value_obj(str("message"));
+    eigth->id = 8;
 
-    eigth = new_cell();
-    eigth->value = new_string_value_obj(str("hello there"));
+    ninth = new_cell();
+    ninth->value = new_string_value_obj(str("hello there"));
+    ninth->id = 9;
 
     sixth = new_cell();
     sixth->branch = seventh;
+    sixth->id = 6;
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
     state = crw_new_state_context(root, global, stack);
 
+    root->next = second;
+    second->next = third;
+    third->next = sixth;
+    sixth->next = seventh;
+    seventh->next = eigth;
+    eight->next = ninth;
+
     while(state->status != CRW_DONE){
        state->next(state); 
-       print_state(state);
+       print_state(state, 0);
+       printf("\n");
     }
 
     summerize(suite);

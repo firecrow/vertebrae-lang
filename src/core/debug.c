@@ -55,7 +55,7 @@ void print_value(struct value_obj *value){
 
 void print_cell(struct cell *cell){
     if(!cell){
-        printf("C(NULL)\n");
+        printf("C(NULL)");
         return;
     }
     printf("<C%d ", cell->id);
@@ -63,7 +63,7 @@ void print_cell(struct cell *cell){
         print_value(cell->value);
     }
     printf("C(n%d/h%d", cell->next != NULL, cell->branch != NULL);
-    printf(")\n");
+    printf(")");
     fflush(stdout);
 }
 
@@ -73,16 +73,25 @@ void print_head(struct head *head){
         printf(" %d", head->operator->type);
     }
     print_value(head->value);
-    printf(">\n");
+    printf(">");
     fflush(stdout);
 }
 
-void print_state(struct crw_state *ctx){
-    printf("[[[");
+void print_space(int indent){
+    for(int i = 0; i < indent; i ++){
+        printf("    ");
+    }
+}
+
+void print_state(struct crw_state *ctx, bool show_tree){
+    print_space(ctx->nesting);
+    printf("[[[ ");
     print_head(ctx->head);
     printf(" - ");
     print_cell(ctx->cell);
-    print_tree(ctx->closure->symbols);
+    if(show_tree){
+        print_tree(ctx->closure->symbols);
+    }
     printf("]]]");
     fflush(stdout);
 }
