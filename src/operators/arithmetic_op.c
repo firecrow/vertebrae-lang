@@ -33,12 +33,6 @@ static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struc
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
-    printf("value passed into arith: ");
-    print_value(value);
-    printf("\n");
-    printf("head->value result in arith: ");
-    print_value(head->value);
-    printf("\n");
 }
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {

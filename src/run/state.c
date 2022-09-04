@@ -50,8 +50,8 @@ static void next_step(struct crw_state *ctx){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
     }else if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
-        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
         ctx->stack = push_stack(ctx->stack, ctx->cell, ctx->head);
+        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
     }else{
         if(ctx->head->operator){
             struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
