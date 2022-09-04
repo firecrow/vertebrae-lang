@@ -116,14 +116,14 @@ int main(){
     closure = new_closure(NULL);
     head = new_head();
 
-    setup_head(head, cell, closure);
+    setup_new_head(head, cell, closure);
     test(suite, head->operator == NULL, "No operator if cell has no value");
 
     value = new_value();
     value->type == SL_TYPE_STRING;
     cell->value = value;
 
-    setup_head(head, cell, closure);
+    setup_new_head(head, cell, closure);
     test(suite, head->operator == NULL, "Operator should not be set if value is not function");
 
     op = new_arithmetic_operator(ADD);
@@ -135,7 +135,7 @@ int main(){
     cell->value->type = SL_TYPE_SYMBOL;
     cell->value->slot.string = op_name;
 
-    setup_head(head, cell, closure);
+    setup_new_head(head, cell, closure);
     test(suite, head->operator != NULL, "Operator should be set from closure");
 
     summerize(suite);
@@ -233,7 +233,6 @@ int main(){
     /********************************* test arithmetic ********************/
     suite = new_suite("Arithmetic tests");
 
-    head = new_head();
     root = new_cell();
     global = new_closure(NULL);
 
@@ -255,16 +254,14 @@ int main(){
     second->next = third;
     third->next = fourth;
 
-    stack = new_stack_item(NULL, NULL, head);
+    stack = new_stack_item(NULL, NULL, new_head());
     state = crw_new_state_context(root, global, stack);
 
     while(state->status != CRW_DONE){
        state->next(state); 
     }
-    print_value(state->head->value);
-    /*
+
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
-    */
 
     return 0;
 }

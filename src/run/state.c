@@ -8,8 +8,10 @@
 static void next_step(struct crw_state *ctx);
 
 static void passthrough(struct head *head, struct head *previous){
-    if(head && head->operator){
+    if(head->operator){
         head->operator->handle(head->operator, head, previous->value);
+    }else{
+        head->value = previous->value;
     }
 }
 
@@ -44,13 +46,13 @@ static void pop_stack(struct crw_state *ctx){
 }
 
 static void next_step(struct crw_state *ctx){
-    printf("1\n");
-    print_cell(ctx->cell);
-    if(ctx->cell->branch){
+    if(ctx->head == NULL){
+        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
+    }else if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
-        ctx->head = new_head(ctx->cell->branch, ctx->head);
+        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
         ctx->stack = push_stack(ctx->stack, ctx->cell, ctx->head);
-    }else if(ctx->head){
+    }else{
         if(ctx->head->operator){
             struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
             if(value && value->type == SL_TYPE_CELL){
@@ -68,7 +70,6 @@ static void next_step(struct crw_state *ctx){
             }
         }
     }
-    printf("2\n");
 
     if(ctx->cell->branch){
         ctx->cell = ctx->cell->branch;
@@ -76,13 +77,11 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->cell->next;
     }
 
-    printf("3\n");
     if(ctx->cell == NULL){
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }
     }
-    printf("4 %d\n", ctx->cell == NULL);
     if(!ctx->cell){
         ctx->status = CRW_DONE;
         return;

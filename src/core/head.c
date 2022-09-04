@@ -13,10 +13,11 @@ struct head *new_head(){
     return head;
 }
 
-void setup_head(struct head *head, struct cell *cell, struct closure *closure){
+struct head *setup_new_head(struct head *head, struct cell *cell, struct closure *closure){
     struct value_obj *value = swap_for_symbol(closure, cell->value);
 
     if(value && value->type == SL_TYPE_FUNCTION){
         head->operator = value->slot.operator;
     }
+    return head;
 }

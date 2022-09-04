@@ -27,7 +27,6 @@ static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struc
     if(op->type == ADD){
         head->value->slot.integer += new_value; 
     }else if(op->type == SUBTRACT){
-        printf("SUB\n");
         head->value->slot.integer -= new_value;
     }else if(op->type == DIVIDE){
         head->value->slot.integer = head->value->slot.integer / new_value;
