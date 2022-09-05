@@ -6,8 +6,6 @@
 
 struct closure *init_basic_library(struct closure *closure){
     /** ========== variabls =========*/
-    closure_add_function(closure, str("let"), new_definition_operator(DEFINITION));
-    closure_add_function(closure, str("closure"), new_closure_operator(CLOSURE));
 
     /** ========== arithemtic ========= */
     /* + */

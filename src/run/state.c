@@ -54,6 +54,12 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 static void next_step(struct crw_state *ctx){
+    /* if we see keys in the open they can be skipped */
+    bool in_key = crw_process_keys(ctx);
+    if(in_key){
+        retufn;
+    }
+
     if(ctx->head == NULL){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
     }else if(ctx->cell->branch){

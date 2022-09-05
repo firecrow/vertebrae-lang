@@ -376,7 +376,7 @@ int main(){
     third->next = sixth;
     sixth->next = seventh;
     seventh->next = eigth;
-    eight->next = ninth;
+    eigth->next = ninth;
 
     while(state->status != CRW_DONE){
        state->next(state); 

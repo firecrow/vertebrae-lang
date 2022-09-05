@@ -69,9 +69,12 @@ void print_cell(struct cell *cell){
 
 void print_head(struct head *head){
     printf("<H");
+    printf(" source value:");
+    print_value(head->source);
     if(head->operator){
-        printf(" %d", head->operator->type);
+        printf(" opp type %d", head->operator->type);
     }
+    printf(" head value: ");
     print_value(head->value);
     printf(">");
     fflush(stdout);

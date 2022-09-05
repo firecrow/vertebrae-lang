@@ -20,5 +20,6 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         head->operator = value->slot.operator;
     }
     head->closure = closure;
+    head->source = value;
     return head;
 }

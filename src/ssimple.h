@@ -6,6 +6,13 @@
 
 #define STRING_DEFAULT_SIZE 4
 
+enum CRW_RESUlt {
+    FALSE = 0,
+    TRUE,
+    NIL,
+    ERROR
+};
+
 enum SL_TYPE {
     SL_TYPE_NONE = 0,
     SL_TYPE_SYMBOL,
@@ -78,6 +85,7 @@ struct value_obj {
         struct operator_ifc *operator;
         char c;
         void *custom;
+        enum CRW_RESULT result;
     } slot;
     struct string *(*to_string)(struct value_obj *value);
     bool (*truthy)(struct value_obj *value);
@@ -115,6 +123,7 @@ struct head {
     struct operator_ifc *operator;
     struct closure *closure;  
     struct value_obj *value;
+    struct value_obj *source;
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);
