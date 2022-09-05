@@ -5,7 +5,7 @@
 #include "../operators/operator.h"
 #include "run.h"
 
-void crw_process_keys(struct crw_state *ctx){
+bool crw_process_keys(struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->cell->value;
 

@@ -16,4 +16,4 @@ struct crw_state {
 };
 
 struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack);
-void crw_process_keys(struct crw_state *ctx);
+bool crw_process_keys(struct crw_state *ctx);
