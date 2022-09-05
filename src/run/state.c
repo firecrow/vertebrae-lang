@@ -66,7 +66,12 @@ static void next_step(struct crw_state *ctx){
     }else if(ctx->cell->branch){
         /* creating the head will effectively process the cell */
         ctx->stack = push_stack(ctx);
+
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
+
+        printf("new head:");
+        print_head(ctx->head);
+        printf("\n");
     }else{
         if(ctx->head->operator){
             struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);

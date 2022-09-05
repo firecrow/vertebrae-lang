@@ -318,7 +318,7 @@ int main(){
        printf("\n");
     }
 
-    test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
+    test(suite, tree_get(state->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
     test(suite, state->head->value->slot.integer == 3, "Final value reflects variable value");
 
     summerize(suite);

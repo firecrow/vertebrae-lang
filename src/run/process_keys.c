@@ -6,19 +6,14 @@
 #include "run.h"
 
 bool crw_process_keys(struct crw_state *ctx){
-    printf("hello?\n");
     struct head *head = ctx->head;
     struct value_obj *value = ctx->cell->value;
     if(value && value->type == SL_TYPE_KEY){
-        tree_add(head->closure->symbols, value->slot.string, NULL);
         ctx->key_for_next = value;
         return 1;
     }else if(ctx->key_for_next){
-        tree_update(head->closure->symbols, ctx->key_for_next->slot.string, value);
+        tree_update(ctx->closure->symbols, ctx->key_for_next->slot.string, value);
         ctx->key_for_next = NULL;
-
-        print_tree(head->closure->symbols);
-
         return 1;
     }else{
         return 0;
