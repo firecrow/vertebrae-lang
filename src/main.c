@@ -9,12 +9,6 @@
 
 int spacing = 0;
 
-void print_space(){
-    for(int i =0; i< spacing; i++){
-        write(STDOUT, " ", 1);
-    }
-}
-
 int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct head *head = new_head();

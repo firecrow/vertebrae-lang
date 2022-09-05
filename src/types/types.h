@@ -49,3 +49,4 @@ struct tree {
 struct tree *new_tree();
 struct value_obj *tree_get(struct tree *tree, struct string *key);
 void tree_add(struct tree *tree, struct string *key, struct value_obj *value);
+void tree_update(struct tree *tree, struct string *key, struct value_obj *value);

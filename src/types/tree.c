@@ -75,6 +75,11 @@ struct value_obj *tree_get(struct tree *tree, struct string *key){
     }
 }
 
+/* todo make this more comprehensive */
+void tree_update(struct tree *tree, struct string *key, struct value_obj *value){
+    tree_add(tree, key, value);
+}
+
 void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
     struct tree_entry *entry = new_tree_entry();
     entry->key = key;

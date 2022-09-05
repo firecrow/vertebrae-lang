@@ -1,13 +1,12 @@
 CC := cc
 COREOBJ := build/parse.o build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \
-	build/state.o 
+	build/state.o build/process_keys.o 
 
 TYPESOBJ := build/string.o build/regex.o build/tree.o \
 	build/value.o
 
 OPOBJ := build/arithmetic_op.o build/io_op.o \
-	build/definition_op.o build/closure_op.o
 
 LIBRARYOBJ := build/default_library.o
 

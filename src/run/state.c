@@ -57,7 +57,7 @@ static void next_step(struct crw_state *ctx){
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
     if(in_key){
-        retufn;
+        return;
     }
 
     if(ctx->head == NULL){

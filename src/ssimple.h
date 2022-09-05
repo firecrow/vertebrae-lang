@@ -6,7 +6,7 @@
 
 #define STRING_DEFAULT_SIZE 4
 
-enum CRW_RESUlt {
+enum CRW_RESULT {
     FALSE = 0,
     TRUE,
     NIL,
