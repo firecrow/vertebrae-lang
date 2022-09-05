@@ -12,27 +12,25 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-#TESTOBJECTS = $(TYPESOBJ) build/head.o build/cell.o build/closure.o build/arithmetic_op.o build/state.o build/stack.o build/parse.o build/debug.o
-
 all: crow-lisp
 
 crow-lisp: dir $(OBJECTS)
 	$(CC) -g -o bin/crow-lisp src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
-	$(CC) -c  $<  -o $@
+	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/run/%.c
-	$(CC) -c  $<  -o $@
+	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/types/%.c
-	$(CC) -c  $<  -o $@
+	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/operators/%.c
-	$(CC) -c  $<  -o $@
+	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/library/%.c
-	$(CC) -c  $<  -o $@
+	$(CC) -g -c  $<  -o $@
 
 dir:
 	mkdir -p  build

@@ -313,7 +313,9 @@ int main(){
     state = crw_new_state_context(root, global, stack);
 
     while(state->status != CRW_DONE){
-       state->next(state); 
+       state->next(state);
+       print_state(state, 1);
+       printf("\n");
     }
 
     test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
@@ -367,6 +369,7 @@ int main(){
     sixth = new_cell();
     sixth->branch = seventh;
     sixth->id = 6;
+
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
     state = crw_new_state_context(root, global, stack);
