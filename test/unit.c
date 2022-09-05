@@ -314,8 +314,6 @@ int main(){
 
     while(state->status != CRW_DONE){
        state->next(state);
-       print_state(state, 1);
-       printf("\n");
     }
 
     test(suite, tree_get(state->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
@@ -323,8 +321,8 @@ int main(){
 
     summerize(suite);
     
-    /********************************* Quoted function pointer test ********************/
-    suite = new_suite("Quoted function test");
+    /********************************* Function pointer test ********************/
+    suite = new_suite("Function test");
 
     root = new_cell();
     global = new_closure(NULL);
@@ -383,7 +381,7 @@ int main(){
 
     while(state->status != CRW_DONE){
        state->next(state); 
-       print_state(state, 0);
+       print_state(state, 1);
        printf("\n");
     }
 
