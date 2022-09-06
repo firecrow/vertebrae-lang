@@ -60,18 +60,15 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->cell->next;
         return;
     }
-
     if(ctx->head == NULL){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
-    }else if(ctx->cell->branch){
-        /* creating the head will effectively process the cell */
+    }else if(ctx->cell->branch || ctx->cell->value == SL_TYPE_CELL){
+        struct cell *branch = ctx->cell->branch;
+        if(ctx->cell->value == SL_TYPE_CELL){
+           branch = ctx->cell->value->slot.cell; 
+        }
         ctx->stack = push_stack(ctx);
-
-        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
-
-        printf("new head:");
-        print_head(ctx->head);
-        printf("\n");
+        ctx->head = setup_new_head(new_head(), branch, ctx->closure);
     }else{
         if(ctx->head->operator){
             struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);

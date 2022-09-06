@@ -8,6 +8,9 @@
 bool crw_process_keys(struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->cell->value;
+    if(ctx->cell->branch){
+        value = new_cell_value_obj(ctx->cell->branch); 
+    }
     if(value && value->type == SL_TYPE_KEY){
         ctx->key_for_next = value;
         return 1;

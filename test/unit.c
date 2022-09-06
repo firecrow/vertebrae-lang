@@ -352,8 +352,12 @@ int main(){
     third->value = new_cell_value_obj(fourth);
     third->id = 3;
 
+    sixth = new_cell();
+    sixth->branch = seventh;
+    sixth->id = 6;
+
     seventh = new_cell();
-    seventh->value = new_symbol_value_obj(str("show"));
+    seventh->value = new_symbol_value_obj(str("call"));
     seventh->id = 7;
 
     eigth = new_cell();
@@ -364,9 +368,10 @@ int main(){
     ninth->value = new_string_value_obj(str("hello there"));
     ninth->id = 9;
 
-    sixth = new_cell();
-    sixth->branch = seventh;
-    sixth->id = 6;
+    tenth = new_cell();
+    tenth->value = new_symbol_value_obj(str("show"));
+    tenth->id = 9;
+
 
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
@@ -378,10 +383,11 @@ int main(){
     sixth->next = seventh;
     seventh->next = eigth;
     eigth->next = ninth;
+    ninth->next = tenth;
 
     while(state->status != CRW_DONE){
        state->next(state); 
-       print_state(state, 1);
+       print_cell(state->cell);
        printf("\n");
     }
 
