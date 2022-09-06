@@ -12,6 +12,8 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
+    printf("io called\n");
+    print_value(value);
     if(value && value->to_string){
         printf("%s", value->to_string(value)->content);
     }else{

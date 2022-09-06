@@ -362,16 +362,6 @@ int main(){
     eigth->value = new_key_value_obj(str("message"));
     eigth->id = 8;
 
-    ninth = new_cell();
-    ninth->value = new_string_value_obj(str("hello there"));
-    ninth->id = 9;
-
-    /*
-    tenth = new_cell();
-    tenth->id = 9;
-    */
-
-
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
     state = crw_new_state_context(root, global, stack);
 
@@ -382,10 +372,11 @@ int main(){
     third->next = sixth;
     sixth->branch = seventh;
     seventh->next = eigth;
-    eigth->next = ninth;
 
     while(state->status != CRW_DONE){
        state->next(state); 
+       print_state(state, 0);
+       printf("\n");
     }
 
     summerize(suite);
