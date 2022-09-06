@@ -16,6 +16,7 @@ void print_value(struct value_obj *value);
 void print_cell(struct cell *cell);
 void print_head(struct head *head);
 void print_tree(struct tree *tree);
+void print_state(struct crw_state *ctx, bool show_tree);
 
 /* head.c */
 struct head *new_head();
