@@ -155,6 +155,7 @@ int main(){
     struct cell *eigth = NULL;
     struct cell *ninth = NULL;
     struct cell *tenth = NULL;
+    struct cell *eleventh = NULL;
 
     head = new_head();
     root = new_cell();
@@ -338,7 +339,6 @@ int main(){
     second->value = new_key_value_obj(str("show"));
     second->id = 2;
 
-        /* this is the beginig of the function body */
         fourth = new_cell();
         fourth->value = new_symbol_value_obj(str("print"));
         fourth->id = 4;
@@ -349,7 +349,6 @@ int main(){
 
     /* atach the new function */
     third = new_cell();
-    third->value = new_cell_value_obj(fourth);
     third->id = 3;
 
     sixth = new_cell();
@@ -379,6 +378,10 @@ int main(){
 
     root->next = second;
     second->next = third;
+
+    third->branch = fourth;
+    fourth->next = fifth;
+
     third->next = sixth;
     sixth->next = seventh;
     seventh->next = eigth;
@@ -387,8 +390,6 @@ int main(){
 
     while(state->status != CRW_DONE){
        state->next(state); 
-       print_cell(state->cell);
-       printf("\n");
     }
 
     summerize(suite);

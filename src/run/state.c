@@ -54,6 +54,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 static void next_step(struct crw_state *ctx){
+    struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
     if(in_key){
@@ -62,16 +63,16 @@ static void next_step(struct crw_state *ctx){
     }
     if(ctx->head == NULL){
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
-    }else if(ctx->cell->branch || ctx->cell->value == SL_TYPE_CELL){
+    }else if(ctx->cell->branch || (value && value->type == SL_TYPE_CELL)){
         struct cell *branch = ctx->cell->branch;
-        if(ctx->cell->value == SL_TYPE_CELL){
-           branch = ctx->cell->value->slot.cell; 
+        if(value && value->type == SL_TYPE_CELL){
+           branch = value->slot.cell; 
         }
         ctx->stack = push_stack(ctx);
         ctx->head = setup_new_head(new_head(), branch, ctx->closure);
+        ctx->cell = branch;
     }else{
         if(ctx->head->operator){
-            struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
             if(value && value->type == SL_TYPE_CELL){
                 value = value->slot.cell->value;
             }
@@ -88,11 +89,7 @@ static void next_step(struct crw_state *ctx){
         }
     }
 
-    if(ctx->cell->branch){
-        ctx->cell = ctx->cell->branch->next;
-    }else{
-        ctx->cell = ctx->cell->next;
-    }
+    ctx->cell = ctx->cell->next;
 
     if(ctx->cell == NULL){
         while(ctx->cell == NULL && ctx->stack){
