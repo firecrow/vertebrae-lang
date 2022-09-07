@@ -74,13 +74,18 @@ static void next_step(struct crw_state *ctx){
     bool in_key = crw_process_keys(ctx);
     if(in_key){
         ctx->cell = ctx->cell->next;
-        if(ctx->cell != NULL){
+        if(!complete_head(ctx)){
+            if(ctx->cell){
+                value = swap_for_symbol(ctx->closure, ctx->cell->value);
+            }else{
+                ctx->status = CRW_DONE;
+                return;
+            }
+        }else{
+            if(ctx->cell == NULL){
+                ctx->status = CRW_DONE;
+            }
             return;
-        }
-    }
-    if(!complete_head(ctx)){
-        if(ctx->cell){
-            value = swap_for_symbol(ctx->closure, ctx->cell->value);
         }
     }
     if(ctx->cell->branch){
