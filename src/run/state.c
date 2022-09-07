@@ -43,8 +43,9 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 
    memset(state, 0, sizeof(struct crw_state));
 
+   state->head = setup_new_head(new_head(), root, closure);
    state->closure = closure;
-   state->cell = root;
+   state->cell = root->next;
    state->stack = stack;
    state->status = CRW_CONTINUE;
    state->next = next_step;
@@ -64,6 +65,10 @@ bool complete_head(struct crw_state *ctx){
 }
 
 static void next_step(struct crw_state *ctx){
+    if(!ctx->cell){
+        fprintf(stderr, "Error next_step called on empty cell\n");
+        exit(1);
+    }
     struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
@@ -78,9 +83,7 @@ static void next_step(struct crw_state *ctx){
             value = swap_for_symbol(ctx->closure, ctx->cell->value);
         }
     }
-    if(ctx->head == NULL){
-        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
-    }else if(ctx->cell->branch){
+    if(ctx->cell->branch){
         ctx->stack = push_stack(ctx);
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
         ctx->cell = ctx->cell->branch;
@@ -99,11 +102,7 @@ static void next_step(struct crw_state *ctx){
         }
     }
 
-    print_cell(ctx->cell);
-    printf("\n");
     ctx->cell = ctx->cell->next;
-    print_cell(ctx->cell);
-    printf("\n");
 
     if(ctx->cell == NULL){
         if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){

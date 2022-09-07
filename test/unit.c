@@ -143,9 +143,10 @@ int main(){
     /***************** STEP TESTS *************/
     struct crw_state *state = NULL;
 
-    struct cell *root = NULL;
     struct closure *global = NULL;
     struct stack_item *stack = NULL;
+    struct cell *root = NULL;
+    struct cell *first = NULL;
     struct cell *second = NULL;
     struct cell *third = NULL;
     struct cell *fourth = NULL;
@@ -158,12 +159,16 @@ int main(){
     struct cell *eleventh = NULL;
 
     head = new_head();
+
     root = new_cell();
+    first = new_cell();
+    root->next = first;
+
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
     state = crw_new_state_context(root, global, stack);
 
-    test(suite, state->cell == root, "Cell are assinged");
+    test(suite, state->cell == first, "Cell are assinged");
     test(suite, state->closure == global, "Global are assinged");
     test(suite, state->stack == stack, "Stack are assinged");
 
@@ -173,10 +178,13 @@ int main(){
     suite = new_suite("Basic step tests");
 
     root = new_cell();
+    first = new_cell();
     second = new_cell();
     third = new_cell();
     fourth = new_cell();
-    root->next = second;
+
+    root->next = first;
+    first->next = second;
     second->next = third;
     third->next = fourth;
 
@@ -199,7 +207,9 @@ int main(){
     suite = new_suite("Pop stack branch tests");
 
     root = new_cell();
-    root->value = new_string_value_obj(str("root"));
+
+    first = new_cell();
+    first->value = new_string_value_obj(str("first"));
 
     second = new_cell();
     second->value = new_string_value_obj(str("second"));
@@ -216,7 +226,8 @@ int main(){
     sixth = new_cell();
     sixth->value = new_string_value_obj(str("sixth"));
 
-    root->next = second;
+    root->next = first;
+    first->next = second;
     second->next = third;
     second->branch = fourth;
     fourth->next = fifth;
@@ -326,6 +337,7 @@ int main(){
     suite = new_suite("Function test");
 
     root = new_cell();
+    first = new_cell();
     global = new_closure(NULL);
 
     init_basic_library(global); 
@@ -366,10 +378,8 @@ int main(){
     ninth->value = new_string_value_obj(str("hello, crow-lisp"));
     ninth->id = 8;
 
-    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    state = crw_new_state_context(root, global, stack);
-
-    root->next = second;
+    root->next = first;
+    first->next = second;
     second->next = third;
     third->branch = fourth;
     fourth->next = fifth;
@@ -377,6 +387,9 @@ int main(){
     sixth->branch = seventh;
     seventh->next = eigth;
     eigth->next = ninth;
+
+    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
+    state = crw_new_state_context(root, global, stack);
 
     while(state->status != CRW_DONE){
        state->next(state); 
