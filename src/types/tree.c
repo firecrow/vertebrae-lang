@@ -58,11 +58,10 @@ struct value_obj *tree_get(struct tree *tree, struct string *key){
     } else {
         struct tree_entry *node = tree->root;
         while(node){
-            if(hash == node->hash){
-                if(key->length == node->key->length){
-                    if(!strncmp(key->content, node->key->content, key->length)){
-                        return node->content;
-                    }
+            if(key->length == node->key->length){
+                int cmp = strncmp(key->content, node->key->content, key->length);
+                if(cmp == 0){
+                    return node->content;
                 }
             }
             if(hash >= node->hash){
@@ -84,7 +83,6 @@ void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
     struct tree_entry *entry = new_tree_entry();
     entry->key = key;
     entry->content = value;
-    entry->hash = djb2_hash(key);
     if(entry == NULL){
         fprintf(stderr, "Tree add recieved a NULL entry");
         return;
@@ -95,7 +93,12 @@ void tree_add(struct tree *tree, struct string *key, struct value_obj *value){
     } else {
         struct tree_entry *node = tree->root;
         while(node){
-            if(entry->hash >= node->hash){
+            int cmp = strncmp(entry->key->content, node->key->content, entry->key->length);
+            if(cmp == 0){
+                node->content = entry->content;
+                return;
+            }
+            if(cmp > 0){
                 if(!node->right){
                     _set_entry(tree, &(node->right), entry);
                     return;
