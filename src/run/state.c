@@ -69,9 +69,6 @@ static void next_step(struct crw_state *ctx){
     bool in_key = crw_process_keys(ctx);
     if(in_key){
         ctx->cell = ctx->cell->next;
-        if(!ctx->cell){
-            ctx->status = CRW_DONE;
-        }
         if(ctx->cell != NULL){
             return;
         }
@@ -102,10 +99,14 @@ static void next_step(struct crw_state *ctx){
         }
     }
 
+    print_cell(ctx->cell);
+    printf("\n");
     ctx->cell = ctx->cell->next;
+    print_cell(ctx->cell);
+    printf("\n");
 
     if(ctx->cell == NULL){
-        if(ctx->head->source->type == SL_TYPE_CELL){
+        if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
             ctx->cell = ctx->head->source->slot.cell;
         }else{
             while(ctx->cell == NULL && ctx->stack){

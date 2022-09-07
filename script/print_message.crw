@@ -1,0 +1,6 @@
+(let 
+    :say-hi-func (print "hello, " subject "\n")
+    (say-hi :subject "adam")
+    (say-hi :subject "jafar")
+    (say-hi :subject "sarah")
+    (say-hi :subject "superman"))

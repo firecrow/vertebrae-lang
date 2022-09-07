@@ -1,0 +1,3 @@
+(let
+    :show (print message)
+    (show :message "hi frow crow-lisp"))
