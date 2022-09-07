@@ -53,7 +53,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 bool complete_head(struct crw_state *ctx){
-    if(ctx->cell == NULL && ctx->head->source->type == SL_TYPE_CELL){
+    if(ctx->cell == NULL && ctx->head && ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
         ctx->cell = ctx->head->source->slot.cell;
         ctx->head->source = new_symbol_value_obj(str("NULL"));
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
@@ -72,8 +72,13 @@ static void next_step(struct crw_state *ctx){
         if(!ctx->cell){
             ctx->status = CRW_DONE;
         }
-        if(complete_head(ctx)){
+        if(ctx->cell != NULL){
             return;
+        }
+    }
+    if(!complete_head(ctx)){
+        if(ctx->cell){
+            value = swap_for_symbol(ctx->closure, ctx->cell->value);
         }
     }
     if(ctx->head == NULL){
@@ -83,14 +88,10 @@ static void next_step(struct crw_state *ctx){
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
         ctx->cell = ctx->cell->branch;
     }else{
-        printf("in here\n");
         if(ctx->head->operator){
-            if(value && value->type == SL_TYPE_CELL){
-                value = value->slot.cell->value;
-            }
             enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 
-             * run the rest of the cells, setting cell->next to NULL here
+                 * run the rest of the cells, setting cell->next to NULL here
              * will cause the if/else branch following to pull from the
              * previous stack entry
              */
