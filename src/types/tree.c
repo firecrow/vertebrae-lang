@@ -58,15 +58,15 @@ struct value_obj *tree_get(struct tree *tree, struct string *key){
     } else {
         struct tree_entry *node = tree->root;
         while(node){
+            int cmp = strncmp(key->content, node->key->content, key->length);
             if(key->length == node->key->length){
-                int cmp = strncmp(key->content, node->key->content, key->length);
                 if(cmp == 0){
                     return node->content;
                 }
             }
-            if(hash >= node->hash){
+            if(cmp > 0){
                 node = node->right;
-            }else {
+            }else{
                 node = node->left;
             }
         };

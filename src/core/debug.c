@@ -73,6 +73,8 @@ void print_head(struct head *head){
     print_value(head->source);
     if(head->operator){
         printf(" opp type %d", head->operator->type);
+    }else{
+        printf(" no op ");
     }
     printf(" head value: ");
     print_value(head->value);
@@ -93,7 +95,7 @@ void print_state(struct crw_state *ctx, bool show_tree){
     printf(" - ");
     print_cell(ctx->cell);
     if(show_tree){
-        print_tree(ctx->closure->symbols);
+        print_tree(ctx->head->closure->symbols);
     }
     printf("]]]");
     fflush(stdout);

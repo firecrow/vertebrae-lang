@@ -132,6 +132,12 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 }
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
+    if(value && value->type == SL_TYPE_SYMBOL && !strncmp(value->slot.string->content, "value", strlen("value"))){
+        closure = closure->parent;
+        if(!closure){
+            return value;
+        }
+    }
     struct value_obj *result = closure->lookup(closure, value);
     if(result){
         return result;

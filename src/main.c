@@ -22,12 +22,6 @@ int main(int argc, char *argv[]) {
 
     while(!ctx->status == CRW_DONE){
        ctx->next(ctx); 
-       print_cell(ctx->cell);
-       printf("\n");
-       /*
-       print_state(ctx, 0);
-       printf("\n");
-       */
     }
 
     return 0;

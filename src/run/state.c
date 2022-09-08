@@ -44,7 +44,6 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    memset(state, 0, sizeof(struct crw_state));
 
    state->head = setup_new_head(new_head(), root, closure);
-   state->closure = closure;
    state->cell = root->next;
    state->stack = stack;
    state->status = CRW_CONTINUE;
@@ -53,40 +52,41 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    return state;
 }
 
-bool complete_head(struct crw_state *ctx){
-    /*ctx->head->finalize();*/
-    return 1;
-}
-
 static void next_step(struct crw_state *ctx){
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
     }
-    struct value_obj *value = swap_for_symbol(ctx->closure, ctx->cell->value);
+    /*
+    print_cell(ctx->cell);
+    printf("\n");
+    */
+
+    struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    tree_update(ctx->head->closure->symbols, str("value"), value);
+
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
+
     if(in_key){
         ctx->cell = ctx->cell->next;
-        if(!complete_head(ctx)){
-            if(ctx->cell){
-                value = swap_for_symbol(ctx->closure, ctx->cell->value);
-            }else{
-                ctx->status = CRW_DONE;
-                return;
-            }
-        }else{
-            if(ctx->cell == NULL){
-                ctx->status = CRW_DONE;
-            }
-            return;
+        if(ctx->cell == NULL){
+            ctx->status = CRW_DONE;
         }
+        return;
     }
     if(ctx->cell->branch){
         ctx->stack = push_stack(ctx);
-        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->closure);
+        value = swap_for_symbol(ctx->head->closure, ctx->cell->branch->value);
+
+        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
         ctx->cell = ctx->cell->branch;
     }else{
+        if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
+            ctx->cell = ctx->head->source->slot.cell;
+            ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+            ctx->head->source = NULL;
+        }
         if(ctx->head->operator){
             enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 

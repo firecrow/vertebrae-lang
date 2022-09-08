@@ -8,7 +8,6 @@ struct crw_state {
     struct head *head;
     struct cell *cell;
     struct stack_item *stack;
-    struct closure *closure;
     struct value_obj *key_for_next;
     bool (*next)(struct crw_state *ctx);
     /* for debugging */

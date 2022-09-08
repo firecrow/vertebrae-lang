@@ -15,7 +15,7 @@ bool crw_process_keys(struct crw_state *ctx){
         if(ctx->cell->branch){
             value = new_cell_value_obj(ctx->cell->branch); 
         }
-        tree_update(ctx->closure->symbols, ctx->key_for_next->slot.string, value);
+        tree_update(ctx->head->closure->symbols, ctx->key_for_next->slot.string, value);
         ctx->key_for_next = NULL;
         return 1;
     }else{
