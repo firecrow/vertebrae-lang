@@ -87,7 +87,7 @@ static void next_step(struct crw_state *ctx){
         if(ctx->cell == NULL && set_cell_func(ctx)){
             ctx->cell = ctx->cell->next;
         }
-        if(ctx->cell == NULL){
+        if(!ctx->cell){
             ctx->status = CRW_DONE;
         }
         return;
@@ -102,16 +102,7 @@ static void next_step(struct crw_state *ctx){
         bool was_cell_func = set_cell_func(ctx);
 
         if(!was_cell_func && ctx->head->operator){
-            enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
-            /* if the handle has communicated that it no longer wants to 
-                 * run the rest of the cells, setting cell->next to NULL here
-             * will cause the if/else branch following to pull from the
-             * previous stack entry
-             */
-            if(branch_type == SL_BREAK){
-                pop_stack(ctx);
-                return CRW_CONTINUE;
-            }
+            ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
         }
     }
 

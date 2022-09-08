@@ -1,0 +1,3 @@
+(let 
+    :show (print "hi its the start (" start ") product of things " (+ start 2 value) " isnt it great\n")
+    (show :start 9 7 8 19))
