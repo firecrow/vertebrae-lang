@@ -1,6 +1,10 @@
 (let 
     :say-hi-func (print "hello, " subject ", go away\n")
+
     (say-hi-func :subject "adam")
     (say-hi-func :subject "jafar")
     (say-hi-func :subject "sarah")
-    (say-hi-func :subject "superman"))
+    (say-hi-func :subject "superman")
+
+    :say-hi-cells (print "hello, " value "come here dude\n")
+    (say-hi-cells "adam" "javar" "sarah" "superman"))

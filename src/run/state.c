@@ -54,13 +54,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 bool complete_head(struct crw_state *ctx){
-    if(ctx->cell == NULL && ctx->head && ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
-        ctx->cell = ctx->head->source->slot.cell;
-        ctx->head->source = new_symbol_value_obj(str("NULL"));
-        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->closure);
-        ctx->cell = ctx->cell->next;
-        return 0;
-    }
+    /*ctx->head->finalize();*/
     return 1;
 }
 
@@ -110,12 +104,8 @@ static void next_step(struct crw_state *ctx){
     ctx->cell = ctx->cell->next;
 
     if(ctx->cell == NULL){
-        if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
-            ctx->cell = ctx->head->source->slot.cell;
-        }else{
-            while(ctx->cell == NULL && ctx->stack){
-                pop_stack(ctx);
-            }
+        while(ctx->cell == NULL && ctx->stack){
+            pop_stack(ctx);
         }
     }
     if(!ctx->cell){
