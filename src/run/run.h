@@ -10,6 +10,7 @@ struct crw_state {
     struct stack_item *stack;
     struct value_obj *key_for_next;
     bool (*next)(struct crw_state *ctx);
+    void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
     /* for debugging */
     int nesting;
 };

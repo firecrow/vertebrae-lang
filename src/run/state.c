@@ -34,6 +34,10 @@ static void pop_stack(struct crw_state *ctx){
 
 static void next_step(struct crw_state *ctx);
 
+static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    ctx->cell = ctx->cell->next;
+}
+
 struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
 
@@ -48,6 +52,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    state->stack = stack;
    state->status = CRW_CONTINUE;
    state->next = next_step;
+   state->default_handle = default_handle;
 
    return state;
 }
@@ -104,7 +109,7 @@ static void next_step(struct crw_state *ctx){
         }
     }
 
-    ctx->cell = ctx->cell->next;
+    ctx->default_handle(ctx->head->operator, ctx);
 
     if(ctx->cell == NULL){
         while(ctx->cell == NULL && ctx->stack){
