@@ -83,11 +83,11 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->cell->branch;
     }else{
         if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
+            ctx->stack = push_stack(ctx);
             ctx->cell = ctx->head->source->slot.cell;
             ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
             ctx->head->source = NULL;
-        }
-        if(ctx->head->operator){
+        }else if(ctx->head->operator){
             enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 
                  * run the rest of the cells, setting cell->next to NULL here
