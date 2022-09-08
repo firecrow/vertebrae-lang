@@ -14,7 +14,7 @@ enum SL_BRANCH_TYPE {
     SL_BREAK
 };
 
-typedef enum SL_BRANCH_TYPE (operator_handle_func)(struct operator_ifc *_op, struct head *head, struct value_obj *value);
+typedef enum SL_BRANCH_TYPE (operator_handle_func)(struct operator_ifc *_op, struct crw_state *ctx);
 
 struct operator_ifc {
     int type;

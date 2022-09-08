@@ -6,17 +6,17 @@ struct string_concat_operator {
     struct string *string;
 }
 
-int string_concat_handle(struct operator_ifc *_op, struct cell *head, struct cell *cell){
-    if(!cell->value || cell->value->type != STRING){
+int string_concat_handle(struct operator_ifc *_op, struct crw_state *ctx;){
+    if(!ctx->cell->value || ctx->cell->value->type != STRING){
         fprintf(stderr, "Cannot concatonate non string value");
         exit(1);
     }
 
-    if(head->value.string == NULL){
-        head->value.string = clone_string(cell->value->slot.string);     
+    if(ctx->head->value.string == NULL){
+        ctx->head->value.string = clone_string(ctx->cell->value->slot.string);     
         return;
     }else{
-        string_append(head->value.string, cell->value->slot.string); 
+        string_append(ctx->head->value.string, ctx->cell->value->slot.string); 
     }
 }
 

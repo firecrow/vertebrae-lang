@@ -2,6 +2,7 @@
 #include "../ssimple.h"
 #include "../core/core.h"
 #include "../types/types.h"
+#include "../run/run.h"
 #include "operator.h"
 
 /* =========== print ==========*/
@@ -11,12 +12,12 @@ struct print_operator {
     operator_handle_func *handle;
 };
 
-static void print_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
-    if(value && value->to_string){
-        printf("%s", value->to_string(value)->content);
+static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    if(ctx->value && ctx->value->to_string){
+        printf("%s", ctx->value->to_string(ctx->value)->content);
     }else{
-        if(value){
-            print_value(value);
+        if(ctx->value){
+            print_value(ctx->value);
         }
         fprintf(stderr, "Cannot print non string value\n");
         /*exit(1);*/

@@ -5,9 +5,12 @@
 #include "../operators/operator.h"
 #include "run.h"
 
-static void passthrough(struct head *head, struct head *previous){
+static void passthrough(struct crw_state *ctx, struct head *previous){
+    ctx->value = previous->value;
+    struct head *head = ctx->head;
+
     if(head->operator){
-        head->operator->handle(head->operator, head, previous->value);
+        head->operator->handle(head->operator, ctx);
     }else{
         head->value = previous->value;
     }
@@ -28,7 +31,7 @@ static void pop_stack(struct crw_state *ctx){
         ctx->cell = NULL;
     }
     ctx->stack = ctx->stack->previous;
-    passthrough(ctx->head, previous);
+    passthrough(ctx, previous);
     ctx->nesting--;
 }
 
@@ -84,8 +87,8 @@ static void next_step(struct crw_state *ctx){
     printf("\n");
     */
 
-    struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    tree_update(ctx->head->closure->symbols, str("value"), value);
+    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
@@ -95,17 +98,19 @@ static void next_step(struct crw_state *ctx){
             ctx->stack = push_stack(ctx);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
+            ctx->default_handle(ctx->head->operator, ctx);
         }else{
             bool was_cell_func = set_cell_func(ctx);
-            value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+            ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
 
             if(!was_cell_func && ctx->head->operator){
-                ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
+                ctx->head->operator->handle(ctx->head->operator, ctx);
             }
+            ctx->default_handle(ctx->head->operator, ctx);
         }
+    }else{
+        ctx->default_handle(ctx->head->operator, ctx);
     }
-
-    ctx->default_handle(ctx->head->operator, ctx);
 
     if(ctx->cell == NULL){
         while(ctx->cell == NULL && ctx->stack){
