@@ -101,10 +101,23 @@ void parse_char(struct parse_ctx *ctx, char c){
 
 
     if(ctx->state == IN_STRING){
-        if(c == '\\' && !ctx->in_escape){
-            finalize_cell(ctx);
-            ctx->in_escape = 1;
-            return;
+        if(c == '\\'){
+            /* if we are escaping the \ then take no action */
+            if(ctx->in_escape){
+                ctx->in_escape = 0;
+            }else{
+                ctx->in_escape = 1;
+                return;
+            }
+        }
+        if(ctx->in_escape){
+            ctx->in_escape = 0;
+            if(c == 'n'){
+                c = '\n';
+            }
+            if(c == 't'){
+                c = '\t';
+            }
         }
 
         if(!ctx->in_escape && c == ctx->closing_char){

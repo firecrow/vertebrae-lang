@@ -1,5 +1,5 @@
 (let 
-    :say-hi-func (print "hello, " subject ", go away")
+    :say-hi-func (print "hello, " subject ", go away\n")
     (say-hi-func :subject "adam")
     (say-hi-func :subject "jafar")
     (say-hi-func :subject "sarah")
