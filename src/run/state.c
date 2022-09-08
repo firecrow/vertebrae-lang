@@ -94,8 +94,6 @@ static void next_step(struct crw_state *ctx){
     }
     if(ctx->cell->branch){
         ctx->stack = push_stack(ctx);
-        value = swap_for_symbol(ctx->head->closure, ctx->cell->branch->value);
-
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
         ctx->cell = ctx->cell->branch;
     }else{
@@ -117,5 +115,5 @@ static void next_step(struct crw_state *ctx){
         ctx->status = CRW_DONE;
         return;
     }
-    ctx->status =  CRW_CONTINUE;
+    ctx->status = CRW_CONTINUE;
 }

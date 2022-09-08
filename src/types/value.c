@@ -35,6 +35,9 @@ bool is_type(struct value_obj *value, enum SL_TYPE type){
 
 struct value_obj *clone_value(struct value_obj *value){
    /* TODO: not yet implemented */
+   if(value->type = SL_TYPE_INT){
+        return new_int_value_obj(value->slot.integer);
+   }
    return value;
 }
 
