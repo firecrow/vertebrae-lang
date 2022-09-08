@@ -87,12 +87,6 @@ static void next_step(struct crw_state *ctx){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
     }
-    /*
-    printf("\n");
-    print_space(ctx->nesting);
-    print_cell(ctx->cell);
-    printf("\n");
-    */
 
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
@@ -103,23 +97,21 @@ static void next_step(struct crw_state *ctx){
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
         }
+
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
-        /*
-        printf("\n");
-        print_space(ctx->nesting);
-        print_head(ctx->head);
-        printf("\n");
-        */
-
         if(ctx->cell != ctx->head->cell){
+
             struct value_obj *head_value = swap_for_symbol(ctx->head->closure, ctx->head->cell->value);
+
             if(head_value->type == SL_TYPE_CELL){
+
                 ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
                 tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
                 set_custom_cell_as_head(ctx, head_value->slot.cell);
+
             }else if(ctx->head->operator){
                 ctx->head->operator->handle(ctx->head->operator, ctx);
             }
