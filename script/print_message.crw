@@ -6,5 +6,5 @@
     (say-hi-func :subject "sarah")
     (say-hi-func :subject "superman")
 
-    :say-hi-cells (print "hello, " value "come here dude\n")
+    :say-hi-cells (print "hello, " value " come here :)\n")
     (say-hi-cells "adam" "javar" "sarah" "superman"))

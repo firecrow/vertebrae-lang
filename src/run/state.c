@@ -57,6 +57,7 @@ static bool set_cell_func(struct crw_state *ctx){
         ctx->stack = push_stack(ctx);
         ctx->cell = ctx->head->source->slot.cell;
         ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+        ctx->head->closure = ctx->head->closure;
         ctx->head->source = NULL;
         return 1;
     }
@@ -68,10 +69,6 @@ static void next_step(struct crw_state *ctx){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
     }
-    /*
-    print_cell(ctx->cell);
-    printf("\n");
-    */
 
     struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     tree_update(ctx->head->closure->symbols, str("value"), value);
@@ -97,6 +94,7 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->cell->branch;
     }else{
         bool was_cell_func = set_cell_func(ctx);
+
         if(!was_cell_func && ctx->head->operator){
             enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 

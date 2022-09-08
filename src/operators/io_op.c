@@ -19,7 +19,7 @@ static void print_handle(struct operator_ifc *_op, struct head *head, struct val
             print_value(value);
         }
         fprintf(stderr, "Cannot print non string value\n");
-        exit(1);
+        /*exit(1);*/
     }
 }
 
