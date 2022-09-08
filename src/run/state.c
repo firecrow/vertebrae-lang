@@ -52,6 +52,17 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    return state;
 }
 
+static bool set_cell_func(struct crw_state *ctx){
+    if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
+        ctx->stack = push_stack(ctx);
+        ctx->cell = ctx->head->source->slot.cell;
+        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+        ctx->head->source = NULL;
+        return 1;
+    }
+    return 0;
+}
+
 static void next_step(struct crw_state *ctx){
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
@@ -70,6 +81,9 @@ static void next_step(struct crw_state *ctx){
 
     if(in_key){
         ctx->cell = ctx->cell->next;
+        if(set_cell_func(ctx)){
+            ctx->cell = ctx->cell->next;
+        }
         if(ctx->cell == NULL){
             ctx->status = CRW_DONE;
         }
@@ -82,12 +96,8 @@ static void next_step(struct crw_state *ctx){
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
         ctx->cell = ctx->cell->branch;
     }else{
-        if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
-            ctx->stack = push_stack(ctx);
-            ctx->cell = ctx->head->source->slot.cell;
-            ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
-            ctx->head->source = NULL;
-        }else if(ctx->head->operator){
+        bool was_cell_func = set_cell_func(ctx);
+        if(!was_cell_func && ctx->head->operator){
             enum SL_BRANCH_TYPE branch_type = ctx->head->operator->handle(ctx->head->operator, ctx->head, value);
             /* if the handle has communicated that it no longer wants to 
                  * run the rest of the cells, setting cell->next to NULL here
