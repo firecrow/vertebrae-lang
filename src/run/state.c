@@ -88,6 +88,7 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
     /*
+    printf("\n");
     print_space(ctx->nesting);
     print_cell(ctx->cell);
     printf("\n");
@@ -106,6 +107,7 @@ static void next_step(struct crw_state *ctx){
         tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
         /*
+        printf("\n");
         print_space(ctx->nesting);
         print_head(ctx->head);
         printf("\n");
@@ -118,8 +120,7 @@ static void next_step(struct crw_state *ctx){
                 tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
                 set_custom_cell_as_head(ctx, head_value->slot.cell);
-            }
-            if(ctx->head->operator){
+            }else if(ctx->head->operator){
                 ctx->head->operator->handle(ctx->head->operator, ctx);
             }
         }else{
