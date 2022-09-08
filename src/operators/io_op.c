@@ -22,6 +22,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         fprintf(stderr, "Cannot print non string value\n");
         /*exit(1);*/
     }
+    ctx->default_handle(_op, ctx);
 }
 
 struct print_operator *print_singleton;

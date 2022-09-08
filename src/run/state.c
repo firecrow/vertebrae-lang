@@ -81,15 +81,6 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
-    /*
-    printf("               >cell on start of next: ");
-    print_cell(ctx->cell);
-    printf("\n");
-    */
-
-    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
-
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
 
@@ -98,14 +89,13 @@ static void next_step(struct crw_state *ctx){
             ctx->stack = push_stack(ctx);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
-            ctx->default_handle(ctx->head->operator, ctx);
-        }else{
-            bool was_cell_func = set_cell_func(ctx);
-            ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        }
+        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
-            if(!was_cell_func && ctx->head->operator){
-                ctx->head->operator->handle(ctx->head->operator, ctx);
-            }
+        if(ctx->cell != ctx->head->cell && ctx->head->operator){
+            ctx->head->operator->handle(ctx->head->operator, ctx);
+        }else{
             ctx->default_handle(ctx->head->operator, ctx);
         }
     }else{

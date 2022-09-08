@@ -21,5 +21,6 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
     }
     head->closure = new_closure(closure);
     head->source = value;
+    head->cell = cell;
     return head;
 }

@@ -124,6 +124,7 @@ struct head {
     struct closure *closure;  
     struct value_obj *value;
     struct value_obj *source;
+    struct cell *cell;
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);
