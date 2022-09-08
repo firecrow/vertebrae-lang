@@ -70,6 +70,12 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
+    /*
+    printf("               >cell on start of next: ");
+    print_cell(ctx->cell);
+    printf("\n");
+    */
+
     struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     tree_update(ctx->head->closure->symbols, str("value"), value);
 
@@ -78,7 +84,7 @@ static void next_step(struct crw_state *ctx){
 
     if(in_key){
         ctx->cell = ctx->cell->next;
-        if(set_cell_func(ctx)){
+        if(ctx->cell == NULL && set_cell_func(ctx)){
             ctx->cell = ctx->cell->next;
         }
         if(ctx->cell == NULL){
