@@ -16,9 +16,9 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     }
 }
 
-static struct stack_item *push_stack(struct crw_state *ctx){
+static struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
     ctx->nesting++;
-    struct stack_item *item = new_stack_item(ctx->stack, ctx->cell, ctx->head);
+    struct stack_item *item = new_stack_item(ctx->stack, cell, ctx->head);
     return item;
 }
 
@@ -37,12 +37,16 @@ static void pop_stack(struct crw_state *ctx){
 
 static void next_step(struct crw_state *ctx);
 
+static set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
+    ctx->stack = push_stack(ctx, ctx->cell);
+    ctx->cell = cell;
+    ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+    ctx->head->closure = ctx->head->closure;
+}
+
 static bool set_cell_func(struct crw_state *ctx){
     if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
-        ctx->stack = push_stack(ctx);
-        ctx->cell = ctx->head->source->slot.cell;
-        ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
-        ctx->head->closure = ctx->head->closure;
+        set_custom_cell_as_head(ctx, ctx->head->source->slot.cell);
         ctx->head->source = NULL;
         return 1;
     }
@@ -51,8 +55,11 @@ static bool set_cell_func(struct crw_state *ctx){
 
 static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
     ctx->cell = ctx->cell->next;
-    if(ctx->cell == NULL && set_cell_func(ctx)){
-        ctx->cell = ctx->cell->next;
+    if(ctx->cell == NULL){
+        ctx->value = NULL;
+        set_cell_func(ctx);
+    }else{
+        ctx->value = ctx->cell->value;
     }
 }
 
@@ -80,21 +87,41 @@ static void next_step(struct crw_state *ctx){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
     }
+    /*
+    print_space(ctx->nesting);
+    print_cell(ctx->cell);
+    printf("\n");
+    */
 
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
 
     if(!in_key){
         if(ctx->cell->branch){
-            ctx->stack = push_stack(ctx);
+            ctx->stack = push_stack(ctx, ctx->cell);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
         }
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
 
-        if(ctx->cell != ctx->head->cell && ctx->head->operator){
-            ctx->head->operator->handle(ctx->head->operator, ctx);
+        /*
+        print_space(ctx->nesting);
+        print_head(ctx->head);
+        printf("\n");
+        */
+
+        if(ctx->cell != ctx->head->cell){
+            struct value_obj *head_value = swap_for_symbol(ctx->head->closure, ctx->head->cell->value);
+            if(head_value->type == SL_TYPE_CELL){
+                ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+                tree_update(ctx->head->closure->symbols, str("value"), ctx->value);
+
+                set_custom_cell_as_head(ctx, head_value->slot.cell);
+            }
+            if(ctx->head->operator){
+                ctx->head->operator->handle(ctx->head->operator, ctx);
+            }
         }else{
             ctx->default_handle(ctx->head->operator, ctx);
         }

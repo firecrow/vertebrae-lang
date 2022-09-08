@@ -16,9 +16,6 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(ctx->value && ctx->value->to_string){
         printf("%s", ctx->value->to_string(ctx->value)->content);
     }else{
-        if(ctx->value){
-            print_value(ctx->value);
-        }
         fprintf(stderr, "Cannot print non string value\n");
         /*exit(1);*/
     }

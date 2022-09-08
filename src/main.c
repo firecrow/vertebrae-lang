@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
     struct crw_state *ctx = crw_new_state_context(root->branch, global, stack);
 
     /*
+    printf("--------------------------------\n");
     printf(" >> ");
     print_cell(ctx->cell);
     printf("\n");
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
     while(!ctx->status == CRW_DONE){
        ctx->next(ctx); 
        /*
+       printf("--------------------------------\n");
        printf(" >> ");
        print_cell(ctx->cell);
        printf("\n");
