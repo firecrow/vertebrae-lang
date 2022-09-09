@@ -1,6 +1,7 @@
 #include "../external.h"
 #include "../ssimple.h"
 #include "../types/types.h"
+#include "../operators/operator.h"
 #include "core.h"
 
 struct closure *new_closure(struct closure *parent){

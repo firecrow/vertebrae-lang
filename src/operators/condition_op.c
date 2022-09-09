@@ -32,27 +32,21 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(!op->next){
         op->next = ctx->head->cell->next;
     }
+
     if(!op->in_body){
-        if(ctx->cell->value->type == SL_TYPE_CELL){
-            ctx->cell = ctx->cell->value->slot.cell;
-            op->next = op->next->next;
-            op->in_body = 1;
-            return;
-        }
-    }else{
-        struct value_obj *value = ctx->cell->value;
-        if(value->truthy(value)){
-            if(ctx->cell->next->value->type == SL_TYPE_CELL){
-                ctx->cell = ctx->cell->next->value->slot.cell;
-                op->next = op->next->next;
-                op->in_body = 0;
-                return;
+        if(ctx->value && !ctx->value->truthy(ctx->value)){
+            if(op->next->next && op->next->next){
+                ctx->cell = op->next = op->next->next->next;
+            }else{
+                ctx->cell = NULL;
             }
+            return;
         }else{
-            op->next = op->next->next;
+            op->in_body = 1;
         }
     }
-    ctx->cell = op->next->next;
+    op->in_body = 0;
+    ctx->cell = op->next = op->next->next;
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {

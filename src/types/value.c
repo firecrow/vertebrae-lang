@@ -54,6 +54,13 @@ static struct string *int_to_string(struct value_obj *value){
     return s;
 }
 
+static struct string *int_truthy(struct value_obj *value){
+    if(value->type != SL_TYPE_INT){
+        fprintf(stderr, "Type not int for int to string");
+    }
+    return value->slot.integer != 0;
+}
+
 static struct string *string_to_string(struct value_obj *value){
     if(value->type != SL_TYPE_STRING){
         fprintf(stderr, "Type not string for int to string\n");
@@ -97,6 +104,7 @@ struct value_obj *new_int_value_obj(int intval){
     value->type = SL_TYPE_INT;
     value->slot.integer = intval;
     value->to_string = int_to_string;
+    value->truthy = int_truthy;
     return value;
 }
 

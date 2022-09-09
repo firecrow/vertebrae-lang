@@ -6,15 +6,18 @@
 #include "run.h"
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
+    if(ctx->cell->id == 7){
+        printf("found\n");
+    }
     ctx->value = previous->value;
     struct head *head = ctx->head;
 
     if(head->operator){
         head->operator->handle(head->operator, ctx);
     }else{
-        head->value = previous->value;
         ctx->value = head->value;
     }
+    head->value = previous->value;
 }
 
 static struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
