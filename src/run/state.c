@@ -6,9 +6,6 @@
 #include "run.h"
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
-    if(ctx->cell->id == 7){
-        printf("found\n");
-    }
     ctx->value = previous->value;
     struct head *head = ctx->head;
 
