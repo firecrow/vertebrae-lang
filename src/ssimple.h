@@ -15,6 +15,7 @@ enum CRW_RESULT {
 
 enum SL_TYPE {
     SL_TYPE_NONE = 0,
+    SL_TYPE_BOOLEAN_RESULT,
     SL_TYPE_SYMBOL,
     SL_TYPE_INT,
     SL_TYPE_FLOAT,
@@ -89,6 +90,7 @@ struct value_obj {
     } slot;
     struct string *(*to_string)(struct value_obj *value);
     bool (*truthy)(struct value_obj *value);
+    bool (*equals)(struct value_obj *value);
 };
 
 struct cell {

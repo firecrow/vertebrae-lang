@@ -11,6 +11,12 @@ struct crw_state {
     struct stack_item *stack;
     struct value_obj *key_for_next;
     struct value_obj *value;
+    struct {
+        struct value_obj *true;
+        struct value_obj *false;
+        struct value_obj *nil;
+        struct value_obj *error;
+    } builtins;
     bool (*next)(struct crw_state *ctx);
     void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
     /* for debugging */

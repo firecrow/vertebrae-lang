@@ -6,9 +6,28 @@
 /* this is for debugging */
 int next_value_id = 0;
 
-static truty_false(struct value_obj *value){
+static bool truthy_false(struct value_obj *value){
     return 0;
 }
+
+static bool result_equals(struct value_obj *source, struct value_obj *compare){
+    if(source->type != SL_TYPE_BOOLEAN_RESULT){
+        return 0;
+    }
+    if(source->type != compare->type){
+        return 0;
+    }
+
+    return source->slot.result == compare->slot.result;
+}
+
+static bool result_truthy(struct value_obj *value){
+    if(value->type != SL_TYPE_BOOLEAN_RESULT){
+        fprintf(stderr, "Error result_truthy called on non result type\n");
+        return 0;
+    }
+    return value->slot.result == TRUE;
+} 
 
 struct value_obj *new_value(){
    struct value_obj *value = malloc(sizeof(struct value_obj)); 
@@ -19,7 +38,7 @@ struct value_obj *new_value(){
 
    memset(value, 0, sizeof(struct value_obj));
    value->id = next_value_id++;
-   value->truthy = truty_false;
+   value->truthy = truthy_false;
 
    return value;
 }
@@ -52,6 +71,10 @@ static struct string *int_to_string(struct value_obj *value){
     }
     struct string *s = new_string_xprintf("%d", value->slot.integer);
     return s;
+}
+
+static struct string *default_to_string(struct value_obj *value){
+    return str("<Value>");
 }
 
 static struct string *int_truthy(struct value_obj *value){
@@ -107,6 +130,18 @@ struct value_obj *new_int_value_obj(int intval){
     value->truthy = int_truthy;
     return value;
 }
+
+struct value_obj *new_result_value_obj(enum CRW_RESULT result){
+    struct value_obj *value = new_value();
+    value->type = SL_TYPE_BOOLEAN_RESULT;
+    value->slot.result = result;
+    value->to_string = default_to_string;
+    value->truthy = result_truthy;
+    value->equals = result_equals;
+    return value;
+}
+
+
 
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
 

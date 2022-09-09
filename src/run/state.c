@@ -74,7 +74,13 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
       return NULL;
    }
 
+
    memset(state, 0, sizeof(struct crw_state));
+
+   state->builtins.true = new_result_value_obj(TRUE);
+   state->builtins.false = new_result_value_obj(FALSE);
+   state->builtins.nil = new_result_value_obj(NIL);
+   state->builtins.error = new_result_value_obj(ERROR);
 
    state->head = setup_new_head(new_head(), root, closure);
    state->cell = root->next;

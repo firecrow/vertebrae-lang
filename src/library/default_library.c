@@ -5,8 +5,12 @@
 #include "../operators/operator.h"
 
 struct closure *init_basic_library(struct closure *closure){
-    /** ========== condition =========*/
+    /** ========== builtin =========*/
     closure_add_function(closure, str("cond"), new_condition_operator(CONDITION));
+    closure_add_value(closure, str("true"), new_result_value_obj(TRUE));
+    closure_add_value(closure, str("false"), new_result_value_obj(FALSE));
+    closure_add_value(closure, str("nil"), new_result_value_obj(NIL));
+    closure_add_value(closure, str("error"), new_result_value_obj(ERROR));
 
     /** ========== arithemtic ========= */
     /* + */
