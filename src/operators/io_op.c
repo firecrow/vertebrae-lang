@@ -13,6 +13,9 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    if(ctx->value == NULL){
+        return;
+    }
     if(ctx->value && ctx->value->to_string){
         printf("%s", ctx->value->to_string(ctx->value)->content);
     }else{

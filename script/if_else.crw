@@ -1,0 +1,7 @@
+(let
+    (cond
+        (+ 1) 
+            (print "yes\n")
+        (+ 0) 
+            (print "no\n")))
+

@@ -1,5 +1,6 @@
 enum OPERATOR_TYPE {
     CUSTOM = 0,
+    CONDITION,
     ADD,
     SUBTRACT,
     DIVIDE,
@@ -26,3 +27,4 @@ struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_closure_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type);

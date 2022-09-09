@@ -13,6 +13,7 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
         head->operator->handle(head->operator, ctx);
     }else{
         head->value = previous->value;
+        ctx->value = head->value;
     }
 }
 
@@ -54,12 +55,14 @@ static bool set_cell_func(struct crw_state *ctx){
 }
 
 static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    ctx->cell = ctx->cell->next;
-    if(ctx->cell == NULL){
-        ctx->value = NULL;
-        set_cell_func(ctx);
-    }else{
-        ctx->value = ctx->cell->value;
+    if(ctx->cell){
+        ctx->cell = ctx->cell->next;
+        if(ctx->cell == NULL){
+            ctx->value = NULL;
+            set_cell_func(ctx);
+        }else{
+            ctx->value = ctx->cell->value;
+        }
     }
 }
 

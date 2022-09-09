@@ -5,7 +5,8 @@
 #include "../operators/operator.h"
 
 struct closure *init_basic_library(struct closure *closure){
-    /** ========== variabls =========*/
+    /** ========== condition =========*/
+    closure_add_function(closure, str("cond"), new_condition_operator(CONDITION));
 
     /** ========== arithemtic ========= */
     /* + */

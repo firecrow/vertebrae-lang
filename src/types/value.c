@@ -6,6 +6,10 @@
 /* this is for debugging */
 int next_value_id = 0;
 
+static truty_false(struct value_obj *value){
+    return 0;
+}
+
 struct value_obj *new_value(){
    struct value_obj *value = malloc(sizeof(struct value_obj)); 
 
@@ -15,6 +19,7 @@ struct value_obj *new_value(){
 
    memset(value, 0, sizeof(struct value_obj));
    value->id = next_value_id++;
+   value->truthy = truty_false;
 
    return value;
 }

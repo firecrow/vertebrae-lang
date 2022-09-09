@@ -2,6 +2,7 @@
 #include "../ssimple.h"
 #include "../core/core.h"
 #include "../types/types.h"
+#include "../run/run.h"
 #include "operator.h"
 
 struct arithmetic_operator {
@@ -11,14 +12,17 @@ struct arithmetic_operator {
     struct value *value;
 };
 
-static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struct value_obj *value){
+static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct head *head = ctx->head;
+    struct value_obj *value = ctx->value;
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Cannot do arithmetic on non integer value recieved %d", value->type);
-        exit(1);
+        /*exit(1);*/
     }
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
         head->value = clone_value(value);
+        ctx->default_handle(op, ctx);
         return;
     }
 
@@ -33,6 +37,8 @@ static void arithmetic_handle(struct operator_ifc *_op, struct head *head, struc
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
+
+    ctx->default_handle(op, ctx);
 }
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {
