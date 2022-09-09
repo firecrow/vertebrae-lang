@@ -3,6 +3,8 @@
     (cond
         (+ 0) 
             (say-hi "sam")
-        (+ 0) 
+        (+ 1) 
             (say-hi "sarah")
+
+        (print "oh well\n")
 
