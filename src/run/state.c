@@ -8,6 +8,7 @@
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;
     struct head *head = ctx->head;
+    ctx->previous = previous;
 
     if(head->operator){
         head->operator->handle(head->operator, ctx);

@@ -6,6 +6,7 @@ enum CRW_STATUS {
 struct crw_state {
     enum CRW_STATUS status;
     struct head *head;
+    struct head *previous;
     struct cell *cell;
     struct stack_item *stack;
     struct value_obj *key_for_next;

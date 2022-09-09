@@ -17,7 +17,7 @@ struct condition_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
-    bool in_body;
+    bool done;
     struct cell *next;
 };
 
@@ -33,8 +33,9 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         op->next = ctx->head->cell->next;
     }
 
-    if(!op->in_body){
-        if(ctx->value && !ctx->value->truthy(ctx->value)){
+    if(!op->done){
+        /* skip if not truthy */
+        if(ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
             if(op->next->next && op->next->next){
                 ctx->cell = op->next = op->next->next->next;
             }else{
@@ -42,11 +43,12 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
             }
             return;
         }else{
-            op->in_body = 1;
+            op->done = 1;
+            ctx->cell = op->next = op->next->next;
         }
+    } else {
+        ctx->cell = NULL;
     }
-    op->in_body = 0;
-    ctx->cell = op->next = op->next->next;
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {

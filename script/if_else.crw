@@ -1,7 +1,8 @@
 (let
+    :say-hi (print "hi there, " value "\n")
     (cond
         (+ 0) 
-            (print "yes\n")
-        (+ 1) 
-            (print "no\n")))
+            (say-hi "sam")
+        (+ 0) 
+            (say-hi "sarah")
 
