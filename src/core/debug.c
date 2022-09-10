@@ -64,7 +64,7 @@ void print_cell(struct cell *cell){
         print_value(cell->value);
     }
     printf("C(n%d/h%d", cell->next != NULL, cell->branch != NULL);
-    printf(")");
+    printf(")>");
     fflush(stdout);
 }
 

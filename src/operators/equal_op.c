@@ -27,7 +27,7 @@ static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value = ctx->builtins.false;
     }
 
-    ctx->default_handle(op, ctx);
+    default_next(ctx);
 }
 
 struct operator_ifc * new_equal_operator(enum OPERATOR_TYPE type) {

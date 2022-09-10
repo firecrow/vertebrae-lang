@@ -24,15 +24,22 @@ static bool set_cell_func(struct crw_state *ctx){
     return 0;
 }
 
-void close_branch_if_end(struct crw_state *ctx){
-    if(!ctx->cell){
-        ctx->head->operator->handle(ctx->head->operator, ctx);
-    }
+void close_branch(struct crw_state *ctx){
+    ctx->head->operator->handle(ctx->head->operator, ctx);
 }
 
 void default_next(struct crw_state *ctx){
     if(ctx->cell){
+
+        printf("\n");
+        print_cell(ctx->cell);
+        printf(" -> ");
+        print_cell(ctx->cell->next);
+        printf("\n");
+
         ctx->cell = ctx->cell->next;
+    }else{
+        printf("already null\n");
     }
 }
 
@@ -43,6 +50,7 @@ static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {
     struct operator_ifc *op = malloc(sizeof(struct operator_ifc));
     memset(op, 0, sizeof(struct operator_ifc));
+    op->type = type;
     op->handle = default_handle;
     op->new = new_default_operator;
     return op;

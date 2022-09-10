@@ -236,7 +236,7 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 }
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
-    if(value->type != SL_TYPE_SYMBOL){
+    if(!value || value->type != SL_TYPE_SYMBOL){
         return value;
     }
     if(value && value->type == SL_TYPE_SYMBOL && !strncmp(value->slot.string->content, "value", strlen("value"))){

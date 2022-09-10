@@ -17,24 +17,16 @@ int main(int argc, char *argv[]) {
 
     init_basic_library(global); 
 
-    struct stack_item *stack = new_stack_item(NULL, NULL, setup_new_head(head, root->branch, global));
-    struct crw_state *ctx = crw_new_state_context(root->branch, global, stack);
+    struct stack_item *stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
+    struct crw_state *ctx = crw_new_state_context(root,  global, stack);
 
-    /*
-    printf("--------------------------------\n");
-    printf(" >> ");
-    print_cell(ctx->cell);
+    printf("root: ");
+    print_cell(root);
     printf("\n");
-    */
-
     while(!ctx->status == CRW_DONE){
-       ctx->next(ctx); 
-       /*
-       printf("--------------------------------\n");
-       printf(" >> ");
-       print_cell(ctx->cell);
+       printf("cell: ");print_cell(ctx->cell);
        printf("\n");
-       */
+       ctx->next(ctx); 
     }
 
     return 0;

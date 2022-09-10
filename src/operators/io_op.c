@@ -13,7 +13,9 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /* this is the head cell */
     if(ctx->head->cell == ctx->cell){
+        default_next(ctx);
         return;
     }
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){

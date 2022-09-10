@@ -1,5 +1,6 @@
 enum OPERATOR_TYPE {
     CUSTOM = 0,
+    DEFAULT,
     CONDITION,
     ADD,
     SUBTRACT,
@@ -24,7 +25,7 @@ struct operator_ifc {
 };
 
 void default_next(struct crw_state *ctx);
-void close_branch_if_end(struct crw_state *ctx);
+void close_branch(struct crw_state *ctx);
 
 struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);

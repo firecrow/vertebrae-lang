@@ -13,6 +13,11 @@ struct arithmetic_operator {
 };
 
 static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /* this is the head cell */
+    if(ctx->head->cell == ctx->cell){
+        default_next(ctx);
+        return;
+    }
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(value->type != SL_TYPE_INT){
@@ -22,7 +27,7 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
         head->value = clone_value(value);
-        ctx->default_handle(op, ctx);
+        default_next(ctx);
         return;
     }
 
@@ -38,7 +43,7 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
 
-    ctx->default_handle(op, ctx);
+    default_next(ctx);
 }
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {

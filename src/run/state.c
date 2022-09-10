@@ -25,6 +25,7 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void pop_stack(struct crw_state *ctx){
+    printf("poping stack...\n");
     struct head *previous = ctx->head;
     ctx->head = ctx->stack->head;
     if(ctx->stack->cell){
@@ -56,7 +57,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    state->builtins.error = new_result_value_obj(ERROR);
 
    state->head = setup_new_head(new_head(), root, closure);
-   state->cell = root->next;
+   state->cell = root;
    state->stack = stack;
    state->status = CRW_CONTINUE;
    state->next = next_step;
@@ -65,6 +66,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 static void next_step(struct crw_state *ctx){
+    printf("id: %d\n",ctx->cell->id);
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
@@ -73,26 +75,25 @@ static void next_step(struct crw_state *ctx){
     /* if we see keys in the open they can be skipped */
     bool in_key = crw_process_keys(ctx);
 
-    if(!in_key){
+    if(in_key){
+        default_next(ctx);
+    }else{
         if(ctx->cell->branch){
+
+            printf("\nbranch");
+            print_cell(ctx->cell->branch);
+            fflush(stdout);
+
             ctx->stack = push_stack(ctx, ctx->cell);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
         }
-
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-        if(ctx->cell != ctx->head->cell){
-            struct value_obj *head_value = swap_for_symbol(ctx->head->closure, ctx->head->cell->value);
-            if(head_value->type == SL_TYPE_CELL){
-                ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-            }else{
-                ctx->head->operator->handle(ctx->head->operator, ctx);
-            }
-        }
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
 
     if(ctx->cell == NULL){
+        close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }
