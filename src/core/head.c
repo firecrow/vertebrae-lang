@@ -10,6 +10,7 @@ struct head *new_head(){
         return NULL;
     }
     memset(head, 0, sizeof(struct head));
+    head->operator = new_default_operator;
     return head;
 }
 

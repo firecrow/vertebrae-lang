@@ -1,12 +1,1 @@
-(let
-    (print :head 1 2 3)
-    (print :cell 1 2 3)
-    (if 
-        (= 1 2) 
-            (print "the world is upside down")
-        (if 
-            (= 1 3) 
-                (print true)
-                (print false))
-            (print "the world is proper order")
-        (print "end")))
+(print "hello")

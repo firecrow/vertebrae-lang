@@ -23,9 +23,14 @@ struct operator_ifc {
     operator_handle_func *handle;
 };
 
+void default_next(struct crw_state *ctx);
+void close_branch_if_end(struct crw_state *ctx);
+
 struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_closure_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_equal_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type);
+

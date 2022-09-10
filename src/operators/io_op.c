@@ -13,10 +13,9 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->value == NULL){
+    if(ctx->head->cell == ctx->cell){
         return;
     }
-
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         print_head(ctx->head);
         printf("\n");
@@ -24,9 +23,12 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         print_cell(ctx->cell);
         printf("\n");
     }else{
-        printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
+        /* this means it's not a finish call */
+        if(ctx->cell != NULL && ctx->value){
+            printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
+        }
     }
-    ctx->default_handle(_op, ctx);
+    default_next(ctx);
 }
 
 struct print_operator *print_singleton;
