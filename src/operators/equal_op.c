@@ -9,21 +9,22 @@ struct equal_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
-    struct value *value;
+    struct value_obj *value;
 };
 
 static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct equal_operator *op = (struct equal_operator *)_op;
     struct head *head = ctx->head;
     if(!op->value){
-        head->value = true_obj;
+        head->value =  ctx->builtins.true;
         op->value = ctx->value;
         return;
     }
 
-    if(op->value->equals && op->value->equals(value)){
-        head->value = ctx->builtins->true;
+    if(op->value->equals && op->value->equals(ctx->value)){
+        head->value = ctx->builtins.true;
     }else{
-        head->value = ctx->builtins->false;
+        head->value = ctx->builtins.false;
     }
 
     ctx->default_handle(op, ctx);
