@@ -28,6 +28,12 @@ struct condition_operator {
  * such that each successful branch will run it's next cell on the op->next level
  */
 static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /* this is the head cell */
+    if(ctx->head->cell == ctx->cell){
+        default_next(ctx);
+        return;
+    }
+    printf("condition called\n");
     struct condition_operator *op = (struct condition_operator *)_op;
     if(!op->next){
         op->next = ctx->head->cell->next;
@@ -35,14 +41,16 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
     if(!op->done){
         /* skip if not truthy */
-        if(ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
+        if(!ctx->previous || ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
             if(op->next->next && op->next->next){
                 ctx->cell = op->next = op->next->next->next;
             }else{
                 ctx->cell = NULL;
             }
+            default_next(ctx);
             return;
         }else{
+            printf("running...\n");
             op->done = 1;
             ctx->cell = op->next = op->next->next;
         }

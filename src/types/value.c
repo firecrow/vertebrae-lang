@@ -8,8 +8,8 @@ int next_value_id = 0;
 
 /*----- univeral -----*/
 
-static bool truthy_false(struct value_obj *value){
-    return 0;
+static bool truthy_true(struct value_obj *value){
+    return 1;
 }
 
 static bool equals_false(struct value_obj *source, struct value_obj *compare){
@@ -41,7 +41,7 @@ struct value_obj *new_value(){
 
    memset(value, 0, sizeof(struct value_obj));
    value->id = next_value_id++;
-   value->truthy = truthy_false;
+   value->truthy = truthy_true;
    value->equals = equals_false;
 
    return value;
