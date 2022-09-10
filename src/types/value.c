@@ -90,11 +90,31 @@ static bool result_truthy(struct value_obj *value){
     return value->slot.result == TRUE;
 } 
 
+static struct string *result_to_string(struct value_obj *value){
+    if(value->type != SL_TYPE_BOOLEAN_RESULT){
+        fprintf(stderr, "Type not string for int to string\n");
+    }
+    enum CRW_RESULT result = value->slot.result;
+    if(result == TRUE){
+       return str("true"); 
+    }
+    if(result == FALSE){
+       return str("false"); 
+    }
+    if(result == NIL){
+       return str("nil"); 
+    }
+    if(result == ERROR){
+       return str("error"); 
+    }
+    return value->slot.string;
+}
+
 struct value_obj *new_result_value_obj(enum CRW_RESULT result){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_BOOLEAN_RESULT;
     value->slot.result = result;
-    value->to_string = default_to_string;
+    value->to_string = result_to_string;
     value->truthy = result_truthy;
     value->equals = result_equals;
     return value;
@@ -135,6 +155,7 @@ struct value_obj *new_cell_value_obj(struct cell *cell){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_CELL;
     value->slot.cell = cell;
+    value->to_string = default_to_string;
     return value;
 }
 
@@ -201,6 +222,9 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
 }
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
+    if(value->type != SL_TYPE_SYMBOL){
+        return value;
+    }
     if(value && value->type == SL_TYPE_SYMBOL && !strncmp(value->slot.string->content, "value", strlen("value"))){
         closure = closure->parent;
         if(!closure){

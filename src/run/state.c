@@ -114,7 +114,6 @@ static void next_step(struct crw_state *ctx){
         if(ctx->cell != ctx->head->cell){
 
             struct value_obj *head_value = swap_for_symbol(ctx->head->closure, ctx->head->cell->value);
-
             if(head_value->type == SL_TYPE_CELL){
 
                 ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);

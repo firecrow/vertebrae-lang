@@ -28,3 +28,4 @@ struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_closure_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_equal_operator(enum OPERATOR_TYPE type);

@@ -51,10 +51,10 @@ void closure_add_cell(struct closure *closure, struct string *key, struct cell *
     tree_add(closure->symbols, key, (void*)cell);
 }
 
-void closure_add_value(struct closure *closure, struct string *key, struct value *value){
+void closure_add_value(struct closure *closure, struct string *key, struct value_obj *value){
     struct closure_entry *entry = new_closure_entry(closure, 0);
     entry->body.value = value;
-    tree_add(closure->symbols, key, (void*)value);
+    tree_add(closure->symbols, key, value);
 }
 
 void closure_add_function(struct closure *closure, struct string *key, struct operator_ifc *op){

@@ -6,20 +6,21 @@
 #include "core.h"
 
 static char *debug_SL_TYPE[] = {
-    "NONE",
-    "SYMBOL",
-    "INT",
-    "FLOAT",
-    "CHAR",
-    "STRING",
-    "TREE",
-    "CELL",
-    "CLOSURE",
-    "FUNCTION",
-    "VALUE",
-    "COMMENT",
-    "QUOTE",
-    "KEY"
+    "SL_TYPE_NONE",
+    "SL_TYPE_BOOLEAN_RESULT",
+    "SL_TYPE_SYMBOL",
+    "SL_TYPE_INT",
+    "SL_TYPE_FLOAT",
+    "SL_TYPE_CHAR",
+    "SL_TYPE_STRING",
+    "SL_TYPE_TREE",
+    "SL_TYPE_CELL",
+    "SL_TYPE_CLOSURE",
+    "SL_TYPE_FUNCTION",
+    "SL_TYPE_VALUE",
+    "SL_TYPE_COMMENT",
+    "SL_TYPE_QUOTE",
+    "SL_TYPE_KEY"
 };
 
 void print_value(struct value_obj *value){
