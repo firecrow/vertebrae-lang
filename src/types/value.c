@@ -12,6 +12,10 @@ static bool truthy_false(struct value_obj *value){
     return 0;
 }
 
+static bool equals_false(struct value_obj *source, struct value_obj *compare){
+    return 0;
+}
+
 bool is_type(struct value_obj *value, enum SL_TYPE type){
     return value && value->type == type;
 }
@@ -38,6 +42,7 @@ struct value_obj *new_value(){
    memset(value, 0, sizeof(struct value_obj));
    value->id = next_value_id++;
    value->truthy = truthy_false;
+   value->equals = equals_false;
 
    return value;
 }
@@ -140,12 +145,24 @@ static struct string *int_truthy(struct value_obj *value){
     return value->slot.integer != 0;
 }
 
+static bool int_equals(struct value_obj *source, struct value_obj *compare){
+    if(source->type != SL_TYPE_INT){
+        return 0;
+    }
+    if(source->type != compare->type){
+        return 0;
+    }
+
+    return source->slot.integer == compare->slot.integer;
+}
+
 struct value_obj *new_int_value_obj(int intval){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_INT;
     value->slot.integer = intval;
     value->to_string = int_to_string;
     value->truthy = int_truthy;
+    value->equals = int_equals;
     return value;
 }
 
@@ -209,10 +226,7 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
     }
 
     if(regex_match("^[0-9]\\+$", token)){
-        value->type = SL_TYPE_INT;
-        value->slot.integer = atoi(token->content);
-        value->to_string = int_to_string;
-        return value;
+        return new_int_value_obj(atoi(token->content));
     }
 
     value->type = SL_TYPE_SYMBOL;

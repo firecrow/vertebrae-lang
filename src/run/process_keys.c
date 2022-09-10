@@ -9,6 +9,7 @@ bool crw_process_keys(struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->cell->value;
     if(value && value->type == SL_TYPE_KEY){
+        tree_update(ctx->head->closure->symbols, value->slot.string, ctx->builtins.nil);
         ctx->key_for_next = value;
         return 1;
     }else if(ctx->key_for_next){

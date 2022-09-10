@@ -16,11 +16,15 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(ctx->value == NULL){
         return;
     }
-    if(ctx->value && ctx->value->to_string){
-        printf("%s", ctx->value->to_string(ctx->value)->content);
+
+    if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
+        print_head(ctx->head);
+        printf("\n");
+    }else if(tree_get(ctx->head->closure->symbols, str("cell")) != NULL){
+        print_cell(ctx->cell);
+        printf("\n");
     }else{
-        fprintf(stderr, "Cannot print non string value\n");
-        /*exit(1);*/
+        printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
     }
     ctx->default_handle(_op, ctx);
 }

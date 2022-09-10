@@ -104,10 +104,11 @@ void print_state(struct crw_state *ctx, bool show_tree){
 
 void print_tree(struct tree *tree){
     struct order_entry *oentry = tree->order;
+    printf("tree: ");
     while(oentry){
-        printf("key:%s", oentry->entry->key->content);
+        printf("key:%s ", oentry->entry->key->content);
         print_value(oentry->entry->content);
-        printf("\n");
+        printf(", ");
         oentry = oentry->next;
     }
 }

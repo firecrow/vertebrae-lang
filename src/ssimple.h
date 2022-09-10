@@ -90,7 +90,7 @@ struct value_obj {
     } slot;
     struct string *(*to_string)(struct value_obj *value);
     bool (*truthy)(struct value_obj *value);
-    bool (*equals)(struct value_obj *value);
+    bool (*equals)(struct value_obj *source, struct value_obj *compare);
 };
 
 struct cell {

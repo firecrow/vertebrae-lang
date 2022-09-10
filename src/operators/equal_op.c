@@ -21,7 +21,7 @@ static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return;
     }
 
-    if(op->value->equals && op->value->equals(ctx->value)){
+    if(op->value->equals(op->value, ctx->value)){
         head->value = ctx->builtins.true;
     }else{
         head->value = ctx->builtins.false;
