@@ -27,12 +27,13 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 
 void pop_stack(struct crw_state *ctx){
     struct head *previous = ctx->head;
-    ctx->head = ctx->stack->head;
     if(ctx->stack->cell){
-        ctx->cell = ctx->stack->cell->next;
+        ctx->cell = ctx->stack->cell;
     }else{
         ctx->cell = NULL;
     }
+
+    ctx->head = ctx->stack->head;
     ctx->stack = ctx->stack->previous;
     passthrough(ctx, previous);
     ctx->nesting--;
@@ -81,13 +82,13 @@ static void next_step(struct crw_state *ctx){
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
         }
-        
-        
-        if(ctx->head->cell->value->type == SL_TYPE_CELL){
-            printf("its a value cell\n");
-        }
-        
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        
+        if(ctx->value->type == SL_TYPE_CELL){
+            ctx->cell = ctx->value->slot.cell;
+            ctx->stack = push_stack(ctx, ctx->cell);
+            ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+        }
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
 

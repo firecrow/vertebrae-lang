@@ -1,4 +1,7 @@
 (let 
     :func (print "hi") 
     (print :tree)
+    (func)
+    (func)
+    (func)
     (func))

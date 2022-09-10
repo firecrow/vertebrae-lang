@@ -19,21 +19,26 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return;
     }
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
+        printf("\x1b[34m");
         print_head(ctx->head);
-        printf("\n");
+        printf("\x1b[0m\n");
     }else if(tree_get(ctx->head->closure->symbols, str("cell")) != NULL){
+        printf("\x1b[34m");
         print_cell(ctx->cell);
-        printf("\n");
+        printf("\x1b[0m\n");
     }else if(tree_get(ctx->head->closure->symbols, str("tree")) != NULL){
+        printf("\x1b[34m<tree ");
         print_tree(ctx->head->closure->parent->symbols);
-        printf("\n");
+        printf(">\x1b[0m\n");
     }else{
         /* this means it's not a finish call */
         if(ctx->value){
             printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
         }
     }
-    default_next(ctx);
+    if(ctx->value){
+        default_next(ctx);
+    }
 }
 
 struct print_operator *print_singleton;
