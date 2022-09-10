@@ -8,6 +8,7 @@ struct tree *new_tree(){
     if(tree == NULL){
         return NULL;
     }
+    memset(tree, 0, sizeof(struct tree));
     return tree;
 };
 
@@ -16,6 +17,16 @@ static struct tree_entry *new_tree_entry(){
     if(entry == NULL){
         return NULL;
     }
+    memset(entry, 0, sizeof(struct tree_entry));
+    return entry;
+}
+
+static struct tree_entry *new_order_entry(){
+    struct order_entry *entry = malloc(sizeof(struct order_entry));
+    if(entry == NULL){
+        return NULL;
+    }
+    memset(entry, 0, sizeof(struct order_entry));
     return entry;
 }
 
@@ -30,7 +41,7 @@ static unsigned long djb2_hash(struct string *string){
 }
 
 static void _push_order(struct tree *tree, struct tree_entry *new){
-    struct order_entry *order_entry = malloc(sizeof(struct order_entry));
+    struct order_entry *order_entry = new_order_entry();
     order_entry->entry = new;
     if(order_entry == NULL){
         fprintf(stderr, "Error allocating order entry\n");

@@ -79,7 +79,6 @@ struct string *get_or_create_token(struct parse_ctx *ctx){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
-    printf("%c\n", c);
 
     struct cell *slot;
     struct cell *new;

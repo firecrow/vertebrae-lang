@@ -25,21 +25,13 @@ static bool set_cell_func(struct crw_state *ctx){
 }
 
 void close_branch(struct crw_state *ctx){
+    ctx->value = NULL;
     ctx->head->operator->handle(ctx->head->operator, ctx);
 }
 
 void default_next(struct crw_state *ctx){
     if(ctx->cell){
-
-        printf("\n");
-        print_cell(ctx->cell);
-        printf(" -> ");
-        print_cell(ctx->cell->next);
-        printf("\n");
-
         ctx->cell = ctx->cell->next;
-    }else{
-        printf("already null\n");
     }
 }
 

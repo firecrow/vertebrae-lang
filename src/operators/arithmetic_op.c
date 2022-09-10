@@ -20,6 +20,9 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
+    if(!value){
+        return;
+    }
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Cannot do arithmetic on non integer value recieved %d", value->type);
         /*exit(1);*/

@@ -1,1 +1,4 @@
-(print (+ 1))
+(let 
+    :func (print "hi") 
+    (print :tree)
+    (func))

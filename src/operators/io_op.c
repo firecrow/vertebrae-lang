@@ -24,9 +24,12 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else if(tree_get(ctx->head->closure->symbols, str("cell")) != NULL){
         print_cell(ctx->cell);
         printf("\n");
+    }else if(tree_get(ctx->head->closure->symbols, str("tree")) != NULL){
+        print_tree(ctx->head->closure->parent->symbols);
+        printf("\n");
     }else{
         /* this means it's not a finish call */
-        if(ctx->cell != NULL && ctx->value){
+        if(ctx->value){
             printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
         }
     }

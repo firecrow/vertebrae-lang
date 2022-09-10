@@ -11,9 +11,10 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->previous = previous;
 
     if(head->operator){
+        ctx->value = previous->value;
         head->operator->handle(head->operator, ctx);
     }else{
-        ctx->value = head->value;
+        ctx->value = previous->value;
     }
     head->value = previous->value;
 }
@@ -25,7 +26,6 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void pop_stack(struct crw_state *ctx){
-    printf("poping stack...\n");
     struct head *previous = ctx->head;
     ctx->head = ctx->stack->head;
     if(ctx->stack->cell){
@@ -48,7 +48,6 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
       return NULL;
    }
 
-
    memset(state, 0, sizeof(struct crw_state));
 
    state->builtins.true = new_result_value_obj(TRUE);
@@ -66,7 +65,6 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 }
 
 static void next_step(struct crw_state *ctx){
-    printf("id: %d\n",ctx->cell->id);
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
@@ -79,15 +77,16 @@ static void next_step(struct crw_state *ctx){
         default_next(ctx);
     }else{
         if(ctx->cell->branch){
-
-            printf("\nbranch");
-            print_cell(ctx->cell->branch);
-            fflush(stdout);
-
             ctx->stack = push_stack(ctx, ctx->cell);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
         }
+        
+        
+        if(ctx->head->cell->value->type == SL_TYPE_CELL){
+            printf("its a value cell\n");
+        }
+        
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
