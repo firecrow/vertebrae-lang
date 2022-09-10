@@ -37,7 +37,11 @@ void default_next(struct crw_state *ctx){
 }
 
 static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    default_next(ctx);
+    if(ctx->head->cell && ctx->head->cell->value &&  ctx->head->cell->value->type == SL_TYPE_CELL){
+        ctx->cell = ctx->head->value->slot.cell;
+    }else{
+        default_next(ctx);
+    }
 }
 
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {

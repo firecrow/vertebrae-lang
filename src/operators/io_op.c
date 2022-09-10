@@ -21,23 +21,25 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");
         print_head(ctx->head);
-        printf("\x1b[0m\n");
+        printf("\x1b[0m");
     }else if(tree_get(ctx->head->closure->symbols, str("cell")) != NULL){
         printf("\x1b[34m");
         print_cell(ctx->cell);
-        printf("\x1b[0m\n");
+        printf("\x1b[0m");
     }else if(tree_get(ctx->head->closure->symbols, str("tree")) != NULL){
         printf("\x1b[34m<tree ");
-        print_tree(ctx->head->closure->parent->symbols);
-        printf(">\x1b[0m\n");
+        print_tree(ctx->head->closure->symbols);
+        printf(">\x1b[0m");
     }else{
         /* this means it's not a finish call */
         if(ctx->value){
-            printf("\x1b[34m%s\x1b[0m\n", ctx->value->to_string(ctx->value)->content);
+            printf("\x1b[34m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
         }
     }
     if(ctx->value){
         default_next(ctx);
+    }else{
+        printf("\n");
     }
 }
 

@@ -83,12 +83,6 @@ static void next_step(struct crw_state *ctx){
             ctx->cell = ctx->cell->branch;
         }
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-        
-        if(ctx->value->type == SL_TYPE_CELL){
-            ctx->cell = ctx->value->slot.cell;
-            ctx->stack = push_stack(ctx, ctx->cell);
-            ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
-        }
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
 

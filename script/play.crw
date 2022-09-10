@@ -1,1 +1,9 @@
-(let (if (false) (print "yes")))
+(let 
+      :compare 4
+      :func (if 
+        (= x compare)
+            (print compare " and " x " are equal")
+        (print compare " and " x " are not equal"))
+
+      (func :x 9)
+      (func :x 4))

@@ -13,6 +13,15 @@ struct equal_operator {
 };
 
 static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /* this is the head cell */
+    if(ctx->head->cell == ctx->cell){
+        default_next(ctx);
+        return;
+    }
+    if(!ctx->value){
+        return;
+    }
+    
     struct equal_operator *op = (struct equal_operator *)_op;
     struct head *head = ctx->head;
     if(!op->value){
