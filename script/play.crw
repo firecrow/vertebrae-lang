@@ -1,1 +1,1 @@
-(print true "\n")
+(if (false) (print "yes" "\n"))
