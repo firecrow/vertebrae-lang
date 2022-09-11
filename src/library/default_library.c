@@ -11,6 +11,9 @@ struct closure *init_basic_library(struct closure *closure){
     closure_add_value(closure, str("nil"), new_result_value_obj(NIL));
     closure_add_value(closure, str("error"), new_result_value_obj(ERROR));
 
+    /* --------- namespace ----------*/
+    closure_add_function(closure, str("set"), new_set_operator(SET));
+
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
     closure_add_function(closure, str("="), new_equal_operator(CONDITION));

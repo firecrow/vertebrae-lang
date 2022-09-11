@@ -3,12 +3,14 @@
 #include "../core/core.h"
 #include "types.h"
 
+int tree_id = 0;
 struct tree *new_tree(){
     struct tree *tree = malloc(sizeof(struct tree));
     if(tree == NULL){
         return NULL;
     }
     memset(tree, 0, sizeof(struct tree));
+    tree->id = tree_id++;
     return tree;
 };
 

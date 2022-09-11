@@ -42,6 +42,7 @@ struct tree_entry {
 };
 struct tree {
     enum SL_TYPE type;
+    int id;
     struct tree_entry *root; 
     struct order_entry *order; 
     struct order_entry *_last_order; 

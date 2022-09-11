@@ -6,7 +6,9 @@ COREOBJ := build/parse.o build/cell.o build/head.o \
 TYPESOBJ := build/string.o build/regex.o build/tree.o \
 	build/value.o
 
-OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o build/equal_op.o build/default_op.o build/function_op.o\
+OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
+	build/equal_op.o build/default_op.o build/function_op.o\
+	build/set_op.o
 
 LIBRARYOBJ := build/default_library.o
 

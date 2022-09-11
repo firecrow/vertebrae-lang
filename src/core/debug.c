@@ -103,6 +103,7 @@ void print_state(struct crw_state *ctx, bool show_tree){
 }
 
 void print_tree(struct tree *tree){
+    printf("<tree %d\n", tree->id);
     struct order_entry *oentry = tree->order;
     while(oentry){
         printf("");

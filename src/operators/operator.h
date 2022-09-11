@@ -9,7 +9,8 @@ enum OPERATOR_TYPE {
     PRINT,
     DEFINITION,
     CLOSURE,
-    FUNCTION
+    FUNCTION,
+    SET
 };
 
 enum SL_BRANCH_TYPE {
@@ -35,4 +36,4 @@ struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_equal_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type);
-
+struct operator_ifc * new_set_operator(enum OPERATOR_TYPE type);

@@ -9,18 +9,11 @@ struct function_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
-    int count;
 };
 
 static struct function_operator *op = NULL;
 
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    /*
-    op->count++;
-    if(op->count == 5){
-        exit(1);
-    }
-    */
     if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_PASSTHROUGH){
         default_next(ctx);
         return;
@@ -45,6 +38,5 @@ struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type) {
     op->type = type;
     op->handle = function_handle;
     op->new = new_function_operator;
-    op->count = 0;
     return (struct operator_ifc *)op;
 }
