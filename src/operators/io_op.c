@@ -13,8 +13,7 @@ struct print_operator {
 };
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    /* this is the head cell */
-    if(ctx->head->cell == ctx->cell){
+    if(ctx->handle_state == CRW_IN_HEAD){
         default_next(ctx);
         return;
     }
@@ -32,7 +31,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf(">\x1b[0m");
     }else{
         /* this means it's not a finish call */
-        if(ctx->value){
+        if(ctx->value && ctx->handle_state == CRW_IN_ARG){
             printf("\x1b[33m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
         }
     }

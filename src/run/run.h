@@ -3,8 +3,16 @@ enum CRW_STATUS {
     CRW_DONE = 1
 };
 
+enum CRW_HANDLE_STATE {
+   CRW_IN_ARG = 0,
+   CRW_IN_HEAD,
+   CRW_IN_CLOSE,
+   CRW_IN_PASSTHROUGH
+};
+
 struct crw_state {
     enum CRW_STATUS status;
+    enum CRW_HANDLE_STATE handle_state;
     struct head *head;
     struct head *previous;
     struct cell *cell;
@@ -27,3 +35,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
 bool crw_process_keys(struct crw_state *ctx);
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell);
 void pop_stack(struct crw_state *ctx);
+void close_branch(struct crw_state *ctx);
+
+/* utils */
+struct cell *get_next(struct cell *cell);

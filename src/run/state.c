@@ -5,17 +5,20 @@
 #include "../operators/operator.h"
 #include "run.h"
 
+static set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
+    ctx->stack = push_stack(ctx, ctx->cell);
+    ctx->cell = cell;
+    ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
+    ctx->head->closure = ctx->head->closure;
+}
+
 static void passthrough(struct crw_state *ctx, struct head *previous){
-    ctx->value = previous->value;
     struct head *head = ctx->head;
     ctx->previous = previous;
-
-    if(head->operator){
-        ctx->value = previous->value;
-        head->operator->handle(head->operator, ctx);
-    }else{
-        ctx->value = previous->value;
-    }
+    ctx->value = previous->value;
+    ctx->handle_state = CRW_IN_PASSTHROUGH;
+    head->operator->handle(head->operator, ctx);
+    ctx->handle_state = CRW_IN_ARG;
     head->value = previous->value;
 }
 
@@ -25,26 +28,28 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
     return item;
 }
 
-void pop_stack(struct crw_state *ctx){
-
-    struct head *previous = ctx->head;
-    if(ctx->stack && ctx->stack->head->operator->type == FUNCTION){
-        if(ctx->stack->cell){
-            ctx->cell = ctx->stack->cell->next;
-        }else{
-            ctx->cell = NULL;
-        }
-        if(ctx->stack->cell){
-            ctx->stack->cell = ctx->stack->cell->next;
-        }else{
-            ctx->stack->cell = NULL;
-        }
-    }else if(ctx->stack->cell){
-        ctx->cell = ctx->stack->cell;
-    }else{
-        ctx->cell = NULL;
+static bool set_cell_func(struct crw_state *ctx){
+    if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
+        set_custom_cell_as_head(ctx, ctx->head->source->slot.cell);
+        ctx->head->source = NULL;
+        return 1;
     }
+    if(ctx->head->operator){
+        ctx->head->operator->handle(ctx->head->operator, ctx);
+    }
+    return 0;
+}
 
+void close_branch(struct crw_state *ctx){
+    ctx->key_for_next = NULL;
+    ctx->handle_state = CRW_IN_CLOSE;
+    ctx->head->operator->handle(ctx->head->operator, ctx);
+    ctx->handle_state = CRW_IN_ARG;
+}
+
+void pop_stack(struct crw_state *ctx){
+    struct head *previous = ctx->head;
+    ctx->cell = ctx->stack->cell;
     ctx->head = ctx->stack->head;
     ctx->stack = ctx->stack->previous;
     passthrough(ctx, previous);
@@ -74,6 +79,8 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    state->status = CRW_CONTINUE;
    state->next = next_step;
 
+   state->handle_state = CRW_IN_ARG;
+
    return state;
 }
 
@@ -93,13 +100,16 @@ static void next_step(struct crw_state *ctx){
             ctx->stack = push_stack(ctx, ctx->cell);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
+            ctx->handle_state = CRW_IN_HEAD;
         }
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         ctx->head->operator->handle(ctx->head->operator, ctx);
+        ctx->handle_state = CRW_IN_ARG;
     }
 
     if(ctx->cell == NULL){
         close_branch(ctx);
+
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }

@@ -13,8 +13,7 @@ struct arithmetic_operator {
 };
 
 static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    /* this is the head cell */
-    if(ctx->head->cell == ctx->cell){
+    if(!ctx->handle_state == CRW_IN_HEAD){
         default_next(ctx);
         return;
     }

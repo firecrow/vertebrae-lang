@@ -26,7 +26,6 @@ struct operator_ifc {
 };
 
 void default_next(struct crw_state *ctx);
-void close_branch(struct crw_state *ctx);
 
 struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
