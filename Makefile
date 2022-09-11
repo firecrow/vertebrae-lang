@@ -15,10 +15,10 @@ LIBRARYOBJ := build/default_library.o
 
 OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
-all: crow-lisp
+all: gekkota
 
-crow-lisp: dir $(OBJECTS)
-	$(CC) -g -o bin/crow-lisp src/main.c $(OBJECTS)
+gekkota: dir $(OBJECTS)
+	$(CC) -g -o bin/gekkota src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
 	$(CC) -g -c  $<  -o $@
@@ -53,7 +53,7 @@ bin/test: test/unit.c dir $(OBJECTS)
 	$(CC) -g -o bin/test test/unit.c $(OBJECTS)
 
 run:
-	./bin/crow-lisp script/example.sl
+	./bin/gekkota script/example.sl
 
 install:
-	cp ./bin/crow-lisp $(INSTALL_DIR)
+	cp ./bin/gekkota $(INSTALL_DIR)
