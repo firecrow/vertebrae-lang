@@ -9,7 +9,7 @@
     (list-func "yo" "dummy" "nail" "scratch")
 
     .nested-func (
-        if (true)
+        if (false)
                 '(print "the right answer is " (+ 1))
             (true)
                 '(print "the wrong answer is " (+ 3)))

@@ -45,11 +45,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
             printf("\n");
         }
     }
-    if(ctx->value){
-        default_next(ctx);
-    }else{
-        printf("\n");
-    }
+    default_next(ctx);
     ctx->head->value = ctx->value;
 }
 
