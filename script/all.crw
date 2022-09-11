@@ -9,10 +9,10 @@
     (list-func "yo" "dummy" "nail" "scratch")
 
     .nested-func (
-        if (false)
-                '(+ 1)
+        if (true)
+                '(print "the right answer is " (+ 1))
             (true)
-                '(+ 2))
-    (print nested-func)
+                '(print "the wrong answer is " (+ 3)))
+    (nested-func)
 
     (print .data))
