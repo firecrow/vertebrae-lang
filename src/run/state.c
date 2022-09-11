@@ -100,6 +100,9 @@ static void next_step(struct crw_state *ctx){
             ctx->stack = push_stack(ctx, ctx->cell);
             ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
             ctx->cell = ctx->cell->branch;
+            if(ctx->cell && is_non_head_class(ctx->cell->value)){
+                return;
+            }
             ctx->handle_state = CRW_IN_HEAD;
         }
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);

@@ -24,6 +24,7 @@ struct value_obj *new_int_value_obj(int intval);
 struct value_obj *new_cell_value_obj(struct cell *cell);
 struct value_obj *new_result_value_obj(enum CRW_RESULT result);
 bool is_string_class(struct value_obj *value);
+bool is_non_head_class(struct value_obj *value);
 
 /* tree */
 struct order_entry {

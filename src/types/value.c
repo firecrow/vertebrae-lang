@@ -210,7 +210,15 @@ struct value_obj *new_key_value_obj(struct string *string){
 }
 
 
-/*----- factories -----*/
+/*----- factories/utils -----*/
+
+bool is_non_head_class(struct value_obj *value){
+    if(!value){
+        return 0;
+    }
+    return value->type == SL_TYPE_NONE || 
+        value->type == SL_TYPE_KEY;
+}
 
 struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
 

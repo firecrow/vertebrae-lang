@@ -1,16 +1,13 @@
-(let
+(
     .location "sticks"
-    .place 17
-    .say-hi (let 
-        (print "hello " value ", how is the " subject " in the " location "?\n"))
-    .greet (let 
+    .say-hi (print "hello " value ", how is the " subject " in the " location "?\n")
+    .greet ( 
             .subject "rowing"
             (if (= place 2)
-                (let 
-                    (print "running")
-                    (set .location "UK")))
+                    ((print "running")
+                        (set .location "UK")))
 
             (print .data)
             (say-hi "sam" "dash" "usa" "hazel"))
 
-    (greet .place 2) 
+    (greet .place 2))
