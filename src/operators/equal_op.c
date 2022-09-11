@@ -13,14 +13,11 @@ struct equal_operator {
 };
 
 static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(!ctx->handle_state == CRW_IN_HEAD){
+    if(ctx->handle_state == CRW_IN_HEAD){
         default_next(ctx);
         return;
     }
-    if(!ctx->value){
-        return;
-    }
-    
+        
     struct equal_operator *op = (struct equal_operator *)_op;
     struct head *head = ctx->head;
     if(!op->value){
