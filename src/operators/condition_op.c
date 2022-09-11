@@ -49,7 +49,8 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         }else{
             op->done = 1;
             ctx->cell = op->next = op->next->next;
-        }
+            ctx->head->value = ctx->cell->value;
+        }       
     } else {
         ctx->cell = NULL;
     }

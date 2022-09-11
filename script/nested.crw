@@ -1,0 +1,10 @@
+(
+    .nested-func (
+        if (false)
+                (+ 1)
+            (true)
+                (+ 2))
+                
+
+    (print nested-func)
+    (print .data))

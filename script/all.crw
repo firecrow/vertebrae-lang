@@ -1,0 +1,14 @@
+(
+    .default "hello"
+    .level 10
+    .prop-func '(print default " " name)
+    .list-func '(print default " hello you are ? " value)
+    .nested-func (
+        if (= level 10)
+            '(print "its ten degress " location)
+         '(print "its NOT 10 degress " location))
+
+    (prop-func .name "sally")
+    (list-func "yo" "dummy" "nail" "scratch")
+    (print nested-func)
+    (print .data))

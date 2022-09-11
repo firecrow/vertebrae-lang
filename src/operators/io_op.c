@@ -41,6 +41,8 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         /* this means it's not a finish call */
         if(ctx->value && ctx->handle_state != CRW_IN_CLOSE){
             printf("\x1b[33m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
+        }else if(ctx->handle_state == CRW_IN_CLOSE){
+            printf("\n");
         }
     }
     if(ctx->value){
@@ -48,7 +50,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else{
         printf("\n");
     }
-    ctx->head->value = ctx->builtins.true;
+    ctx->head->value = ctx->value;
 }
 
 struct print_operator *print_singleton;

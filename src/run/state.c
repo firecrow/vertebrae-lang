@@ -17,6 +17,7 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->previous = previous;
     ctx->value = previous->value;
 
+    printf("passthrough");
     crw_process_keys(ctx);
 
     head->value = previous->value;
@@ -94,6 +95,7 @@ static void next_step(struct crw_state *ctx){
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    print_value(ctx->value);
     bool is_key = crw_process_keys(ctx);
 
     if(ctx->cell->branch){
