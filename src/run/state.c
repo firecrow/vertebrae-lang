@@ -59,7 +59,7 @@ void pop_stack(struct crw_state *ctx){
 static void next_step(struct crw_state *ctx);
 
 
-struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack){
+struct crw_state *crw_new_state_context(struct cell* root, struct stack_item *stack){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
 
    if(state == NULL){
@@ -73,7 +73,7 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *closu
    state->builtins.nil = new_result_value_obj(NIL);
    state->builtins.error = new_result_value_obj(ERROR);
 
-   state->head = setup_new_head(new_head(), root, closure);
+   state->head = setup_new_head(new_head(), root, stack->head->closure);
    state->cell = root;
    state->stack = stack;
    state->status = CRW_CONTINUE;
@@ -90,25 +90,32 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
-    /* if we see keys in the open they can be skipped */
+    if(ctx->cell->branch){
+        ctx->stack = push_stack(ctx, ctx->cell);
+        printf("\x1b[32mbranch %d", ctx->head->closure->symbols->id);
+        print_cell(ctx->cell->branch);
+        ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
+        printf("-> %d\x1b[0m\n", ctx->head->closure->symbols->id);
+        ctx->cell = ctx->cell->branch;
+        /*
+        if(ctx->cell && is_non_head_class(ctx->cell->value)){
+            return;
+        }
+        */
+        ctx->handle_state = CRW_IN_HEAD;
+    }
+    print_head(ctx->head);
+
+    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
-    if(in_key){
-        default_next(ctx);
-    }else{
-        if(ctx->cell->branch){
-            ctx->stack = push_stack(ctx, ctx->cell);
-            ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
-            ctx->cell = ctx->cell->branch;
-            if(ctx->cell && is_non_head_class(ctx->cell->value)){
-                return;
-            }
-            ctx->handle_state = CRW_IN_HEAD;
-        }
-        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    /* if we see keys in the open they can be skipped */
+    if(!in_key){
         ctx->head->operator->handle(ctx->head->operator, ctx);
-        ctx->handle_state = CRW_IN_ARG;
+    }else{
+        default_next(ctx);
     }
+    ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){
         close_branch(ctx);

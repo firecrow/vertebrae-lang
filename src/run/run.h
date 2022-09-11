@@ -31,7 +31,7 @@ struct crw_state {
     int nesting;
 };
 
-struct crw_state *crw_new_state_context(struct cell* root, struct closure *closure, struct stack_item *stack);
+struct crw_state *crw_new_state_context(struct cell* root, struct stack_item *stack);
 bool crw_process_keys(struct crw_state *ctx);
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell);
 void pop_stack(struct crw_state *ctx);

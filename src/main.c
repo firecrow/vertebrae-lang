@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     init_basic_library(global); 
 
     struct stack_item *stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    struct crw_state *ctx = crw_new_state_context(root,  global, stack);
+    struct crw_state *ctx = crw_new_state_context(root, stack);
 
     while(!ctx->status == CRW_DONE){
        ctx->next(ctx); 

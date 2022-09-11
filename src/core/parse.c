@@ -69,7 +69,9 @@ void finalize_cell(struct parse_ctx *ctx){
     if(ctx->state != START){
         ctx->prev_state = ctx->state;
     }
-    ctx->state = START;
+    if(ctx->state != IN_QUOTE){
+        ctx->state = START;
+    }
 }
 
 struct string *get_or_create_token(struct parse_ctx *ctx){
@@ -142,24 +144,27 @@ void parse_char(struct parse_ctx *ctx, char c){
     if(c == '('){
         finalize_cell(ctx);
 
-        stack_cell = new_cell();
         new = new_cell();
-        if(new == NULL || stack_cell == NULL){
-            fprintf(stderr, "Error allocating root cell aborting");
-            exit(1);
-        }
-
-        stack_cell->branch = new;
-        slot = ctx->current;
-
-        ctx->current = new;
-        ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
-
-        if(!ctx->root){
-            ctx->root = stack_cell;
+        if(ctx->state == IN_QUOTE){
+            ctx->current->value = new_cell_value_obj(new);
+            ctx->stack = push_stack(ctx->stack, ctx->current, NULL);
+            ctx->current->next = new_cell();
+            ctx->current = ctx->current->next;
         }else{
-            if(slot){
-                slot->next = stack_cell;
+            stack_cell = new_cell();
+            stack_cell->branch = new;
+
+            slot = ctx->current;
+
+            ctx->current = new;
+            ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
+
+            if(!ctx->root){
+                ctx->root = stack_cell;
+            }else{
+                if(slot){
+                    slot->next = stack_cell;
+                }
             }
         }
 
@@ -211,6 +216,12 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     if(c == '.'){
        ctx->state = IN_KEY; 
+       ctx->closing_char = ' ';
+       return;
+    }
+
+    if(c == '\''){
+       ctx->state = IN_QUOTE; 
        ctx->closing_char = ' ';
        return;
     }

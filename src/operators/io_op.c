@@ -48,6 +48,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else{
         printf("\n");
     }
+    ctx->head->value = ctx->builtins.true;
 }
 
 struct print_operator *print_singleton;
