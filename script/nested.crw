@@ -3,7 +3,7 @@
         if (false)
                 (+ 1)
             (true)
-                (+ 2))
+                '(+ 2))
                 
 
     (print nested-func)
