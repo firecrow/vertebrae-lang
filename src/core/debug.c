@@ -50,6 +50,9 @@ void print_value(struct value_obj *value){
     if(value->type == SL_TYPE_COMMENT){
         printf("%s", value->slot.string->content);
     }
+    if(value->type == SL_TYPE_BOOLEAN_RESULT){
+        printf("%s", value->to_string(value)->content);
+    }
 
     printf(" %s %d", debug_SL_TYPE[value->type], value->id);
 }

@@ -39,7 +39,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         }
     }else{
         /* this means it's not a finish call */
-        if(ctx->value && ctx->handle_state == CRW_IN_ARG){
+        if(ctx->value && ctx->handle_state != CRW_IN_CLOSE){
             printf("\x1b[33m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
         }
     }

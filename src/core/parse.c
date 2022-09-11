@@ -20,8 +20,6 @@ static struct stack_item *push_stack(struct stack_item *existing, struct cell *c
     return item;
 }
 
-
-
 struct cell *parse_all(struct string *string){
     struct parse_ctx *ctx = new_parse_ctx();
 
@@ -59,13 +57,15 @@ void assign_cell_attributes(enum SL_PARSE_STATE state, struct cell *cell, struct
     cell->value = value_from_token(state, token);
 }
 
+bool is_whitespace(char c){
+    return c == ' ' || c == '\t' || c == '\n';
+}
+
 void finalize_cell(struct parse_ctx *ctx){
     if(ctx->token){
         assign_cell_attributes(ctx->state, ctx->current, ctx->token);
-
         ctx->token = NULL;
     }
-
     if(ctx->state != START){
         ctx->prev_state = ctx->state;
     }
@@ -81,7 +81,6 @@ struct string *get_or_create_token(struct parse_ctx *ctx){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
-
     struct cell *slot;
     struct cell *new;
     struct cell *stack_cell;
@@ -183,8 +182,10 @@ void parse_char(struct parse_ctx *ctx, char c){
         return;
     }
 
-    if(c == ' ' || c == '\t' || c == '\n'){
-        finalize_cell(ctx);
+    if(is_whitespace(c)){
+        if(ctx->token && ctx->token->length){
+            finalize_cell(ctx);
+        }
         return;
     }
 

@@ -34,6 +34,7 @@ enum SL_TYPE {
 
 enum SL_PARSE_STATE {
     START = 0,
+    IN_CELL_STARTED,
     IN_CELL,
     IN_COMMENT,
     IN_STRING,
@@ -127,6 +128,7 @@ struct head {
     struct value_obj *value;
     struct value_obj *source;
     struct cell *cell;
+    struct value_obj *key_for_next;
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);

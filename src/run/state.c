@@ -16,10 +16,14 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     struct head *head = ctx->head;
     ctx->previous = previous;
     ctx->value = previous->value;
+
+    crw_process_keys(ctx);
+
+    head->value = previous->value;
+
     ctx->handle_state = CRW_IN_PASSTHROUGH;
     head->operator->handle(head->operator, ctx);
     ctx->handle_state = CRW_IN_ARG;
-    head->value = previous->value;
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
@@ -41,7 +45,6 @@ static bool set_cell_func(struct crw_state *ctx){
 }
 
 void close_branch(struct crw_state *ctx){
-    ctx->key_for_next = NULL;
     ctx->handle_state = CRW_IN_CLOSE;
     ctx->head->operator->handle(ctx->head->operator, ctx);
     ctx->handle_state = CRW_IN_ARG;
@@ -90,27 +93,27 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
+    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    bool is_key = crw_process_keys(ctx);
+
     if(ctx->cell->branch){
         ctx->stack = push_stack(ctx, ctx->cell);
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
         ctx->cell = ctx->cell->branch;
-        /*
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
             return;
         }
-        */
         ctx->handle_state = CRW_IN_HEAD;
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    bool in_key = crw_process_keys(ctx);
 
-    /* if we see keys in the open they can be skipped */
-    if(!in_key){
+    if(!is_key){
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }else{
-        default_next(ctx);
+        default_next(ctx);  
     }
+
     ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){

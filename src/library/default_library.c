@@ -16,7 +16,7 @@ struct closure *init_basic_library(struct closure *closure){
 
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
-    closure_add_function(closure, str("="), new_equal_operator(CONDITION));
+    closure_add_function(closure, str("="), new_equal_operator(EQUAL));
     /*
     closure_add_function(closure, str("and"), new_and_operator(CONDITION));
     closure_add_function(closure, str("or"), new_or_operator(CONDITION));

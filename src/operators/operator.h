@@ -2,6 +2,7 @@ enum OPERATOR_TYPE {
     CUSTOM = 0,
     DEFAULT,
     CONDITION,
+    EQUAL,
     ADD,
     SUBTRACT,
     DIVIDE,

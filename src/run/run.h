@@ -17,7 +17,6 @@ struct crw_state {
     struct head *previous;
     struct cell *cell;
     struct stack_item *stack;
-    struct value_obj *key_for_next;
     struct value_obj *value;
     struct {
         struct value_obj *true;
