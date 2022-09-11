@@ -92,10 +92,7 @@ static void next_step(struct crw_state *ctx){
 
     if(ctx->cell->branch){
         ctx->stack = push_stack(ctx, ctx->cell);
-        printf("\x1b[32mbranch %d", ctx->head->closure->symbols->id);
-        print_cell(ctx->cell->branch);
         ctx->head = setup_new_head(new_head(), ctx->cell->branch, ctx->head->closure);
-        printf("-> %d\x1b[0m\n", ctx->head->closure->symbols->id);
         ctx->cell = ctx->cell->branch;
         /*
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
@@ -104,7 +101,6 @@ static void next_step(struct crw_state *ctx){
         */
         ctx->handle_state = CRW_IN_HEAD;
     }
-    print_head(ctx->head);
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);

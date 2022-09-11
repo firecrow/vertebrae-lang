@@ -148,8 +148,7 @@ void parse_char(struct parse_ctx *ctx, char c){
         if(ctx->state == IN_QUOTE){
             ctx->current->value = new_cell_value_obj(new);
             ctx->stack = push_stack(ctx->stack, ctx->current, NULL);
-            ctx->current->next = new_cell();
-            ctx->current = ctx->current->next;
+            ctx->current = new;
         }else{
             stack_cell = new_cell();
             stack_cell->branch = new;

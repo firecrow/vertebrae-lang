@@ -30,7 +30,6 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     ctx->cell = func->next;
 }
 
-
 struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type) {
     if(op == NULL){
         op = malloc(sizeof(struct function_operator));

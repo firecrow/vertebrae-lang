@@ -8,16 +8,12 @@
 bool crw_process_keys(struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->cell->value;
-    printf("\n");
     if(value && value->type == SL_TYPE_KEY){
         tree_update(ctx->head->closure->symbols, value->slot.string, ctx->builtins.nil);
         ctx->key_for_next = value;
         return 1;
     }else if(ctx->key_for_next){
-        printf("processing:%s", ctx->key_for_next->slot.string->content);
-        print_value(ctx->cell->value);
         tree_update(ctx->head->closure->symbols, ctx->key_for_next->slot.string, value);
-        print_tree(ctx->head->closure->symbols);
         ctx->key_for_next = NULL;
         return 0;
     }else{

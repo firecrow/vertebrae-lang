@@ -1,4 +1,6 @@
 (
     .hi 2
-    .say-hi '(print "hi\n")
+    .say-hi '(print greetings " " value " hi")
+    (say-hi .greetings "hello" hi 3 4 5)
+    (print "after")
     (print .data))
