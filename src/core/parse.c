@@ -209,7 +209,7 @@ void parse_char(struct parse_ctx *ctx, char c){
        return;
     }
 
-    if(c == ':'){
+    if(c == '.'){
        ctx->state = IN_KEY; 
        ctx->closing_char = ' ';
        return;

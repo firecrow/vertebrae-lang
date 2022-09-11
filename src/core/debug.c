@@ -42,7 +42,7 @@ void print_value(struct value_obj *value){
         printf("%d", value->slot.integer);
     }
     if(value->type == SL_TYPE_KEY){
-        printf(":%s", value->slot.string->content);
+        printf(".%s", value->slot.string->content);
     }
     if(value->type == SL_TYPE_QUOTE){
         printf("'%s", value->slot.string->content);

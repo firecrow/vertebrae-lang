@@ -1,12 +1,12 @@
 (let
-    :location "default location"
-    :say-hi (print 
+    .location "default location"
+    .say-hi (print 
         "hello " value ", how is the " subject "? " location "\n")
-    :greet (let 
-        :subject "rowing"
-                (if (= place 2)
-                   (let :location "UK"))
+    .greet (let 
+        .subject "rowing"
+            (if (= place 2)
+               (let .location "UK"))
 
-                (say-hi  "sam" "dash" "usa" "hazel"))
+            (say-hi  "sam" "dash" "usa" "hazel"))
 
-    (greet :place 3))
+    (greet .place 3))
