@@ -25,7 +25,6 @@ static bool set_cell_func(struct crw_state *ctx){
 }
 
 void close_branch(struct crw_state *ctx){
-    ctx->value = NULL;
     ctx->key_for_next = NULL;
     ctx->head->operator->handle(ctx->head->operator, ctx);
 }

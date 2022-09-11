@@ -33,7 +33,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else{
         /* this means it's not a finish call */
         if(ctx->value){
-            printf("\x1b[34m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
+            printf("\x1b[33m%s\x1b[0m", ctx->value->to_string(ctx->value)->content);
         }
     }
     if(ctx->value){

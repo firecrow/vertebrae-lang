@@ -43,6 +43,7 @@ struct value_obj *new_value(){
    value->id = next_value_id++;
    value->truthy = truthy_true;
    value->equals = equals_false;
+   value->to_string = default_to_string;
 
    return value;
 }
@@ -167,22 +168,34 @@ struct value_obj *new_int_value_obj(int intval){
 }
 
 /*----- cell -----*/
+static struct string *cell_to_string(struct value_obj *value){
+    return str("<cell>");
+}
 
 struct value_obj *new_cell_value_obj(struct cell *cell){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_CELL;
     value->slot.cell = cell;
-    value->to_string = default_to_string;
+    value->to_string = cell_to_string;
     return value;
 }
 
 /*----- symbol -----*/
+static struct string *symbol_to_string(struct value_obj *value){
+    if(value->type != SL_TYPE_SYMBOL){
+        fprintf(stderr, "Type not string for int to string\n");
+    }
+    struct string *output = str("<symbol:");
+    string_append(output, value->slot.string);
+    string_append(output, str(">"));
+    return output;
+}
 
 struct value_obj *new_symbol_value_obj(struct string *string){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_SYMBOL;
     value->slot.string = string;
-    value->to_string = string_to_string;
+    value->to_string = symbol_to_string;
     return value;
 }
 
@@ -229,21 +242,12 @@ struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *tok
         return new_int_value_obj(atoi(token->content));
     }
 
-    value->type = SL_TYPE_SYMBOL;
-    value->slot.string = token;
-
-    return value;
+    return new_symbol_value_obj(token);
 }
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
     if(!value || value->type != SL_TYPE_SYMBOL){
         return value;
-    }
-    if(value && value->type == SL_TYPE_SYMBOL && !strncmp(value->slot.string->content, "value", strlen("value"))){
-        closure = closure->parent;
-        if(!closure){
-            return value;
-        }
     }
     struct value_obj *result = closure->lookup(closure, value);
     if(result){

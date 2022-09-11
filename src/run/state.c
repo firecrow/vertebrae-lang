@@ -26,8 +26,20 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void pop_stack(struct crw_state *ctx){
+
     struct head *previous = ctx->head;
-    if(ctx->stack->cell){
+    if(ctx->stack && ctx->stack->head->operator->type == FUNCTION){
+        if(ctx->stack->cell){
+            ctx->cell = ctx->stack->cell->next;
+        }else{
+            ctx->cell = NULL;
+        }
+        if(ctx->stack->cell){
+            ctx->stack->cell = ctx->stack->cell->next;
+        }else{
+            ctx->stack->cell = NULL;
+        }
+    }else if(ctx->stack->cell){
         ctx->cell = ctx->stack->cell;
     }else{
         ctx->cell = NULL;
