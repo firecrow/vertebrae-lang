@@ -88,6 +88,10 @@ static bool result_equals(struct value_obj *source, struct value_obj *compare){
     return source->slot.result == compare->slot.result;
 }
 
+bool value_is_nil(struct value_obj *value){
+    return value && value->type == SL_TYPE_BOOLEAN_RESULT && value->slot.result == NIL;
+}
+
 static bool result_truthy(struct value_obj *value){
     if(value->type != SL_TYPE_BOOLEAN_RESULT){
         fprintf(stderr, "Error result_truthy called on non result type\n");

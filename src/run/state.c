@@ -17,9 +17,9 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->previous = previous;
     ctx->value = previous->value;
 
-    crw_process_keys(ctx);
-
     head->value = previous->value;
+    ctx->value = head->value;
+    crw_process_keys(ctx);
 
     ctx->handle_state = CRW_IN_PASSTHROUGH;
     head->operator->handle(head->operator, ctx);

@@ -17,7 +17,6 @@ static void set_handle(struct operator_ifc *_op, struct crw_state *ctx){
         default_next(ctx);
         return;
     }
-    printf("set called\n");
 
     struct order_entry *oentry = ctx->head->closure->symbols->order;
     while(oentry){
@@ -26,7 +25,7 @@ static void set_handle(struct operator_ifc *_op, struct crw_state *ctx){
             struct value_obj *result = NULL;
             while(closure && !result){
                 result = tree_get(closure->symbols, oentry->entry->key);
-                if(result){
+                if(result && !value_is_nil(result)){
                     tree_add(closure->symbols, oentry->entry->key, oentry->entry->content);
                     break;
                 }

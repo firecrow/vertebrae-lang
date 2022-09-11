@@ -1,4 +1,5 @@
 CC := cc
+INSTALL_DIR := /home/firecrow/bin
 COREOBJ := build/parse.o build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \
 	build/state.o build/process_keys.o  build/utils.o
@@ -53,3 +54,6 @@ bin/test: test/unit.c dir $(OBJECTS)
 
 run:
 	./bin/crow-lisp script/example.sl
+
+install:
+	cp ./bin/crow-lisp $(INSTALL_DIR)

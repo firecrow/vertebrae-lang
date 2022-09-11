@@ -24,7 +24,7 @@ struct value_obj *closure_lookup(struct closure *closure, struct value_obj *key)
         return key;
     }
     struct value_obj *result = NULL;
-    while(closure && !result){
+    while(closure && (!result || value_is_nil(result))){
         result = tree_get(closure->symbols, key->slot.string);
         closure = closure->parent;
     }

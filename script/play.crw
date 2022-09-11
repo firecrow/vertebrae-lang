@@ -1,10 +1,6 @@
 (
-    .show (
-        if (true) 
-            ('(print 1)) 
-        (true) 
-            ('(print 2)) 
-        (true) 
-            ('(print 3))) 
-    (print .data)
-    (print show))
+.i 1
+(print i)
+(set .i (+ 3 2 i))
+(print i)
+(print .data))
