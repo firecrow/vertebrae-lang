@@ -249,9 +249,13 @@ struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *val
     if(!value || value->type != SL_TYPE_SYMBOL){
         return value;
     }
-    struct value_obj *result = closure->lookup(closure, value);
-    if(result){
-        return result;
+    struct value_obj *prior = NULL;
+    while(prior != value && value->type == SL_TYPE_SYMBOL){
+        prior = value;
+        struct value_obj *result = closure->lookup(closure, value);
+        if(result){
+            value = result;
+        }
     }
     return value;
 }

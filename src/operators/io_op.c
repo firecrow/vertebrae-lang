@@ -29,6 +29,14 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("\x1b[34m<tree ");
         print_tree(ctx->head->closure->symbols);
         printf(">\x1b[0m");
+    }else if(tree_get(ctx->head->closure->symbols, str("data")) != NULL){
+        struct closure *closure = ctx->head->closure;
+        while(closure){
+            printf("\x1b[34m<---- tree\n");
+            print_tree(closure->symbols);
+            printf("\x1b[0m\n");
+            closure = closure->parent;
+        }
     }else{
         /* this means it's not a finish call */
         if(ctx->value && ctx->handle_state == CRW_IN_ARG){

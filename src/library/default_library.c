@@ -11,7 +11,6 @@ struct closure *init_basic_library(struct closure *closure){
     closure_add_value(closure, str("nil"), new_result_value_obj(NIL));
     closure_add_value(closure, str("error"), new_result_value_obj(ERROR));
 
-
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
     closure_add_function(closure, str("="), new_equal_operator(CONDITION));
@@ -38,6 +37,25 @@ struct closure *init_basic_library(struct closure *closure){
     /* ---------- io ---------- */
     /* print */
     closure_add_function(closure, str("print"), new_print_operator(PRINT));
+    /* open file */
+    /* close file */
+    /* open socket */
+    /* close socket */
+    /* read */
+    /* read async */
+    /* rename file */
+    /* move file */
+
+    /* ---------- sub ---------- */
+    /* exec */
+    /* wait */
+    /* status */
+    /* kill */
+    /* deamonize */
+
+    /* ---------- sqlite ---------- */
+
+    /* ---------- webserver ---------- */
 
     /* ---------- string ---------- */
     /* concat */
@@ -45,6 +63,12 @@ struct closure *init_basic_library(struct closure *closure){
     /* to upper */
     /* to lower */
     /* trim */
+    /* colors */
+
+    /* ---------- regex ---------- */
+    /* match */
+    /* replace */
+    /* get groups */
 
     /* -------- arrays --------= */
     /* split */
@@ -52,7 +76,7 @@ struct closure *init_basic_library(struct closure *closure){
     /* concat */
 
     /* -------- objects --------= */
-    /* creation */
+    /* clone creation */
     /* property access */
 
     /* --------= logic --------= */

@@ -25,10 +25,7 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         head->operator = new_default_operator(DEFAULT);
         head->value = value;
     }
-    /*
     head->closure = new_closure(closure);
-    */
-    head->closure = closure;
     head->source = value;
     head->cell = cell;
     return head;
