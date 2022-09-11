@@ -1,5 +1,5 @@
 
-ta
+# Gakkota
 Functional Language inspired by lisp
 
 ## About
