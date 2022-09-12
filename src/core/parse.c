@@ -2,6 +2,41 @@
 
 void parse_char(struct parse_ctx *ctx, char c);
 
+static enum match_state {
+  GKA_PARSE_NOT_STARTED = 0,
+  GKA_PARSE_PARTIAL,
+  GKA_PARSE_IN_MATCH,
+  GKA_PARSE_DONE
+};
+
+static enum match_result {
+  GKA_PARSE_NOT_ACTIVE,
+  GKA_PARSE_EXCLUSIVE,
+  GKA_PARSE_LISTENING,
+};
+
+struct match_pattern {
+  enum match_type type;  
+  enum match_state state;
+  struct cell *(*finalize)(struct cell_match_pattern *pattern);
+  void *data;
+};
+
+static typedef struct match_pattern (*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
+
+#define GKA_PATTERN_COUNT 9
+struct pattern_incr_func patterns[GKA_PATTERN_COUNT] = {
+  string_incr
+  open_cell
+  close_cell
+  quote_incr
+  key_incr
+  not_incr
+  incr_incr
+  number_incr
+  symbol_incr
+};
+
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
 
@@ -10,6 +45,15 @@ struct parse_ctx *new_parse_ctx(){
     }
     memset(ctx, 0, sizeof(struct parse_ctx));
     return ctx;
+}
+
+void setup_parse_ctx(struct parse_ctx *ctx){
+  for(int i = 0; i< GKA_PATTERN_COUNT; i++){
+    struct match_pattern *pattern = malloc(sizeof(struct match_pattern));
+    memset(pattern, 0, sizeof(struct match_pattern));
+    pattern->incr = patterns[i];
+    ctx->patterns[i] = pattern; 
+  }
 }
 
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
@@ -97,7 +141,6 @@ void parse_char(struct parse_ctx *ctx, char c){
 
         return;
     }
-
 
     if(ctx->state == IN_STRING){
         if(c == '\\'){
