@@ -1,6 +1,6 @@
 
-# Gakkota
-Functional Language inspired by lisp
+# Gekkota
+Functional Programming Language with Property Access
 
 ## About
 Gekkota is a language inspired by lisp, it has a syntax somewhere in the common lisp universe but is adjusted to focus on more direct access for less formal consistency.
