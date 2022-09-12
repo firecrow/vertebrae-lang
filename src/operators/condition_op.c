@@ -1,11 +1,6 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../run/run.h"
-#include "operator.h"
+#include "../gekkota.h"
 
-static enum phases {
+enum phases {
     NOT_STARTEd = 0,
     IF,
     ELSE_IF,

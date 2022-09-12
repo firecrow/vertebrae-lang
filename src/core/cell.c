@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "core.h"
+#include "../gekkota.h"
 
 struct value_obj *get_or_create_value(struct cell *cell){
     if(cell->value == NULL){

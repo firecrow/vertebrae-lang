@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "types.h"
+#include "../gekkota.h"
 
 /* this is for debugging */
 int next_value_id = 0;
@@ -22,7 +19,7 @@ bool is_type(struct value_obj *value, enum SL_TYPE type){
 
 struct value_obj *clone_value(struct value_obj *value){
    /* TODO: not yet implemented */
-   if(value->type = SL_TYPE_INT){
+   if(value->type == SL_TYPE_INT){
         return new_int_value_obj(value->slot.integer);
    }
    return value;
@@ -143,7 +140,7 @@ static struct string *int_to_string(struct value_obj *value){
 }
 
 
-static struct string *int_truthy(struct value_obj *value){
+bool int_truthy(struct value_obj *value){
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Type not int for int to string");
     }

@@ -1,15 +1,11 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
-#include "core.h"
+#include "../gekkota.h"
 
 struct closure *new_closure(struct closure *parent){
     struct closure *closure = malloc(sizeof(struct closure));
     if(closure == NULL){
         return NULL;
     }
-    memset(closure, 0, sizeof(closure));
+    memset(closure, 0, sizeof(struct closure));
     closure->parent = parent;
     closure->symbols = new_tree();
     closure->lookup = closure_lookup;

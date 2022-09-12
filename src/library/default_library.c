@@ -1,10 +1,6 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
+#include "../gekkota.h"
 
-struct closure *init_basic_library(struct closure *closure){
+void init_basic_library(struct closure *closure){
     /** ---------- builtin --------=*/
     closure_add_value(closure, str("true"), new_result_value_obj(TRUE));
     closure_add_value(closure, str("false"), new_result_value_obj(FALSE));

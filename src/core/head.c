@@ -1,8 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
-#include "core.h"
+#include "../gekkota.h"
 
 struct head *new_head(){
     struct head *head = malloc(sizeof(struct head));

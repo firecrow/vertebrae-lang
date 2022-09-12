@@ -1,9 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
-#include "../run/run.h"
-#include "core.h"
+#include "../gekkota.h"
 
 static char *debug_SL_TYPE[] = {
     "SL_TYPE_NONE",

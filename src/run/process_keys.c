@@ -1,9 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../core/core.h"
-#include "../operators/operator.h"
-#include "run.h"
+#include "../gekkota.h"
 
 bool crw_process_keys(struct crw_state *ctx){
     struct value_obj *value = ctx->value;

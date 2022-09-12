@@ -1,1 +1,1 @@
-struct closure *init_basic_library(struct closure *closure);
+void init_basic_library(struct closure *closure);

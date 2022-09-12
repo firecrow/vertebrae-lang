@@ -1,11 +1,6 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../core/core.h"
-#include "../operators/operator.h"
-#include "run.h"
+#include "../gekkota.h"
 
-static set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
+static void set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->cell = cell;
     ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);

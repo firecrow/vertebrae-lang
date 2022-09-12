@@ -1,3 +1,5 @@
+#include "../gekkota.h"
+
 /* =========== concat ==========*/
 struct string_concat_operator {
     int type;

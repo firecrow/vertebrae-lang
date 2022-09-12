@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "core.h"
+#include "../gekkota.h"
 
 void parse_char(struct parse_ctx *ctx, char c);
 
@@ -15,7 +12,7 @@ struct parse_ctx *new_parse_ctx(){
     return ctx;
 }
 
-static struct stack_item *push_stack(struct stack_item *existing, struct cell *cell, struct head *head){
+static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
     struct stack_item *item = new_stack_item(existing, cell, head);
     return item;
 }
@@ -81,6 +78,7 @@ struct string *get_or_create_token(struct parse_ctx *ctx){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
+
     struct cell *slot;
     struct cell *new;
     struct cell *stack_cell;
@@ -146,7 +144,7 @@ void parse_char(struct parse_ctx *ctx, char c){
         new = new_cell();
         if(ctx->state == IN_QUOTE){
             ctx->current->value = new_cell_value_obj(new);
-            ctx->stack = push_stack(ctx->stack, ctx->current, NULL);
+            ctx->stack = push_parse_stack(ctx->stack, ctx->current, NULL);
             ctx->current = new;
         }else{
             stack_cell = new_cell();
@@ -155,7 +153,7 @@ void parse_char(struct parse_ctx *ctx, char c){
             slot = ctx->current;
 
             ctx->current = new;
-            ctx->stack = push_stack(ctx->stack, stack_cell, NULL);
+            ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
 
             if(!ctx->root){
                 ctx->root = stack_cell;

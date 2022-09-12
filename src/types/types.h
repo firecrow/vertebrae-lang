@@ -1,8 +1,8 @@
 /* string */
 struct string *new_string();
 struct string *clone_string(struct string *string);
-struct string *string_free(struct string *string);
-int _string_resize(struct string *string, size_t length);
+void string_free(struct string *string);
+void _string_resize(struct string *string, size_t length);
 int string_append(struct string *string, struct string *additional);
 int string_append_char(struct string *string, char c);
 struct string *string_from_cstring(char *cstring);

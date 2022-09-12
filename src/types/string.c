@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "types.h"
+#include "../gekkota.h"
 
 struct string *new_string(){
     struct string *string = malloc(sizeof(struct string));
@@ -39,12 +36,12 @@ struct string *clone_string(struct string *string){
     return new;
 }
 
-struct string *string_free(struct string *string){
+void string_free(struct string *string){
     free(string->content);
     free(string);
 }
 
-int _string_resize(struct string *string, size_t length){
+void _string_resize(struct string *string, size_t length){
     if(string->allocated < length){
         while(string->allocated < length+1){
             string->allocated = string->allocated * 2;

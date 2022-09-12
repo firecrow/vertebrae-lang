@@ -59,7 +59,7 @@ struct closure_entry {
     enum SL_TYPE type;
     union {
         struct cell *cell;
-        struct value *value;
+        struct value_obj *value;
         struct operator_ifc *function;
     } body;
 };

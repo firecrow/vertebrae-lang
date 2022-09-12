@@ -24,7 +24,7 @@ struct crw_state {
         struct value_obj *nil;
         struct value_obj *error;
     } builtins;
-    bool (*next)(struct crw_state *ctx);
+    void (*next)(struct crw_state *ctx);
     void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
     /* for debugging */
     int nesting;
