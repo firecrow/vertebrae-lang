@@ -9,22 +9,20 @@ static enum match_state {
   GKA_PARSE_DONE
 };
 
-static enum match_result {
-  GKA_PARSE_NOT_ACTIVE,
-  GKA_PARSE_EXCLUSIVE,
-  GKA_PARSE_LISTENING,
-};
+static typedef struct cell *(*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
 
 struct match_pattern {
   enum match_type type;  
   enum match_state state;
-  struct cell *(*finalize)(struct cell_match_pattern *pattern);
+  bool in_escape;
+  struct string token;
+  pattern_incr_func incr; 
   void *data;
 };
 
-static typedef struct match_pattern (*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
 
 #define GKA_PATTERN_COUNT 9
+#define GKA_PATTERN_START 0 
 struct pattern_incr_func patterns[GKA_PATTERN_COUNT] = {
   string_incr
   open_cell
@@ -121,6 +119,67 @@ struct string *get_or_create_token(struct parse_ctx *ctx){
     return ctx->token;
 }
 
+void parse_char(struct parse_ctx *ctx, char c){
+  int pattern_idx = GKA_PATTERN_START;
+  struct match_pattern *current = NULL;
+  enum match_state result = GKA_PARSE_NOT_STARTED;
+
+  while(pattern_idx < GKA_PATTERN_COUNT){
+    current = ctx->patterns[patter_idx++];
+    current->incr(current, ctx);
+    if(pattern->state > GKA_PARTIAL){
+      break;
+    }
+  }
+}
+
+/* ----- string ----- */
+struct match_pattern (*pattern_incr_func)(struct cell_match_pattern *pattern, char c){
+    if(pattern->state == GKA_NOT_STARTED){
+      if(c == '"'){
+        pattern->state = GKA_PARSE_IN_MATCH;
+      }
+    } else if(pattern->state == IN_MATCH){
+        if(c == '\\'){
+            /* if we are escaping the \ then take no action */
+            if(pattern->in_escape){
+                pattern->in_escape = 0;
+            }else{
+                pattern->in_escape = 1;
+                return;
+            }
+        }
+        if(pattern->in_escape){
+            pattern->in_escape = 0;
+            if(c == 'n'){
+                c = '\n';
+            }
+            if(c == 't'){
+                c = '\t';
+            }
+        }
+
+        if(!pattern->in_escape && c == '"'){
+            pattern->state = GKA_PARSE_DONE;
+            ctx->slot = ctx->current;
+            ctx->current = new_string_value_obj(pattern->token);
+            ctx->slot->next = ctx->current;
+        }else{
+            string_append_char(pattern->token, c);
+        }
+        reeturn NULL;
+    }
+}
+/* ----- open cell ----- */
+/* ----- close cell ----- */
+/* ----- quote ' ----- */
+/* ----- not ! ----- */
+/* ----- super ^ ----- */
+/* ----- key ----- */
+/* ----- number ----- */
+/* ----- symbol ----- */
+
+/*
 void parse_char(struct parse_ctx *ctx, char c){
 
     struct cell *slot;
@@ -277,3 +336,4 @@ void parse_char(struct parse_ctx *ctx, char c){
 
     string_append_char(get_or_create_token(ctx), c);
 }
+*/
