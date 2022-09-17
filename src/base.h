@@ -101,18 +101,6 @@ struct cell {
     struct cell *branch;
 };
 
-struct parse_ctx {
-    struct cell *current;
-    struct cell *root;
-    struct stack_item *stack;
-    enum SL_PARSE_STATE state;
-    enum SL_PARSE_STATE prev_state;
-    bool in_escape;
-    bool has_comment_char;
-    struct string *token;
-    char closing_char;
-};
-
 struct stack_item {
     struct cell *cell;
     struct head *head;

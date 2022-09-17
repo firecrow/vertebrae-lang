@@ -1,40 +1,5 @@
 #include "../gekkota.h"
 
-void parse_char(struct parse_ctx *ctx, char c);
-
-static enum match_state {
-  GKA_PARSE_NOT_STARTED = 0,
-  GKA_PARSE_PARTIAL,
-  GKA_PARSE_IN_MATCH,
-  GKA_PARSE_DONE
-};
-
-static typedef struct cell *(*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
-
-struct match_pattern {
-  enum match_type type;  
-  enum match_state state;
-  bool in_escape;
-  struct string token;
-  pattern_incr_func incr; 
-  void *data;
-};
-
-
-#define GKA_PATTERN_COUNT 9
-#define GKA_PATTERN_START 0 
-struct pattern_incr_func patterns[GKA_PATTERN_COUNT] = {
-  string_incr
-  open_cell
-  close_cell
-  quote_incr
-  key_incr
-  not_incr
-  incr_incr
-  number_incr
-  symbol_incr
-};
-
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
 
@@ -44,6 +9,7 @@ struct parse_ctx *new_parse_ctx(){
     memset(ctx, 0, sizeof(struct parse_ctx));
     return ctx;
 }
+
 
 void setup_parse_ctx(struct parse_ctx *ctx){
   for(int i = 0; i< GKA_PATTERN_COUNT; i++){
@@ -92,54 +58,38 @@ struct cell*parse_file(int fd){
     return ctx->root; 
 }
 
-void assign_cell_attributes(enum SL_PARSE_STATE state, struct cell *cell, struct string *token){
-    cell->value = value_from_token(state, token);
-}
-
 bool is_whitespace(char c){
     return c == ' ' || c == '\t' || c == '\n';
 }
 
-void finalize_cell(struct parse_ctx *ctx){
-    if(ctx->token){
-        assign_cell_attributes(ctx->state, ctx->current, ctx->token);
-        ctx->token = NULL;
-    }
-    if(ctx->state != START){
-        ctx->prev_state = ctx->state;
-    }
-    if(ctx->state != IN_QUOTE){
-        ctx->state = START;
-    }
-}
-
-struct string *get_or_create_token(struct parse_ctx *ctx){
-    if(!ctx->token)
-        ctx->token = new_string();
-    return ctx->token;
-}
-
 void parse_char(struct parse_ctx *ctx, char c){
   int pattern_idx = GKA_PATTERN_START;
-  struct match_pattern *current = NULL;
+  struct match_pattern *pattern = NULL;
   enum match_state result = GKA_PARSE_NOT_STARTED;
 
-  while(pattern_idx < GKA_PATTERN_COUNT){
-    current = ctx->patterns[patter_idx++];
-    current->incr(current, ctx);
-    if(pattern->state > GKA_PARTIAL){
-      break;
+  ctx->current->incr(ctx->currnet, ctx, c);
+
+  if(ctx->current->state != GKA_PARSE_IN_MATCH){
+    while(pattern_idx < GKA_PATTERN_COUNT){
+      pattern = ctx->patterns[patter_idx++];
+      current->incr(current, ctx, c);
+      if(pattern->state > GKA_PARTIAL){
+        ctx->pattern = pattern;
+        break;
+      }
     }
   }
 }
 
 /* ----- string ----- */
-struct match_pattern (*pattern_incr_func)(struct cell_match_pattern *pattern, char c){
+void string_incr(struct cell_match_pattern *pattern, char c){
     if(pattern->state == GKA_NOT_STARTED){
       if(c == '"'){
         pattern->state = GKA_PARSE_IN_MATCH;
+        return;
       }
-    } else if(pattern->state == IN_MATCH){
+    }
+    if(pattern->state == IN_MATCH){
         if(c == '\\'){
             /* if we are escaping the \ then take no action */
             if(pattern->in_escape){
@@ -167,173 +117,101 @@ struct match_pattern (*pattern_incr_func)(struct cell_match_pattern *pattern, ch
         }else{
             string_append_char(pattern->token, c);
         }
-        reeturn NULL;
     }
 }
 /* ----- open cell ----- */
-/* ----- close cell ----- */
-/* ----- quote ' ----- */
-/* ----- not ! ----- */
-/* ----- super ^ ----- */
-/* ----- key ----- */
-/* ----- number ----- */
-/* ----- symbol ----- */
-
-/*
-void parse_char(struct parse_ctx *ctx, char c){
-
-    struct cell *slot;
-    struct cell *new;
-    struct cell *stack_cell;
-    struct cell *enclosing;
-    struct symbol *symbol;
-    
-    if(ctx->state == IN_COMMENT){
-        if(c == '\n'){
-            finalize_cell(ctx);
-            ctx->state = START;
-
-            return;
-        }else{
-            string_append_char(get_or_create_token(ctx), c);
-        }
-
-        return;
-    }
-
-    if(ctx->state == IN_STRING){
-        if(c == '\\'){
-            /* if we are escaping the \ then take no action */
-            if(ctx->in_escape){
-                ctx->in_escape = 0;
-            }else{
-                ctx->in_escape = 1;
-                return;
-            }
-        }
-        if(ctx->in_escape){
-            ctx->in_escape = 0;
-            if(c == 'n'){
-                c = '\n';
-            }
-            if(c == 't'){
-                c = '\t';
-            }
-        }
-
-        if(!ctx->in_escape && c == ctx->closing_char){
-            finalize_cell(ctx);
-            ctx->state = START;
-
-            return;
-        }else{
-            string_append_char(get_or_create_token(ctx), c);
-        }
-
-        return;
-    }
-
-    if(ctx->state == IN_KEY){
-        if(c != ' ' && c != ')'){
-            string_append_char(get_or_create_token(ctx), c);
-            return;
-        }
-    }
-
-    if(c == '('){
-        finalize_cell(ctx);
-
-        new = new_cell();
-        if(ctx->state == IN_QUOTE){
-            ctx->current->value = new_cell_value_obj(new);
-            ctx->stack = push_parse_stack(ctx->stack, ctx->current, NULL);
-            ctx->current = new;
-        }else{
-            stack_cell = new_cell();
-            stack_cell->branch = new;
-
-            slot = ctx->current;
-
-            ctx->current = new;
-            ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-
-            if(!ctx->root){
-                ctx->root = stack_cell;
-            }else{
-                if(slot){
-                    slot->next = stack_cell;
-                }
-            }
-        }
-
-        ctx->state = IN_CELL;
-        return;
-    }
-
-    if(c == ')'){
-
-        finalize_cell(ctx);
-        if(ctx->stack){
-            ctx->current = ctx->stack->cell;
-            ctx->stack = ctx->stack->previous;
-        }else{
-            ctx->current = NULL;
-        }
-        return;
-    }
-
-    if(is_whitespace(c)){
-        if(ctx->token && ctx->token->length){
-            finalize_cell(ctx);
-        }
-        return;
-    }
-
-    if(ctx->state == START){
-        new = new_cell();
-        if(new == NULL){
-            char msg[] = "Error allocating root cell aborting";
-            exit(1);
-        }
+void open_incr(struct cell_match_pattern *pattern, char c){
+  if(c == '('){
+    new = new_cell();
+    if(ctx->accent == GKA_PARSE_IN_QUOTE){
+        ctx->current->value = new_cell_value_obj(new);
+        ctx->stack = push_parse_stack(ctx->stack, ctx->current, NULL);
+        ctx->current = new;
+    }else{
+        stack_cell = new_cell();
+        stack_cell->branch = new;
 
         slot = ctx->current;
+
         ctx->current = new;
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+
         if(!ctx->root){
-            ctx->root = new;
+            ctx->root = stack_cell;
         }else{
             if(slot){
-                slot->next = new;
+                slot->next = stack_cell;
             }
         }
-        ctx->state = IN_CELL;
     }
-
-    if(c == '"'){
-       ctx->state = IN_STRING; 
-       ctx->closing_char = '"';
-       return;
-    }
-
-    if(c == '.'){
-       ctx->state = IN_KEY; 
-       ctx->closing_char = ' ';
-       return;
-    }
-
-    if(c == '\''){
-       ctx->state = IN_QUOTE; 
-       ctx->closing_char = ' ';
-       return;
-    }
-
-    if(c == '/'){
-       if(ctx->has_comment_char){
-          ctx->state = IN_COMMENT;
-       }
-       ctx->has_comment_char = 1; 
-       return;
-    }
-
-    string_append_char(get_or_create_token(ctx), c);
+    pattern->state = GKA_PARSE_DONE;
+  }
 }
-*/
+/* ----- close cell ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+    if(c == '('){
+      if(ctx->stack){
+          ctx->current = ctx->stack->cell;
+          ctx->stack = ctx->stack->previous;
+      }else{
+          ctx->current = NULL;
+      }
+      pattern->state = GKA_PARSE_DONE;
+    }
+}
+/* ----- quote ' ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+    if(c == '\''){
+       ctx->accent = GKA_ACCENT_QUOTE
+       pattern->accent = GKA_PARSE_DONE;
+    }
+}
+/* ----- not ! ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+    if(c == '!'){
+       ctx->accent = GKA_ACCENT_NOT;
+       pattern->state = GKA_PARSE_DONE;
+    }
+}
+/* ----- super ^ ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+    if(c == '^'){
+       ctx->accent = GKA_ACCENT_SUPER;
+       pattern->state = GKA_PARSE_DONE;
+    }
+}
+/* ----- key ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+  if(pattern->state == GKA_NOT_STARTED && c == '.'){
+    pattern->state = GKA_IN_MATCH;
+    return;
+  }
+  if(pattern->state == GKA_IN_MATCH){
+    if(is_alphanum(c) || c == '-'){
+      string_append_char(pattern->token, c);
+    }else{
+      pattern->state = GKA_NOT_STARTED;
+    }
+  }
+}
+/* ----- number ----- */
+void close_incr(struct cell_match_pattern *pattern, char c){
+  if(pattern->state == GKA_NOT_STARTED && c == '-' || is_num(c)){
+    string_append_char(pattern->token, c);
+  }else{
+    if(pattern->token->length){
+       int value = atoi(pattern->token);
+       ctx->add_new_cell(new_int_value_obj(value));
+    }
+    pattern->state = GKA_NOT_STARTED;
+  }
+}
+/* ----- symbol ----- */
+void symbol_incr(struct cell_match_pattern *pattern, char c){
+  if(c != '\0'){
+    string_append_char(pattern->token, c);
+  }else{
+    ctx->add_string_cell(new_symbol_value_obj(pattern->token));
+    pattern->state = GKA_NOT_STARTED;
+  }
+}
