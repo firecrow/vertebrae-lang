@@ -10,7 +10,7 @@ struct value_obj *get_or_create_value(struct cell *cell){
 /* this is for debugging */
 int next_cell_id = 0;
 
-struct cell *new_cell(){
+struct cell *new_cell(struct value_obj *value){
    struct cell *cell = malloc(sizeof(struct cell)); 
 
    if(cell == NULL){
@@ -19,6 +19,7 @@ struct cell *new_cell(){
 
    memset(cell, 0, sizeof(struct cell));
    cell->id = next_cell_id++;
+   cell->value = value;
 
    return cell;
 }

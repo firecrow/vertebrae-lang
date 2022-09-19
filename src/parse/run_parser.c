@@ -21,14 +21,26 @@ struct parse_ctx *new_parse_ctx(){
     return ctx;
 }
 
-
-void setup_parse_ctx(struct parse_ctx *ctx){
-  for(int i = 0; i< GKA_PATTERN_COUNT; i++){
+static struct match_pattern *setup_pattern(pattern_incr_func func){
     struct match_pattern *pattern = malloc(sizeof(struct match_pattern));
     memset(pattern, 0, sizeof(struct match_pattern));
-    pattern->incr = patterns[i];
-    ctx->patterns[i] = pattern; 
-  }
+    pattern->incr = func;
+    return pattern;
+}
+
+
+void setup_parse_ctx(struct parse_ctx *ctx){
+  int i = 0;
+  ctx->patterns[i++] = setup_pattern(lose_cell_incr);
+  ctx->patterns[i++] = setup_pattern(key_incr);
+  ctx->patterns[i++] = setup_pattern(not_incr);
+  ctx->patterns[i++] = setup_pattern(open_cell_incr);
+  ctx->patterns[i++] = setup_pattern(close_cell_incr);
+  ctx->patterns[i++] = setup_pattern(quote_incr);
+  ctx->patterns[i++] = setup_pattern(number_incr);
+  ctx->patterns[i++] = setup_pattern(string_incr);
+  ctx->patterns[i++] = setup_pattern(super_incr);
+  ctx->patterns[i++] = setup_pattern(symbol_incr);
 }
 
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
@@ -53,7 +65,7 @@ struct cell *parse_all(struct string *string){
     return ctx->root; 
 }
 
-struct cell*parse_file(int fd){
+struct cell *parse_file(int fd){
     char buffer[1];
 
     struct parse_ctx *ctx = new_parse_ctx();
@@ -67,10 +79,6 @@ struct cell*parse_file(int fd){
        parse_char(ctx, buffer[0]);
     }
     return ctx->root; 
-}
-
-bool is_whitespace(char c){
-    return c == ' ' || c == '\t' || c == '\n';
 }
 
 void parse_char(struct parse_ctx *ctx, char c){

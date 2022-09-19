@@ -1,13 +1,12 @@
-#include "../gekkota.h"
-#include "parse.h"
-
-void close_cell_incr(struct cell_match_pattern *pattern, char c){
+void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+  struct cell *slot;
+  struct cell *stack_cell;
   if(c == '('){
-    new = new_cell();
-    if(ctx->accent == GKA_PARSE_IN_QUOTE){
-        ctx->current->value = new_cell_value_obj(new);
-        ctx->stack = push_parse_stack(ctx->stack, ctx->current, NULL);
-        ctx->current = new;
+    struct cell *new = new_cell();
+    if(ctx->accent == GKA_PARSE_QUOTE){
+        ctx->cell->value = new_cell_value_obj(new);
+        ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
+        ctx->cell = new;
     }else{
         stack_cell = new_cell();
         stack_cell->branch = new;

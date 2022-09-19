@@ -25,7 +25,7 @@ gekkota: dir $(OBJECTS)
 build/%.o: src/core/%.c
 	$(CC) -g -c  $<  -o $@
 
-build/%.o: src/parse/%.c
+build/%.o: src/parse/run_parser.c
 	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/run/%.c

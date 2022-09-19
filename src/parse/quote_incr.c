@@ -1,9 +1,6 @@
-#include "../gekkota.h"
-#include "parse.h"
-
-void quote_incr(struct cell_match_pattern *pattern, char c){
+void quote_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
     if(c == '\''){
-       ctx->accent = GKA_ACCENT_QUOTE
-       pattern->accent = GKA_PARSE_DONE;
+       ctx->accent = GKA_PARSE_QUOTE;
+       pattern->state = GKA_PARSE_DONE;
     }
 }
