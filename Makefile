@@ -23,22 +23,22 @@ gekkota: dir $(OBJECTS)
 	$(CC) -g -o bin/gekkota src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
-	$(CC) -g -c  $<  -o $@
+	$(CC) -g -c $<  -o $@
 
-build/%.o: src/parse/run_parser.c
-	$(CC) -g -c  $<  -o $@
+build/run_parser.o: src/parse/run_parser.c
+	$(CC) -g -c src/parse/run_parser.c -o build/run_parser.o 
 
 build/%.o: src/run/%.c
-	$(CC) -g -c  $<  -o $@
+	$(CC) -g -c $<  -o $@
 
 build/%.o: src/types/%.c
-	$(CC) -g -c  $<  -o $@
+	$(CC) -g -c $<  -o $@
 
 build/%.o: src/operators/%.c
-	$(CC) -g -c  $<  -o $@
+	$(CC) -g -c $<  -o $@
 
 build/%.o: src/library/%.c
-	$(CC) -g -c  $<  -o $@
+	$(CC) -g -c $<  -o $@
 
 dir:
 	mkdir -p  build

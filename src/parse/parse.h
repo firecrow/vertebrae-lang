@@ -43,27 +43,9 @@ struct cell *parse_all(struct string *string);
 struct cell *parse_file(int fd);
 void parse_char(struct parse_ctx *ctx, char c);
 
-bool is_allnum(char c){
-  if(c >= '0' && c <= '9'){
-    return 1;
-  }
-  return 0;
-}
-
-bool is_alpha(char c){
-  if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')){
-    return 1;
-  }
-  return 0;
-}
-
-bool is_alphanum(char c){
-  return is_alpha(c) || is_allnum(c);
-}
-
-bool is_whitespace(char c){
-    return c == ' ' || c == '\t' || c == '\n';
-}
+bool is_whitespace(char c);
+bool is_alphanum(char c);
+bool is_allnum(char c);
 
 struct parse_ctx *new_parse_ctx();
 static struct match_pattern *setup_pattern(pattern_incr_func func);
