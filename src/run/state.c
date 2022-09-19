@@ -57,7 +57,7 @@ void pop_stack(struct crw_state *ctx){
 static void next_step(struct crw_state *ctx);
 
 
-struct crw_state *crw_new_state_context(struct cell* root, struct stack_item *stack){
+struct crw_state *crw_new_state_context(struct cell* root, struct closure *global){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
 
    if(state == NULL){
@@ -71,9 +71,9 @@ struct crw_state *crw_new_state_context(struct cell* root, struct stack_item *st
    state->builtins.nil = new_result_value_obj(NIL);
    state->builtins.error = new_result_value_obj(ERROR);
 
-   state->head = setup_new_head(new_head(), root, stack->head->closure);
+   state->head = setup_new_head(new_head(), root, global);
    state->cell = root;
-   state->stack = stack;
+   state->stack =  new_stack_item(NULL, root, state->head);
    state->status = CRW_CONTINUE;
    state->next = next_step;
 

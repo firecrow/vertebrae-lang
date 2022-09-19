@@ -110,14 +110,14 @@ int main(){
     head = new_head();
 
     setup_new_head(head, cell, closure);
-    test(suite, head->operator == NULL, "No operator if cell has no value");
+    test(suite, head->operator->type == DEFAULT, "No operator if cell has no value");
 
     value = new_value();
     value->type == SL_TYPE_STRING;
     cell->value = value;
 
     setup_new_head(head, cell, closure);
-    test(suite, head->operator == NULL, "Operator should not be set if value is not function");
+    test(suite, head->operator->type == DEFAULT, "Operator should not be set if value is not function");
 
     op = new_arithmetic_operator(ADD);
     op_name = str("test-op");
@@ -151,19 +151,17 @@ int main(){
     struct cell *tenth = NULL;
     struct cell *eleventh = NULL;
 
-    head = new_head();
 
     root = new_cell();
     first = new_cell();
     root->next = first;
 
     global = new_closure(NULL);
-    stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context(root, global);
 
-    test(suite, state->cell == first, "Cell are assinged");
-    test(suite, state->head->closure == global, "Global are assinged");
-    test(suite, state->stack == stack, "Stack are assinged");
+    test(suite, state->cell == root, "Cell are assinged");
+    test(suite, state->head->closure->parent == global, "Global are assinged");
+    test(suite, state->stack != NULL, "Stack are assinged");
 
     head = new_head();
 
