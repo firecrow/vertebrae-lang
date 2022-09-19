@@ -1,11 +1,4 @@
-#include "../src/external.h"
-
-#include "../src/ssimple.h"
-#include "../src/core/core.h"
-#include "../src/types/types.h"
-#include "../src/run/run.h"
-#include "../src/operators/operator.h"
-#include "../src/library/library.h"
+#include "../src/gekkota.h"
 
 char NUETRAL[] = "\x1b[0m";
 char RED[] = "\x1b[31m";
@@ -166,10 +159,10 @@ int main(){
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     test(suite, state->cell == first, "Cell are assinged");
-    test(suite, state->closure == global, "Global are assinged");
+    test(suite, state->head->closure == global, "Global are assinged");
     test(suite, state->stack == stack, "Stack are assinged");
 
     head = new_head();
@@ -190,7 +183,7 @@ int main(){
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
@@ -235,7 +228,7 @@ int main(){
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
@@ -276,7 +269,7 @@ int main(){
     third->next = fourth;
 
     stack = new_stack_item(NULL, NULL, new_head());
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     while(state->status != CRW_DONE){
        state->next(state); 
@@ -322,13 +315,13 @@ int main(){
     sixth->next = seventh;
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     while(state->status != CRW_DONE){
        state->next(state);
     }
 
-    test(suite, tree_get(state->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
+    test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
     test(suite, state->head->value->slot.integer == 3, "Final value reflects variable value");
 
     summerize(suite);
@@ -389,7 +382,7 @@ int main(){
     eigth->next = ninth;
 
     stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    state = crw_new_state_context(root, global, stack);
+    state = crw_new_state_context(root, stack);
 
     while(state->status != CRW_DONE){
        state->next(state); 
