@@ -15,7 +15,7 @@ PARSEOBJ := build/run_parser.o
 
 LIBRARYOBJ := build/default_library.o
 
-OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
+OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ) 
 
 all: gekkota
 
