@@ -1,9 +1,8 @@
 #include "../gekkota.h"
 
-#include "parse.h"
-
 #include "close_cell_incr.c"
 #include "key_incr.c"
+#include "number_incr.c"
 #include "not_incr.c"
 #include "open_cell_incr.c"
 #include "quote_incr.c"
@@ -31,7 +30,7 @@ static struct match_pattern *setup_pattern(pattern_incr_func func){
 
 void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
-  ctx->patterns[i++] = setup_pattern(lose_cell_incr);
+  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(not_incr);
   ctx->patterns[i++] = setup_pattern(open_cell_incr);
@@ -41,6 +40,7 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
+  ctx->patterns[i++] = NULL;
 }
 
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
@@ -86,14 +86,14 @@ void parse_char(struct parse_ctx *ctx, char c){
   struct match_pattern *pattern = NULL;
   enum match_state result = GKA_PARSE_NOT_STARTED;
 
-  ctx->current->incr(ctx->currnet, ctx, c);
+  ctx->current->incr(ctx->current, ctx, c);
 
   if(ctx->current->state != GKA_PARSE_IN_MATCH){
-    while(pattern_idx < GKA_PATTERN_COUNT){
-      pattern = ctx->patterns[patter_idx++];
-      current->incr(current, ctx, c);
-      if(pattern->state > GKA_PARTIAL){
-        ctx->pattern = pattern;
+    int idx = 0;
+    while((pattern = ctx->patterns[idx++])){
+      ctx->current->incr(ctx->current, ctx, c);
+      if(pattern->state > GKA_PARSE_PARTIAL){
+        ctx->current = pattern;
         break;
       }
     }

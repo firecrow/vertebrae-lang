@@ -28,9 +28,9 @@ void string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
 
         if(!pattern->in_escape && c == '"'){
             pattern->state = GKA_PARSE_DONE;
-            slot = ctx->current;
+            slot = ctx->cell;
             ctx->cell = new_cell(new_string_value_obj(pattern->token));
-            slot->next = ctx->current;
+            slot->next = ctx->cell;
         }else{
             string_append_char(pattern->token, c);
         }

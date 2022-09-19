@@ -12,4 +12,5 @@
 #include "core/core.h"
 #include "operators/operator.h"
 #include "library/library.h"
+#include "parse/parse.h"
 

@@ -1,11 +1,11 @@
-static enum match_state {
+enum match_state {
   GKA_PARSE_NOT_STARTED = 0,
   GKA_PARSE_PARTIAL,
   GKA_PARSE_IN_MATCH,
   GKA_PARSE_DONE
 };
 
-static enum parse_accent {
+enum parse_accent {
   GKA_PARSE_NO_ACCENT,
   GKA_PARSE_QUOTE,
   GKA_PARSE_SUPER,
@@ -14,8 +14,9 @@ static enum parse_accent {
 };
 
 struct match_pattern;
+struct parse_ctx;
 
-typedef enum match_state (*pattern_incr_func)(struct match_pattern *pattern, struct parse_ctx *ctx, char c);
+typedef void (*pattern_incr_func)(struct match_pattern *pattern, struct parse_ctx *ctx, char c);
 
 struct match_pattern {
   enum match_state state;
@@ -25,8 +26,8 @@ struct match_pattern {
   void *data;
 };
 
-#define GKA_PATTERN_COUNT 9
 #define GKA_PATTERN_START 0 
+#define GKA_PATTERN_COUNT 10
 
 struct parse_ctx {
     struct cell *cell;
@@ -34,7 +35,7 @@ struct parse_ctx {
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;
-    struct match_pattern patterns[GKA_PATTERN_COUNT];
+    struct match_pattern *patterns[GKA_PATTERN_COUNT];
 };
 
 struct parse_ctx *new_parse_ctx();

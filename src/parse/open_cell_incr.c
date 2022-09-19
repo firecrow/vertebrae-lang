@@ -11,9 +11,9 @@ void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         stack_cell = new_cell();
         stack_cell->branch = new;
 
-        slot = ctx->current;
+        slot = ctx->cell;
 
-        ctx->current = new;
+        ctx->cell = new;
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
 
         if(!ctx->root){
