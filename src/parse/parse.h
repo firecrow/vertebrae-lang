@@ -1,6 +1,3 @@
-
-
-
 static enum match_state {
   GKA_PARSE_NOT_STARTED = 0,
   GKA_PARSE_PARTIAL,
@@ -8,19 +5,11 @@ static enum match_state {
   GKA_PARSE_DONE
 };
 
-static typedef struct match_state (*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
+struct match_pattern;
 
-struct match_state lose_cell_incr;
-struct match_statekey_incr;
-struct match_statenot_incr;
-struct match_stateopen_cell_incr;
-struct match_statequote_incr;
-struct match_statestring_incr;
-struct match_statesuper_incr;
-struct match_statesymbol_incr;
+typedef enum match_state (*pattern_incr_func)(struct cell_match_pattern *pattern, char c);
 
 struct match_pattern {
-  enum match_type type;  
   enum match_state state;
   bool in_escape;
   struct string token;
@@ -28,12 +17,23 @@ struct match_pattern {
   void *data;
 };
 
+struct match_pattern lose_cell_incr;
+struct match_pattern key_incr;
+struct match_pattern not_incr;
+struct match_pattern open_cell_incr;
+struct match_pattern close_cell_incr;
+struct match_pattern quote_incr;
+struct match_pattern number_incr;
+struct match_pattern string_incr;
+struct match_pattern super_incr;
+struct match_pattern symbol_incr;
+
 #define GKA_PATTERN_COUNT 9
 #define GKA_PATTERN_START 0 
-struct pattern_incr_func patterns[GKA_PATTERN_COUNT] = {
+pattern_incr_func patterns[GKA_PATTERN_COUNT] = {
   string_incr,
-  open_cell,
-  close_cell,
+  open_cell_incr,
+  close_cell_incr,
   quote_incr,
   not_incr,
   key_incr,
@@ -45,7 +45,6 @@ struct parse_ctx {
     struct cell *current;
     struct cell *root;
     struct stack_item *stack;
-    struct match_pattern
     struct match_pattern *current;
 };
 

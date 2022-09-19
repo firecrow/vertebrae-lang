@@ -1,11 +1,9 @@
-void close_incr(struct cell_match_pattern *pattern, char c){
-    if(c == '('){
-      if(ctx->stack){
-          ctx->current = ctx->stack->cell;
-          ctx->stack = ctx->stack->previous;
-      }else{
-          ctx->current = NULL;
-      }
-      pattern->state = GKA_PARSE_DONE;
+#include "../gekkota.h"
+#include "parse.h"
+
+void quote_incr(struct cell_match_pattern *pattern, char c){
+    if(c == '\''){
+       ctx->accent = GKA_ACCENT_QUOTE
+       pattern->accent = GKA_PARSE_DONE;
     }
 }

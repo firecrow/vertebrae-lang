@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-#include "../parse.h"
+#include "parse.h"
 
 #include "close_cell_incr.c"
 #include "key_incr.c"
