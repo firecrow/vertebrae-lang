@@ -139,6 +139,7 @@ int main(){
     struct closure *global = NULL;
     struct stack_item *stack = NULL;
     struct cell *root = NULL;
+    struct cell *branch = NULL;
     struct cell *first = NULL;
     struct cell *second = NULL;
     struct cell *third = NULL;
@@ -257,7 +258,8 @@ int main(){
     init_basic_library(global); 
 
     root = new_cell();
-    root->value = new_symbol_value_obj(str("+"));
+    branch = new_cell();
+    branch->value = new_symbol_value_obj(str("+"));
 
     second = new_cell();
     second->value = new_int_value_obj(1);
@@ -268,12 +270,12 @@ int main(){
     fourth = new_cell();
     fourth->value = new_int_value_obj(-2);
 
-    root->next = second;
+    root->branch = branch;
+    branch->next = second;
     second->next = third;
     third->next = fourth;
 
-    stack = new_stack_item(NULL, NULL, new_head());
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context(root, global);
 
     while(state->status != CRW_DONE){
        state->next(state); 
