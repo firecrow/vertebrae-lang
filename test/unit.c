@@ -320,8 +320,7 @@ int main(){
     fifth->next = sixth;
     sixth->next = seventh;
 
-    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context(root, global);
 
     while(state->status != CRW_DONE){
        state->next(state);
@@ -387,8 +386,7 @@ int main(){
     seventh->next = eigth;
     eigth->next = ninth;
 
-    stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context(root, global);
 
     while(state->status != CRW_DONE){
        state->next(state); 
