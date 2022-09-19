@@ -394,5 +394,15 @@ int main(){
 
     summerize(suite);
 
+    /********************************* Parse test ********************/
+    suite = new_suite("Parse tests");
+    char *script = "(+ 1)";
+
+    root = parse_all(script);
+
+    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
+    test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
+    summerize(suite);
+
     return 0;
 }

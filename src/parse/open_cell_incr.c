@@ -25,5 +25,7 @@ void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         }
     }
     pattern->state = GKA_PARSE_DONE;
+    return;
   }
+  pattern->state = GKA_PARSE_NOT_STARTED;
 }

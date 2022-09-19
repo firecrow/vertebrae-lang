@@ -1,5 +1,4 @@
 void string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
-    printf("string iter...\n");
     struct cell *slot;
     if(pattern->state == GKA_PARSE_NOT_STARTED){
       if(c == '"'){

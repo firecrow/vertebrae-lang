@@ -27,7 +27,7 @@ struct match_pattern {
 };
 
 #define GKA_PATTERN_START 0 
-#define GKA_PATTERN_COUNT 10
+#define GKA_PATTERN_COUNT 11
 
 struct parse_ctx {
     struct cell *cell;
@@ -39,7 +39,7 @@ struct parse_ctx {
 };
 
 struct parse_ctx *new_parse_ctx();
-struct cell *parse_all(struct string *string);
+struct cell *parse_all(char *script);
 struct cell *parse_file(int fd);
 void parse_char(struct parse_ctx *ctx, char c);
 
@@ -51,6 +51,3 @@ struct parse_ctx *new_parse_ctx();
 static struct match_pattern *setup_pattern(pattern_incr_func func);
 void setup_parse_ctx(struct parse_ctx *ctx);
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head);
-struct cell *parse_all(struct string *string);
-struct cell *parse_file(int fd);
-void parse_char(struct parse_ctx *ctx, char c);

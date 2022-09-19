@@ -1,6 +1,9 @@
 #include "../gekkota.h"
 
+#include "parse_utils.c"
+
 #include "close_cell_incr.c"
+#include "whitespace_incr.c"
 #include "key_incr.c"
 #include "number_incr.c"
 #include "not_incr.c"
@@ -9,28 +12,6 @@
 #include "string_incr.c"
 #include "super_incr.c"
 #include "symbol_incr.c"
-
-bool is_allnum(char c){
-  if(c >= '0' && c <= '9'){
-    return 1;
-  }
-  return 0;
-}
-
-bool is_alpha(char c){
-  if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')){
-    return 1;
-  }
-  return 0;
-}
-
-bool is_alphanum(char c){
-  return is_alpha(c) || is_allnum(c);
-}
-
-bool is_whitespace(char c){
-    return c == ' ' || c == '\t' || c == '\n';
-}
 
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
@@ -52,15 +33,18 @@ static struct match_pattern *setup_pattern(pattern_incr_func func){
 
 void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
+  ctx->patterns[i++] = setup_pattern(string_incr);
+  ctx->patterns[i++] = setup_pattern(whitespace_incr);
+  ctx->patterns[i++] = setup_pattern(open_cell_incr);
+  ctx->patterns[i++] = setup_pattern(number_incr);
+  /*
   ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(not_incr);
-  ctx->patterns[i++] = setup_pattern(open_cell_incr);
   ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(quote_incr);
-  ctx->patterns[i++] = setup_pattern(number_incr);
-  ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
+  */
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   ctx->patterns[i++] = NULL;
 }
@@ -70,7 +54,7 @@ static struct stack_item *push_parse_stack(struct stack_item *existing, struct c
     return item;
 }
 
-struct cell *parse_all(struct string *string){
+struct cell *parse_all(char *script){
     struct parse_ctx *ctx = new_parse_ctx();
 
     if(ctx == NULL){
@@ -81,9 +65,9 @@ struct cell *parse_all(struct string *string){
 
     setup_parse_ctx(ctx);
 
-    int l = string->length;
-    for(int i = 0; i<l; i++){
-       parse_char(ctx, string->content[i]);
+    char *p = script;
+    while(*p != '\0'){
+       parse_char(ctx, *p++);
     }
 
     return ctx->root; 
@@ -108,24 +92,23 @@ struct cell *parse_file(int fd){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
-  printf("%c ", c);
-  fflush(stdout);
-  int pattern_idx = GKA_PATTERN_START;
-  struct match_pattern *pattern = NULL;
-  enum match_state result = GKA_PARSE_NOT_STARTED;
+    int pattern_idx = GKA_PATTERN_START;
+    struct match_pattern *pattern = NULL;
+    enum match_state result = GKA_PARSE_NOT_STARTED;
 
-  if(ctx->current){
-    ctx->current->incr(ctx->current, ctx, c);
-  }
-
-  if(!ctx->current || (ctx->current->state != GKA_PARSE_IN_MATCH)){
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-      pattern->incr(pattern, ctx, c);
-      if(pattern->state > GKA_PARSE_PARTIAL){
-        ctx->current = pattern;
-        break;
-      }
+        pattern->incr(pattern, ctx, c);
+
+        if(pattern->state != GKA_PARSE_NOT_STARTED){
+            /* close the current pattern if exists */
+            if(ctx->current && ctx->current->state == GKA_PARSE_IN_MATCH){
+                ctx->current->incr(ctx->current, ctx, '\0');
+            }
+            if(pattern->state != GKA_PARSE_DONE){
+                ctx->current = pattern;
+            }
+            break;
+        }
     }
-  }
 }
