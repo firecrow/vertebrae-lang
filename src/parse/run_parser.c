@@ -79,6 +79,8 @@ struct cell *parse_all(struct string *string){
         exit(1);
     }
 
+    setup_parse_ctx(ctx);
+
     int l = string->length;
     for(int i = 0; i<l; i++){
        parse_char(ctx, string->content[i]);
@@ -96,6 +98,8 @@ struct cell *parse_file(int fd){
         write(STDERR, msg, strlen(msg));
         exit(1);
     }
+
+    setup_parse_ctx(ctx);
     
     while(read(fd, buffer, 1) > 0){
        parse_char(ctx, buffer[0]);
@@ -104,17 +108,24 @@ struct cell *parse_file(int fd){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
+  printf("%c ", c);
+  fflush(stdout);
   int pattern_idx = GKA_PATTERN_START;
   struct match_pattern *pattern = NULL;
   enum match_state result = GKA_PARSE_NOT_STARTED;
 
-  ctx->current->incr(ctx->current, ctx, c);
+  if(ctx->current){
+    ctx->current->incr(ctx->current, ctx, c);
+  }
 
-  if(ctx->current->state != GKA_PARSE_IN_MATCH){
+  if(!ctx->current || (ctx->current->state != GKA_PARSE_IN_MATCH)){
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-      ctx->current->incr(ctx->current, ctx, c);
+      printf("iteration..%d\n", pattern == NULL);
+      printf("pattern..%d\n", pattern->incr == NULL);
+      pattern->incr(ctx->current, ctx, c);
       if(pattern->state > GKA_PARSE_PARTIAL){
+        printf("setting current...\n");
         ctx->current = pattern;
         break;
       }
