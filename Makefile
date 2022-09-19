@@ -1,6 +1,6 @@
 CC := gcc
 INSTALL_DIR := /home/firecrow/tmp
-COREOBJ := build/parse.o build/cell.o build/head.o \
+COREOBJ := build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \
 	build/state.o build/process_keys.o  build/utils.o
 
@@ -11,9 +11,11 @@ OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/equal_op.o build/default_op.o build/function_op.o\
 	build/set_op.o
 
+PARSEOBJ := build/parse.o
+
 LIBRARYOBJ := build/default_library.o
 
-OBJECTS = $(COREOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
+OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ)
 
 all: gekkota
 
@@ -21,6 +23,9 @@ gekkota: dir $(OBJECTS)
 	$(CC) -g -o bin/gekkota src/main.c $(OBJECTS)
 
 build/%.o: src/core/%.c
+	$(CC) -g -c  $<  -o $@
+
+build/%.o: src/parse/%.c
 	$(CC) -g -c  $<  -o $@
 
 build/%.o: src/run/%.c
