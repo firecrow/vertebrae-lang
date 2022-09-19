@@ -1,5 +1,16 @@
 #include "../gekkota.h"
 
+#include "../parse.h"
+
+#include "close_cell_incr.c"
+#include "key_incr.c"
+#include "not_incr.c"
+#include "open_cell_incr.c"
+#include "quote_incr.c"
+#include "string_incr.c"
+#include "super_incr.c"
+#include "symbol_incr.c"
+
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
 
