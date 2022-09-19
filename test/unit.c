@@ -184,6 +184,9 @@ int main(){
     state = crw_new_state_context(root, stack);
 
     state->next(state);
+    test(suite, state->cell == first, "First cell should be current cell after step");
+
+    state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
     state->next(state);
@@ -227,6 +230,9 @@ int main(){
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
     state = crw_new_state_context(root, stack);
+
+    state->next(state);
+    test(suite, state->cell == first, "First cell should be current cell after step");
 
     state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
