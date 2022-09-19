@@ -46,9 +46,9 @@ static struct match_pattern *setup_pattern(pattern_incr_func func){
     struct match_pattern *pattern = malloc(sizeof(struct match_pattern));
     memset(pattern, 0, sizeof(struct match_pattern));
     pattern->incr = func;
+    pattern->token = new_string();
     return pattern;
 }
-
 
 void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
@@ -121,11 +121,8 @@ void parse_char(struct parse_ctx *ctx, char c){
   if(!ctx->current || (ctx->current->state != GKA_PARSE_IN_MATCH)){
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-      printf("iteration..%d\n", pattern == NULL);
-      printf("pattern..%d\n", pattern->incr == NULL);
-      pattern->incr(ctx->current, ctx, c);
+      pattern->incr(pattern, ctx, c);
       if(pattern->state > GKA_PARSE_PARTIAL){
-        printf("setting current...\n");
         ctx->current = pattern;
         break;
       }
