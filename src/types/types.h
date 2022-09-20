@@ -7,6 +7,7 @@ int string_append(struct string *string, struct string *additional);
 int string_append_char(struct string *string, char c);
 struct string *string_from_cstring(char *cstring);
 struct string *new_string_xprintf(const char *restrict format, ...);
+int string_cmp(struct string *a, struct string *b);
 #define str(XARG) string_from_cstring((XARG))
 
 /* regex */

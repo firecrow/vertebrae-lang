@@ -6,6 +6,12 @@
 
 #define STRING_DEFAULT_SIZE 4
 
+#define max(AARG, BARG) \
+    (AARG) > (BARG) ? (AARG) : (BARG)
+
+#define min(AARG, BARG) \
+    (AARG) < (BARG) ? (AARG) : (BARG)
+
 enum CRW_RESULT {
     FALSE = 0,
     TRUE,

@@ -71,6 +71,11 @@ int string_append_char(struct string *string, char c){
     return 0; 
 }
 
+int string_cmp(struct string *a, struct string *b){
+    printf("a:'%s' -> b:'%s'\n", a->content, b->content);
+    return strncmp(a->content, b->content, max(a->length, b->length));    
+}
+
 struct string *string_from_cstring(char *cstring){
     size_t length = strlen(cstring);
     
@@ -93,6 +98,7 @@ struct string *string_from_cstring(char *cstring){
 
     return string;
 }
+
 
 struct string* new_string_xprintf(const char *restrict format, ...){
   /* save the args to for later becuase we need to do two passes */

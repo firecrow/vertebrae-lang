@@ -400,7 +400,10 @@ int main(){
 
     root = parse_all(script);
 
+    print_cell(root->branch);
+
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
+    test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     summerize(suite);
 

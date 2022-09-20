@@ -1,4 +1,5 @@
 void symbol_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+    printf("sybmol recieved '%c'\n", c);
     if(c == '\0'){
         finalize(ctx, new_symbol_value_obj(pattern->token)); 
         pattern->token = new_string();
