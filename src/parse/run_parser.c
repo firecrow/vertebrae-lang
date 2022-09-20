@@ -99,7 +99,7 @@ void parse_char(struct parse_ctx *ctx, char c){
 
         if(pattern->state != GKA_PARSE_NOT_STARTED){
             /* close the current pattern if exists */
-            if(ctx->current && ctx->current->state == GKA_PARSE_IN_MATCH){
+            if(ctx->current && ctx->current != pattern && ctx->current->state == GKA_PARSE_IN_MATCH){
                 ctx->current->incr(ctx->current, ctx, '\0');
             }
             if(pattern->state != GKA_PARSE_DONE){

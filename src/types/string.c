@@ -72,7 +72,6 @@ int string_append_char(struct string *string, char c){
 }
 
 int string_cmp(struct string *a, struct string *b){
-    printf("a:'%s' -> b:'%s'\n", a->content, b->content);
     return strncmp(a->content, b->content, max(a->length, b->length));    
 }
 
