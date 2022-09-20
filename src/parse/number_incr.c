@@ -6,6 +6,7 @@ void number_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   }else if(pattern->token->length){
     int value = atoi(pattern->token->content);
     finalize(ctx, new_int_value_obj(value));
+    pattern->token = new_string();
   }
   pattern->state = GKA_PARSE_NOT_STARTED;
 }

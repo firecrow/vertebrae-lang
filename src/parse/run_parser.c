@@ -20,6 +20,7 @@ struct parse_ctx *new_parse_ctx(){
         return NULL;
     }
     memset(ctx, 0, sizeof(struct parse_ctx));
+    ctx->root = ctx->cell = new_cell(NULL);
     return ctx;
 }
 
@@ -35,14 +36,13 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
-  ctx->patterns[i++] = setup_pattern(open_cell_incr);
   ctx->patterns[i++] = setup_pattern(number_incr);
+  ctx->patterns[i++] = setup_pattern(key_incr);
+  ctx->patterns[i++] = setup_pattern(open_cell_incr);
+  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   /*
-  ctx->patterns[i++] = setup_pattern(close_cell_incr);
-  ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(not_incr);
-  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(quote_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
   */
@@ -95,6 +95,10 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
+        /*
+        printf("idx:%c:%d\n",c, idx);
+        */
+
         pattern->incr(pattern, ctx, c);
 
         if(pattern->state != GKA_PARSE_NOT_STARTED){
@@ -102,7 +106,9 @@ void parse_char(struct parse_ctx *ctx, char c){
             if(ctx->current && ctx->current != pattern && ctx->current->state == GKA_PARSE_IN_MATCH){
                 ctx->current->incr(ctx->current, ctx, '\0');
             }
-            if(pattern->state != GKA_PARSE_DONE){
+            if(pattern->state == GKA_PARSE_DONE){
+                pattern->state = GKA_PARSE_NOT_STARTED;
+            }else{
                 ctx->current = pattern;
             }
             break;

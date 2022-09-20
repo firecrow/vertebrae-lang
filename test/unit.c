@@ -399,14 +399,54 @@ int main(){
     char *script = "(+ 127)";
 
     root = parse_all(script);
-
+    
+    print_cell(root);
+    printf("\n");
     print_cell(root->branch);
+    printf("\n");
     print_cell(root->branch->next);
+    printf("\n");
 
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, root->branch->next->value->slot.integer == 127, "1 is 127");
+
+    script = "(let .hi \"there\")";
+
+    root = parse_all(script);
+
+    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "let is symbol");
+    test(suite, string_cmp(root->branch->value->slot.string, str("let")) == 0, "let is the content of the symbol");
+    test(suite, root->branch->next->value->type == SL_TYPE_KEY, ".hi is a key");
+    test(suite, string_cmp(root->branch->next->value->slot.string, str("hi")) == 0, "key name is accurate");
+
+    script = "(print \"the sum is: \" (+ 1 2 3 4) \" units\")";
+
+    root = parse_all(script);
+    printf("\n");
+    print_cell(root->branch);
+    printf("\n");
+    print_cell(root->branch->next);
+    printf("\n");
+    print_cell(root->branch->next->next);
+    printf("\n");
+    print_cell(root->branch->next->next->branch);
+    printf("\n");
+
+    print_cell(root->branch->next->next->branch->next);
+    printf("\n");
+    print_cell(root->branch->next->next->branch->next->next);
+    printf("\n");
+    print_cell(root->branch->next->next->branch->next->next->next);
+    printf("\n");
+    print_cell(root->branch->next->next->branch->next->next->next->next);
+    printf("\n");
+
+    print_cell(root->branch->next->next->next);
+    printf("\n");
+
+
     summerize(suite);
 
     return 0;
