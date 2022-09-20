@@ -429,8 +429,6 @@ int main(){
     printf("\n");
     print_cell(root->branch->next);
     printf("\n");
-    print_cell(root->branch->next->next);
-    printf("\n");
     print_cell(root->branch->next->next->branch);
     printf("\n");
 
@@ -442,10 +440,14 @@ int main(){
     printf("\n");
     print_cell(root->branch->next->next->branch->next->next->next->next);
     printf("\n");
-
-    print_cell(root->branch->next->next->next);
+    print_cell(root->branch->next->next->branch->next->next->next->next->next);
     printf("\n");
 
+    print_cell(root->branch->next->next->branch->next->next->next->next->next->next);
+    printf("\n");
+
+    print_cell(root->branch->next->next);
+    printf("\n");
 
     summerize(suite);
 
