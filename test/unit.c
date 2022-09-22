@@ -182,7 +182,7 @@ int main(){
 
     stack = new_stack_item(NULL, root, head);
     state = crw_new_state_context();
-    crw_setup_state_context(state, root, stack);
+    crw_setup_state_context(state, root, global);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
@@ -231,7 +231,7 @@ int main(){
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
     state = crw_new_state_context();
-    crw_setup_state_context(state, root, stack);
+    crw_setup_state_context(state, root, global);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
@@ -253,12 +253,12 @@ int main(){
     /********************************* test arithmetic ********************/
     suite = new_suite("Arithmetic tests");
 
-    root = new_cell();
     global = new_closure(NULL);
-
     init_basic_library(global); 
 
     root = new_cell();
+    root->value = new_result_value_obj(NIL);
+
     branch = new_cell();
     branch->value = new_symbol_value_obj(str("+"));
 
@@ -272,6 +272,7 @@ int main(){
     fourth->value = new_int_value_obj(-2);
 
     root->branch = branch;
+
     branch->next = second;
     second->next = third;
     third->next = fourth;
@@ -473,7 +474,7 @@ int main(){
     run_root(state, root);
 
     test(suite, state->head->value->type == SL_TYPE_INT, "head value is int");
-    test(suite, state->head->value->slot.integer == 8, "arithmetic valu is the cntent of the cells");
+    test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
     summerize(suite);
 

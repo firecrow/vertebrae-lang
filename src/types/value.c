@@ -221,39 +221,6 @@ bool is_non_head_class(struct value_obj *value){
         value->type == SL_TYPE_KEY;
 }
 
-struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
-
-    if(state == IN_STRING){
-        return new_string_value_obj(token);
-    }
-
-    if(state == IN_QUOTE){
-        struct value_obj *value = new_string_value_obj(token);
-        value->type = SL_TYPE_QUOTE;
-        return value;
-    }
-
-    if(state == IN_KEY){
-        struct value_obj *value = new_string_value_obj(token);
-        value->type = SL_TYPE_KEY;
-        return value;
-    }
-
-    struct value_obj *value = new_value();
-    if(state == IN_COMMENT){
-        value->type = SL_TYPE_COMMENT;
-        value->slot.string = token;
-        value->to_string = string_to_string;
-        return value;
-    }
-
-    if(regex_match("^[0-9]\\+$", token)){
-        return new_int_value_obj(atoi(token->content));
-    }
-
-    return new_symbol_value_obj(token);
-}
-
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
     if(!value || value->type != SL_TYPE_SYMBOL){
         return value;

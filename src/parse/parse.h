@@ -5,14 +5,6 @@ enum match_state {
   GKA_PARSE_DONE
 };
 
-enum parse_accent {
-  GKA_PARSE_NO_ACCENT,
-  GKA_PARSE_QUOTE,
-  GKA_PARSE_SUPER,
-  GKA_PARSE_DOT,
-  GKA_PARSE_NOT
-};
-
 struct match_pattern;
 struct parse_ctx;
 

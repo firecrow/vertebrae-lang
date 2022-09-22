@@ -15,6 +15,7 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){
+        default_next(ctx);
         return;
     }
     if(value->type != SL_TYPE_INT){

@@ -38,14 +38,12 @@ enum SL_TYPE {
     /* custom types */
 };
 
-enum SL_PARSE_STATE {
-    START = 0,
-    IN_CELL_STARTED,
-    IN_CELL,
-    IN_COMMENT,
-    IN_STRING,
-    IN_QUOTE,
-    IN_KEY
+enum parse_accent {
+  GKA_PARSE_NO_ACCENT,
+  GKA_PARSE_QUOTE,
+  GKA_PARSE_SUPER,
+  GKA_PARSE_DOT,
+  GKA_PARSE_NOT
 };
 
 #define bool char
@@ -103,6 +101,7 @@ struct value_obj {
 struct cell {
     int id;
     struct value_obj *value;
+    enum parse_accent accent;
     struct cell *next;
     struct cell *branch;
 };
