@@ -15,6 +15,8 @@ struct crw_state {
     enum CRW_HANDLE_STATE handle_state;
     struct head *head;
     struct head *previous;
+    /* used mosstly by unit tests for now */
+    struct head *context;
     struct cell *cell;
     struct stack_item *stack;
     struct value_obj *value;

@@ -10,9 +10,6 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     struct head *head = ctx->head;
     ctx->previous = previous;
     ctx->value = previous->value;
-    printf("previous: ");
-    print_head(previous);
-    printf("\n");
 
     head->value = previous->value;
     ctx->value = head->value;

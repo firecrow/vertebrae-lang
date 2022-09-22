@@ -476,6 +476,15 @@ int main(){
     test(suite, state->head->value->type == SL_TYPE_INT, "head value is int");
     test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
+    script = "(mock .hi \"there\")";
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    struct value_obj *hi_value = tree_get(state->context->closure->symbols, str("hi"));
+    test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
+
     summerize(suite);
 
     return 0;

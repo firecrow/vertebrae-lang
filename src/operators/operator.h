@@ -1,6 +1,7 @@
 enum OPERATOR_TYPE {
     CUSTOM = 0,
     DEFAULT,
+    CONTEXT,
     CONDITION,
     EQUAL,
     ADD,
@@ -38,3 +39,4 @@ struct operator_ifc * new_equal_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_set_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_context_operator(enum OPERATOR_TYPE type);

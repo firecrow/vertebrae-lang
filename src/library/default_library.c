@@ -9,6 +9,7 @@ void init_basic_library(struct closure *closure){
 
     /* --------- namespace ----------*/
     closure_add_function(closure, str("set"), new_set_operator(SET));
+    closure_add_function(closure, str("mock"), new_context_operator(CONTEXT));
 
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));

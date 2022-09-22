@@ -4,9 +4,11 @@ void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
   if(c == '('){
     struct cell *new = new_cell(NULL);
     if(ctx->accent == GKA_PARSE_QUOTE){
+        printf("in parse quote for cell\n");
         ctx->cell->value = new_cell_value_obj(new);
         ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
         ctx->cell = new;
+        ctx->accent = GKA_PARSE_NO_ACCENT;
     }else{
         ctx->cell->branch = new;
         ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
