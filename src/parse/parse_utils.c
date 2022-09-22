@@ -22,9 +22,6 @@ bool is_whitespace(char c){
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     ctx->cell->value = value;
-    printf("\x1b[35m");
-    print_cell(ctx->cell);
-    printf("\x1b[0m\n");
     ctx->cell->next = new_cell(NULL);
     ctx->cell = ctx->cell->next;
 }

@@ -158,11 +158,11 @@ int main(){
     root->next = first;
 
     global = new_closure(NULL);
-    state = crw_new_state_context(root, global);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, global);
 
     test(suite, state->cell == root, "Cell are assinged");
     test(suite, state->head->closure->parent == global, "Global are assinged");
-    test(suite, state->stack != NULL, "Stack are assinged");
 
     head = new_head();
 
@@ -180,9 +180,9 @@ int main(){
     second->next = third;
     third->next = fourth;
 
-    global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, stack);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
@@ -230,7 +230,8 @@ int main(){
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
-    state = crw_new_state_context(root, stack);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, stack);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
@@ -275,13 +276,16 @@ int main(){
     second->next = third;
     third->next = fourth;
 
-    state = crw_new_state_context(root, global);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, global);
 
     while(state->status != CRW_DONE){
        state->next(state); 
     }
 
+    /*
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
+    */
 
     summerize(suite);
 
@@ -320,7 +324,8 @@ int main(){
     fifth->next = sixth;
     sixth->next = seventh;
 
-    state = crw_new_state_context(root, global);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, global);
 
     while(state->status != CRW_DONE){
        state->next(state);
@@ -337,8 +342,6 @@ int main(){
     root = new_cell();
     first = new_cell();
     global = new_closure(NULL);
-
-    init_basic_library(global); 
 
     root = new_cell();
     root->value = new_symbol_value_obj(str("let"));
@@ -386,7 +389,8 @@ int main(){
     seventh->next = eigth;
     eigth->next = ninth;
 
-    state = crw_new_state_context(root, global);
+    state = crw_new_state_context();
+    crw_setup_state_context(state, root, global);
 
     while(state->status != CRW_DONE){
        state->next(state); 
@@ -399,13 +403,6 @@ int main(){
     char *script = "(+ 127)";
 
     root = parse_all(script);
-    
-    print_cell(root);
-    printf("\n");
-    print_cell(root->branch);
-    printf("\n");
-    print_cell(root->branch->next);
-    printf("\n");
 
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
@@ -452,6 +449,31 @@ int main(){
     cell = root->branch->next->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "string is the content of the string");
+
+    summerize(suite);
+
+
+    /********************************* Run test ********************/
+    suite = new_suite("Run tests");
+
+    script = "(print \"hi\")";
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->head->value->type == SL_TYPE_STRING, "head value is string");
+    test(suite, string_cmp(state->head->value->slot.string, str("hi")) == 0, "string is the content of the string");
+
+
+    script = "(+ 1 3 5)";
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->head->value->type == SL_TYPE_INT, "head value is int");
+    test(suite, state->head->value->slot.integer == 8, "arithmetic valu is the cntent of the cells");
 
     summerize(suite);
 

@@ -7,6 +7,9 @@ void default_next(struct crw_state *ctx){
 }
 
 static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    if(ctx->previous){
+        ctx->head->value = ctx->previous->value;
+    }
     default_next(ctx);
 }
 

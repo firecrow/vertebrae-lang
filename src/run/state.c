@@ -1,7 +1,6 @@
 #include "../gekkota.h"
 
 static void set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
-    ctx->stack = push_stack(ctx, ctx->cell);
     ctx->cell = cell;
     ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
     ctx->head->closure = ctx->head->closure;
@@ -22,6 +21,9 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
+    if(!ctx->head){
+        return NULL;
+    }
     ctx->nesting++;
     struct stack_item *item = new_stack_item(ctx->stack, cell, ctx->head);
     return item;
@@ -56,8 +58,7 @@ void pop_stack(struct crw_state *ctx){
 
 static void next_step(struct crw_state *ctx);
 
-
-struct crw_state *crw_new_state_context(struct cell* root, struct closure *global){
+struct crw_state *crw_new_state_context(){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
 
    if(state == NULL){
@@ -65,7 +66,10 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *globa
    }
 
    memset(state, 0, sizeof(struct crw_state));
+   return state;
+}
 
+void crw_setup_state_context(struct crw_state *state, struct cell* root, struct closure *global){
    state->builtins.true = new_result_value_obj(TRUE);
    state->builtins.false = new_result_value_obj(FALSE);
    state->builtins.nil = new_result_value_obj(NIL);
@@ -73,13 +77,10 @@ struct crw_state *crw_new_state_context(struct cell* root, struct closure *globa
 
    state->head = setup_new_head(new_head(), root, global);
    state->cell = root;
-   state->stack =  new_stack_item(NULL, root, state->head);
    state->status = CRW_CONTINUE;
    state->next = next_step;
 
    state->handle_state = CRW_IN_ARG;
-
-   return state;
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
@@ -127,4 +128,16 @@ static void next_step(struct crw_state *ctx){
         return;
     }
     ctx->status = CRW_CONTINUE;
+}
+
+void run_root(struct crw_state *ctx, struct cell *root){
+    struct closure *global = new_closure(NULL);
+
+    init_basic_library(global); 
+
+    crw_setup_state_context(ctx, root, global);
+
+    while(ctx->status != CRW_DONE){
+       ctx->next(ctx); 
+    }
 }

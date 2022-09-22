@@ -5,19 +5,9 @@ int spacing = 0;
 int main(int argc, char *argv[]) {
 
     int source = open(argv[1], O_RDONLY);
-    struct head *head = new_head();
     struct cell *root = parse_file(source);
-    return 0;
-    struct closure *global = new_closure(NULL);
-
-    init_basic_library(global); 
-
-    struct stack_item *stack = new_stack_item(NULL, NULL, setup_new_head(head, root, global));
-    struct crw_state *ctx = crw_new_state_context(root, stack);
-
-    while(ctx->status != CRW_DONE){
-       ctx->next(ctx); 
-    }
+    
+    run_root(root);
 
     return 0;
 }

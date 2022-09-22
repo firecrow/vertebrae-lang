@@ -67,6 +67,10 @@ void print_cell(struct cell *cell){
 }
 
 void print_head(struct head *head){
+    if(!head){
+        printf("<H NULL>");
+        return;
+    }
     printf("<H");
     printf(" source value:");
     print_value(head->source);
