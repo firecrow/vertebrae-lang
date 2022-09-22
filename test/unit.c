@@ -485,6 +485,15 @@ int main(){
     struct value_obj *hi_value = tree_get(state->context->closure->symbols, str("hi"));
     test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
 
+    script = "(.hi \"there\" (mock 1))";
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    print_tree(state->context->closure->parent->symbols);
+    print_value(swap_for_symbol(state->context->closure, new_key_value_obj(str("hi"))));
+
     summerize(suite);
 
     return 0;
