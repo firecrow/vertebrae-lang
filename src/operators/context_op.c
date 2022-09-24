@@ -7,7 +7,6 @@ void context_next(struct crw_state *ctx){
 }
 
 static void context_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    printf("assinging\n");
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
     }
