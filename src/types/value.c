@@ -222,7 +222,7 @@ bool is_non_head_class(struct value_obj *value){
 }
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
-    if(!value || value->type != SL_TYPE_SYMBOL){
+    if(value == NULL || (value->type != SL_TYPE_SYMBOL)){
         return value;
     }
     struct value_obj *prior = NULL;
