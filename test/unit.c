@@ -532,6 +532,23 @@ int main(){
     test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
 
+    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    if(state->context){
+        value = swap_for_symbol(state->context->closure, new_symbol_value_obj(str("hi")));
+    }else{
+        value = NULL;
+    }
+
+    test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
+    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
+
+
     summerize(suite);
 
     return 0;
