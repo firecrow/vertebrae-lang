@@ -477,6 +477,7 @@ int main(){
     test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
     script = "(mock .hi \"there\")";
+    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
@@ -485,14 +486,20 @@ int main(){
     struct value_obj *hi_value = tree_get(state->context->closure->symbols, str("hi"));
     test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
 
-    script = "(.hi \"there\" (mock 1))";
+    script = "(.hi \"there\" (mock))";
+    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
     run_root(state, root);
 
+    /*
     print_tree(state->context->closure->parent->symbols);
-    print_value(swap_for_symbol(state->context->closure, new_key_value_obj(str("hi"))));
+    print_value(swap_for_symbol(state->context->closure, new_symbol_value_obj(str("hi"))));
+
+    test(suite, state->context->value->type == SL_TYPE_STRING, "returned is an int");
+    test(suite, string_cmp(state->context->value->slot.string, str("there")) == 0, "hi key has 'there' value");
+    */
 
     summerize(suite);
     /********************************* Swap for symbol test ********************/

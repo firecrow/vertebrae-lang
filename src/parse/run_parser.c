@@ -87,8 +87,7 @@ struct cell *parse_file(int fd){
     
     while(read(fd, buffer, 1) > 0){
        parse_char(ctx, buffer[0]);
-    }
-    return ctx->root; 
+    } return ctx->root; 
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
@@ -96,22 +95,9 @@ void parse_char(struct parse_ctx *ctx, char c){
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
         /*
-        printf("idx:%c:%d\n",c, idx);
+        printf("idx:%c:%d\n",c, idx-1);
         */
 
         pattern->incr(pattern, ctx, c);
-
-        if(pattern->state != GKA_PARSE_NOT_STARTED){
-            /* close the current pattern if exists */
-            if(ctx->current && ctx->current != pattern && ctx->current->state == GKA_PARSE_IN_MATCH){
-                ctx->current->incr(ctx->current, ctx, '\0');
-            }
-            if(pattern->state == GKA_PARSE_DONE){
-                pattern->state = GKA_PARSE_NOT_STARTED;
-            }else{
-                ctx->current = pattern;
-            }
-            break;
-        }
     }
 }

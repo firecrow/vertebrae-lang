@@ -20,6 +20,22 @@ bool is_whitespace(char c){
     return c == ' ' || c == '\t' || c == '\n';
 }
 
+static void complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx){
+    if(pattern->state != GKA_PARSE_NOT_STARTED){
+        /* close the current pattern if exists */
+        if(ctx->current && ctx->current != pattern && ctx->current->state == GKA_PARSE_IN_MATCH){
+            ctx->current->incr(ctx->current, ctx, '\0');
+        }
+        if(pattern->state == GKA_PARSE_DONE){
+            pattern->state = GKA_PARSE_NOT_STARTED;
+        }else{
+            ctx->current = pattern;
+        }
+        return 1;
+    }
+    return 0;
+}
+
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     ctx->cell->value = value;
     ctx->cell->next = new_cell(NULL);

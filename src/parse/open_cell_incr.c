@@ -13,9 +13,14 @@ void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         ctx->cell->branch = new;
         ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
         ctx->cell = new;
+        printf("branch cell\n");
+        print_cell(new);
+        printf("\n");
     }
+
     pattern->state = GKA_PARSE_DONE;
-    return;
+    return complete_previous(pattern, ctx);
   }
   pattern->state = GKA_PARSE_NOT_STARTED;
+  return 0;
 }

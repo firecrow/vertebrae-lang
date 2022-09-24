@@ -99,6 +99,9 @@ static void next_step(struct crw_state *ctx){
     bool is_key = crw_process_keys(ctx);
 
     if(ctx->cell->branch){
+        printf("branch: ");
+        print_cell(ctx->cell->branch);
+        printf("\n");
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
             return;
@@ -117,6 +120,8 @@ static void next_step(struct crw_state *ctx){
     ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){
+        print_head(ctx->head);
+        printf("closing\n");
         close_branch(ctx);
 
         while(ctx->cell == NULL && ctx->stack){

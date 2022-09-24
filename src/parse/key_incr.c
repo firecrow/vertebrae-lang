@@ -15,4 +15,5 @@ void key_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
         pattern->state = GKA_PARSE_NOT_STARTED;
     }
     pattern->state = GKA_PARSE_NOT_STARTED;
+    return complete_previous(pattern, ctx);
 }
