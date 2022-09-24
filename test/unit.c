@@ -420,7 +420,6 @@ int main(){
     test(suite, string_cmp(root->branch->next->value->slot.string, str("hi")) == 0, "key name is accurate");
 
     script = "(print \"the sum is: \" (+ 1 2) \" units\")";
-    printf("%s\n", script);
 
     root = parse_all(script);
 
@@ -484,7 +483,6 @@ int main(){
     test(suite, state->head->value->type == SL_TYPE_STRING, "head value is string");
     test(suite, string_cmp(state->head->value->slot.string, str("hi")) == 0, "string is the content of the string");
 
-
     script = "(+ 1 3 5)";
 
     root = parse_all(script);
@@ -495,7 +493,6 @@ int main(){
     test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
     script = "(mock .hi \"there\")";
-    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
@@ -505,7 +502,6 @@ int main(){
     test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
 
     script = "(.hi \"there\" (mock))";
-    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
@@ -515,6 +511,28 @@ int main(){
 
     test(suite, value->type == SL_TYPE_STRING, "returned is an int");
     test(suite, string_cmp(value->slot.string, str("there")) == 0, "hi key has 'there' value");
+
+    summerize(suite);
+    /********************************* Function run test ********************/
+    suite = new_suite("Function tests");
+
+    script = "(.hi \"there\"\n.func '(\n    (mock (print hi))\n(func))";
+
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    if(state->context){
+        value = swap_for_symbol(state->context->closure, new_symbol_value_obj(str("hi")));
+    }else{
+        value = NULL;
+    }
+
+    test(suite, 1 == 2, "fail until complete");
+    /*
+    test(suite, value && value->type == SL_TYPE_STRING, "returned is an int");
+    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "hi key has 'there' value");
+    */
 
     summerize(suite);
 

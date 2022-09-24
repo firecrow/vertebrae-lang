@@ -7,7 +7,8 @@ int main(int argc, char *argv[]) {
     int source = open(argv[1], O_RDONLY);
     struct cell *root = parse_file(source);
     
-    run_root(root);
+    struct crw_state *state = crw_new_state_context();
+    run_root(state, root);
 
     return 0;
 }
