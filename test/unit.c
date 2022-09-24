@@ -516,7 +516,8 @@ int main(){
     /********************************* Function run test ********************/
     suite = new_suite("Function tests");
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        (mock (print hi))\n    (func))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print hi))\n    (func))";
+    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
@@ -528,11 +529,8 @@ int main(){
         value = NULL;
     }
 
-    test(suite, 1 == 2, "fail until complete");
-    /*
-    test(suite, value && value->type == SL_TYPE_STRING, "returned is an int");
-    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "hi key has 'there' value");
-    */
+    test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
+    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
 
     summerize(suite);
 

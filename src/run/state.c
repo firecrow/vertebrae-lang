@@ -29,18 +29,6 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
     return item;
 }
 
-static bool set_cell_func(struct crw_state *ctx){
-    if(ctx->head->source && ctx->head->source->type == SL_TYPE_CELL){
-        set_custom_cell_as_head(ctx, ctx->head->source->slot.cell);
-        ctx->head->source = NULL;
-        return 1;
-    }
-    if(ctx->head->operator){
-        ctx->head->operator->handle(ctx->head->operator, ctx);
-    }
-    return 0;
-}
-
 void close_branch(struct crw_state *ctx){
     ctx->handle_state = CRW_IN_CLOSE;
     ctx->head->operator->handle(ctx->head->operator, ctx);
