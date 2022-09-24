@@ -405,6 +405,16 @@ int main(){
 
     root = parse_all(script);
 
+    printf("parse start: ");
+    print_cell(root);
+    printf("\n root->branch: ");
+    print_cell(root->branch);
+    printf("\nroot->branch->next: ");
+    print_cell(root->branch->next);
+    printf("\n root->next: ");
+    print_cell(root->next);
+    printf("\n");
+
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");

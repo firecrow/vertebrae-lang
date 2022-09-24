@@ -108,7 +108,6 @@ void print_tree(struct tree *tree){
     printf("<tree %d\n", tree->id);
     struct order_entry *oentry = tree->order;
     while(oentry){
-        printf("");
         if(oentry->entry){
             if(oentry->entry->key){
                 printf("    %s:", oentry->entry->key->content);

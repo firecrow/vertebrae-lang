@@ -9,11 +9,14 @@ int open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c)
         ctx->cell = new;
         ctx->accent = GKA_PARSE_NO_ACCENT;
     }else{
-        ctx->cell->branch = new;
-        ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-        ctx->cell = new;
-    }
+        if(ctx->cell){
+            ctx->next_is_branch = 1;
+            ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
+        }else{
+            ctx->cell = new;
+        }
 
+    }
     pattern->state = GKA_PARSE_DONE;
     return complete_previous(pattern, ctx);
   }

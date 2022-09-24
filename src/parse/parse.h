@@ -24,6 +24,7 @@ struct match_pattern {
 struct parse_ctx {
     struct cell *cell;
     struct cell *root;
+    bool next_is_branch;
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;
