@@ -516,7 +516,7 @@ int main(){
     /********************************* Function run test ********************/
     suite = new_suite("Function tests");
 
-    script = "(.hi \"there\"\n.func '(\n    (mock (print hi))\n(func))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        (mock (print hi))\n    (func))";
 
     root = parse_all(script);
     state = crw_new_state_context();
