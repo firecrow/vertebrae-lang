@@ -8,7 +8,7 @@ enum match_state {
 struct match_pattern;
 struct parse_ctx;
 
-typedef void (*pattern_incr_func)(struct match_pattern *pattern, struct parse_ctx *ctx, char c);
+typedef int (*pattern_incr_func)(struct match_pattern *pattern, struct parse_ctx *ctx, char c);
 
 struct match_pattern {
   enum match_state state;
@@ -43,3 +43,4 @@ struct parse_ctx *new_parse_ctx();
 static struct match_pattern *setup_pattern(pattern_incr_func func);
 void setup_parse_ctx(struct parse_ctx *ctx);
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head);
+static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx);

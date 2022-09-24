@@ -1,4 +1,4 @@
-void open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+int open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   struct cell *slot;
   struct cell *stack_cell;
   if(c == '('){

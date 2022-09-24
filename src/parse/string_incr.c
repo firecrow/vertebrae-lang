@@ -1,4 +1,4 @@
-void string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+int string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
     struct cell *slot;
     if(pattern->state == GKA_PARSE_NOT_STARTED){
       if(c == '"'){
@@ -14,6 +14,7 @@ void string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
                 pattern->in_escape = 0;
             }else{
                 pattern->in_escape = 1;
+                return complete_previous(pattern, ctx);
                 return;
             }
         }

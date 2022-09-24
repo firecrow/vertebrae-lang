@@ -1,4 +1,4 @@
-void close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   if(c == ')'){
     int result = complete_previous(pattern, ctx);
     if(ctx->stack){
