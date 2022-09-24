@@ -1,6 +1,6 @@
 int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   if(c == ')'){
-    int result = complete_previous(pattern, ctx);
+    complete_previous(pattern, ctx);
     if(ctx->stack){
         ctx->cell = ctx->stack->cell;
         ctx->stack = ctx->stack->previous;
@@ -8,7 +8,7 @@ int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         ctx->cell = NULL;
     }
     pattern->state = GKA_PARSE_DONE;
-    return result;
+    return 1;
   }
   return 0;
 }

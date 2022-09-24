@@ -420,6 +420,7 @@ int main(){
     test(suite, string_cmp(root->branch->next->value->slot.string, str("hi")) == 0, "key name is accurate");
 
     script = "(print \"the sum is: \" (+ 1 2) \" units\")";
+    printf("%s\n", script);
 
     root = parse_all(script);
 
@@ -448,6 +449,7 @@ int main(){
     test(suite, cell->next == NULL, "next cell next is null");
 
     cell = root->branch->next->next;
+    print_cell(root->branch->next->next);
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "string is the content of the string");
 

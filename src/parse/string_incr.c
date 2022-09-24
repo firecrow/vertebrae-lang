@@ -4,7 +4,6 @@ int string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
       if(c == '"'){
         pattern->state = GKA_PARSE_IN_MATCH;
         return complete_previous(pattern, ctx);
-        return;
       }
     }
     if(pattern->state == GKA_PARSE_IN_MATCH){
@@ -15,7 +14,6 @@ int string_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
             }else{
                 pattern->in_escape = 1;
                 return complete_previous(pattern, ctx);
-                return;
             }
         }
         if(pattern->in_escape){

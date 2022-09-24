@@ -94,7 +94,7 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-        /*
+       /*
        printf("idx:%c:%d\n",c, idx-1);
        */
 
