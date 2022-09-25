@@ -441,12 +441,13 @@ int main(){
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
     
-
+    /*
     printf("%s\n", script);
     print_cell(root->branch);
     print_cell(root->branch->next);
     print_cell(root->branch->next->branch);
     print_cell(root->branch->next->next);
+    */
 
     cell = root->branch->next->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "+ is symbol");
@@ -464,6 +465,7 @@ int main(){
     print_cell(cell);
     test(suite, cell->next == NULL, "next cell next is null");
 
+    /*
     printf("root: ");
     print_cell(root);
     printf("root->branch: ");
@@ -471,6 +473,7 @@ int main(){
     printf("root->branch->next: ");
     print_cell(root->branch->next);
     printf("\n");
+    */
 
     cell = root->branch->next->next;
     print_cell(root->branch->next);
@@ -478,7 +481,6 @@ int main(){
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
 
     summerize(suite);
-
 
     /********************************* Swap for symbol test ********************/
     suite = new_suite("Swap for symbol test");
@@ -505,6 +507,7 @@ int main(){
     state = crw_new_state_context();
     run_root(state, root);
 
+    print_head(state->head);
     test(suite, state->head->value->type == SL_TYPE_STRING, "head value is string");
     test(suite, string_cmp(state->head->value->slot.string, str("hi")) == 0, "string is the content of the string");
 
@@ -551,13 +554,16 @@ int main(){
     printf("no print runs");
     test(suite, state->context == NULL, "mock never runs");
 
+
     script = "(\n    .hi \"there\"\n    .func '(\n        mock (print hi))\n    (func))";
     printf("%s\n", script);
 
     root = parse_all(script);
+    printf("-----------------------------\n");
     state = crw_new_state_context();
     run_root(state, root);
 
+    /*
     if(state->context){
         value = swap_for_symbol(state->context->closure, new_symbol_value_obj(str("hi")));
     }else{
@@ -567,8 +573,10 @@ int main(){
 
     test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
+    */
 
     return;
+
 
     script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
     printf("%s\n", script);
@@ -583,8 +591,8 @@ int main(){
         value = NULL;
     }
 
-    test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
-    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
+    test(suite, value && value->type == SL_TYPE_STRING, "returned is an string II");
+    test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value II");
 
 
     summerize(suite);

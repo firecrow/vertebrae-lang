@@ -9,9 +9,11 @@ int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         ctx->cell = NULL;
     }
 
+    /*
     printf("poping to cell\n");
     print_cell(ctx->cell);
     printf("\n");
+    */
 
     return 1;
   }
