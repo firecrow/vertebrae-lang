@@ -9,9 +9,7 @@ struct function_operator {
 
 
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    /*
     printf("state %d\n", ctx->handle_state);
-    */
     struct function_operator *op = (struct function_operator *)_op;
     if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_PASSTHROUGH){
         default_next(ctx);
@@ -28,6 +26,9 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
 
     struct cell *func = ctx->head->cell;
+    printf("in func thing............\n");
+    print_cell(func);
+    printf("\n");
 
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
