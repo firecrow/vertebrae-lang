@@ -88,7 +88,8 @@ static void next_step(struct crw_state *ctx){
     printf("\n");
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    bool is_key = crw_process_keys(ctx);
+    bool in_key = crw_process_keys(ctx);
+
     if(ctx->cell->branch){
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
@@ -98,13 +99,11 @@ static void next_step(struct crw_state *ctx){
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-
-    if(!is_key){
+    if(!in_key){
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }else{
-        default_next(ctx);  
+        default_next(ctx);
     }
-
     ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){

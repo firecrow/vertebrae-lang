@@ -340,6 +340,7 @@ int main(){
     /********************************* Function pointer test ********************/
     suite = new_suite("Function test");
 
+    /*
     root = new_cell(NULL);
     first = new_cell(NULL);
     global = new_closure(NULL);
@@ -348,7 +349,6 @@ int main(){
     root->value = new_symbol_value_obj(str("let"));
     root->id = 1;
 
-    /* this is the symbol that will store the function branch */
     second = new_cell(NULL);
     second->value = new_key_value_obj(str("show"));
     second->id = 2;
@@ -361,7 +361,6 @@ int main(){
         fifth->value = new_symbol_value_obj(str("message"));
         fifth->id = 5;
 
-    /* atach the new function */
     third = new_cell(NULL);
     third->id = 3;
 
@@ -398,6 +397,7 @@ int main(){
     }
 
     summerize(suite);
+    */
 
     /********************************* Parse test ********************/
     suite = new_suite("Parse tests");
@@ -521,6 +521,7 @@ int main(){
     test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
     script = "(mock .hi \"there\")";
+    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
@@ -548,6 +549,8 @@ int main(){
     printf("%s\n", script);
 
     root = parse_all(script);
+    printf("-----------------------------\n");
+    fflush(stdout);
     state = crw_new_state_context();
     run_root(state, root);
 
@@ -559,7 +562,6 @@ int main(){
     printf("%s\n", script);
 
     root = parse_all(script);
-    printf("-----------------------------\n");
     state = crw_new_state_context();
     run_root(state, root);
 

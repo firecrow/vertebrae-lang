@@ -12,6 +12,7 @@ bool crw_process_keys(struct crw_state *ctx){
     }else if(value && ctx->head->key_for_next){
         tree_update(ctx->head->closure->symbols, ctx->head->key_for_next->slot.string, value);
         ctx->head->key_for_next = NULL;
+        return 1;
     }
     return 0;
 }

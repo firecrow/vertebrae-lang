@@ -56,8 +56,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             print_cell(quoted_new);
             printf("\n");
 
-            ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-            ctx->cell->next = quoted_new;
+            ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
+            ctx->cell->next = new;
             ctx->cell = ctx->cell->next; 
 
             printf("new\n");
