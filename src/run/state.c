@@ -96,13 +96,17 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
-    if(ctx->cell->branch){
+    while(ctx->cell->branch || ctx->head->cell->branch){
         /*
         printf("branching to: ");
         print_cell(ctx->cell->branch);
         printf("\n");
         */
-        start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
+        struct cell *branch_cell = ctx->cell->branch;
+        if(ctx->head->cell->branch){
+            branch_cell = ctx->head->cell->branch;
+        }
+        start_new_branch(ctx, branch_cell, ctx->head->closure);
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
             return;
         }

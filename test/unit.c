@@ -577,7 +577,7 @@ int main(){
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
     */
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        print \"hello, \" value)\n    (func \"one\" \"two\" \"three\"))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
     printf("%s\n", script);
 
     root = parse_all(script);
