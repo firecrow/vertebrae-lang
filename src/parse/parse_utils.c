@@ -37,19 +37,21 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
+
     printf("finalize: %d ", ctx->next_is_branch);
     print_value(value);
     printf("\n");
 
-
     struct cell *new = new_cell(value);
     if(ctx->next_is_branch){
+        /*
         if(ctx->accent == GKA_PARSE_QUOTE){
             ctx->cell->value = new_cell_value_obj(new);
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
             ctx->cell = new;
             ctx->accent = GKA_PARSE_NO_ACCENT;
         }
+        */
 
         if(ctx->cell){
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
@@ -61,8 +63,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->cell = root_cell;
         }
         ctx->cell->branch = new;
+        ctx->cell = ctx->cell->branch;
         ctx->next_is_branch = 0;
-
+        return;
 
         printf("making branch from: ");
         print_cell(ctx->cell);

@@ -439,7 +439,7 @@ int main(){
 
     cell = root->branch->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
-    test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "string is the content of the string");
+    test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
     
 
     printf("%s\n", script);
@@ -460,14 +460,22 @@ int main(){
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");
 
-    cell = root->branch->next->branch->next->next;
+    cell = root->branch->next->branch->next->next->next;
     test(suite, cell->value == NULL, "next cell value is null");
     test(suite, cell->next == NULL, "next cell next is null");
 
-    cell = root->branch->next;
+    printf("root: ");
+    print_cell(root);
+    printf("root->branch: ");
+    print_cell(root->branch);
+    printf("root->branch->next: ");
+    print_cell(root->branch->next);
+    printf("\n");
+
+    cell = root->branch->next->next;
     print_cell(root->branch->next);
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
-    test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "string is the content of the string");
+    test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
 
     summerize(suite);
 
