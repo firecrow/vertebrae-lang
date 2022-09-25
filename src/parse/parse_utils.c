@@ -40,16 +40,18 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     printf("finalize: %d ", ctx->next_is_branch);
     print_value(value);
     printf("\n");
+
     struct cell *new = new_cell(value);
-    if(ctx->cell){
-        if(ctx->next_is_branch){
-            ctx->cell->branch = new;
-            ctx->next_is_branch = 0;
-        }else{
-            ctx->cell->next = new;
-        }
-        ctx->cell = new;
+    if(ctx->next_is_branch){
+
+        printf("making branch from: ");
+        print_cell(ctx->cell);
+        printf("\n");
+
+        ctx->cell->branch = new;
+        ctx->next_is_branch = 0;
     }else{
-        ctx->cell = new;
+        ctx->cell->next = new;
     }
+    ctx->cell = new;
 }

@@ -12,7 +12,6 @@ int open_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c)
     }else{
         if(ctx->cell){
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-            ctx->cell = new_cell(NULL);
         }else{
             if(!ctx->root){
                 ctx->root = new;
