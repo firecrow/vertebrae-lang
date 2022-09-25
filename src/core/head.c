@@ -19,6 +19,7 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         head->operator = value->slot.operator->new(value->slot.operator->type);
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){
+
         /*
         printf("\x1b[35min th magic: ");
         print_cell(value->slot.cell);

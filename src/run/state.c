@@ -96,7 +96,7 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
-    if(ctx->cell->branch){
+    while(ctx->cell->branch){
         /*
         printf("branching to: ");
         print_cell(ctx->cell->branch);
