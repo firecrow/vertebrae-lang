@@ -83,6 +83,10 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
+    printf("next_step cell: ");
+    print_cell(ctx->cell);
+    printf("\n");
+
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool is_key = crw_process_keys(ctx);
 

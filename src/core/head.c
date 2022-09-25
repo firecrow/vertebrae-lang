@@ -10,11 +10,15 @@ struct head *new_head(){
 }
 
 struct head *setup_new_head(struct head *head, struct cell *cell, struct closure *closure){
+    printf("head\n");
     struct value_obj *value = swap_for_symbol(closure, cell->value);
 
     if(value && value->type == SL_TYPE_FUNCTION){
         head->operator = value->slot.operator->new(value->slot.operator->type);
     }else if(value && value->type == SL_TYPE_CELL){
+        printf("in th magic: ");
+        print_cell(value->slot.cell);
+        printf("\n");
         head->operator = new_function_operator(FUNCTION);
         cell->value = value;
     }else{

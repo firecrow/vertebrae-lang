@@ -44,14 +44,17 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
     struct cell *new = new_cell(value);
     if(ctx->next_is_branch){
-        /*
         if(ctx->accent == GKA_PARSE_QUOTE){
-            ctx->cell->value = new_cell_value_obj(new);
+            struct cell *quoted_new = new_cell(value);
+            printf("quote\n");
+            quoted_new->value = new_cell_value_obj(new);
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-            ctx->cell = new;
+            ctx->cell->next = quoted_new;
+            ctx->cell = new; 
             ctx->accent = GKA_PARSE_NO_ACCENT;
+            ctx->next_is_branch = 0;
+            return;
         }
-        */
 
         if(ctx->cell){
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
@@ -65,11 +68,12 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         ctx->cell->branch = new;
         ctx->cell = ctx->cell->branch;
         ctx->next_is_branch = 0;
-        return;
 
         printf("making branch from: ");
         print_cell(ctx->cell);
         printf("\n");
+
+        return;
 
     }else{
         ctx->cell->next = new;
