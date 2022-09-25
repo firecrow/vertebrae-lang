@@ -1,6 +1,6 @@
 /* cell.c */
 struct value_obj *get_or_create_value(struct cell *cell);
-struct cell *new_cell();
+struct cell *new_cell(struct value_obj *value);
 bool is_branch_cell(struct cell *cell);
 
 /* closure.c */

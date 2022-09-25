@@ -43,13 +43,17 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     ctx->cell = ctx->cell->next;
     */
     struct cell *new = new_cell(value);
+    printf("cell: ");
+    print_cell(ctx->cell);
+    printf("\n");
     printf("new: ");
     print_cell(new);
     printf("\n");
     if(ctx->cell){
         if(ctx->next_is_branch){
             ctx->cell->branch = new;
-        }else {
+            ctx->next_is_branch = 0;
+        }else{
             ctx->cell->next = new;
         }
         ctx->cell = new;

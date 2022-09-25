@@ -1,4 +1,4 @@
-CC := gcc
+CC := gcc -Wall
 INSTALL_DIR := /home/firecrow/tmp
 COREOBJ := build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \

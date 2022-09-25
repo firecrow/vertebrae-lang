@@ -105,7 +105,7 @@ int main(){
     struct operator_ifc *op;
     struct string *op_name;
 
-    cell = new_cell();
+    cell = new_cell(NULL);
     closure = new_closure(NULL);
     head = new_head();
 
@@ -153,8 +153,8 @@ int main(){
     struct cell *eleventh = NULL;
 
 
-    root = new_cell();
-    first = new_cell();
+    root = new_cell(NULL);
+    first = new_cell(NULL);
     root->next = first;
 
     global = new_closure(NULL);
@@ -169,11 +169,11 @@ int main(){
     /* test a few next steps */
     suite = new_suite("Basic step tests");
 
-    root = new_cell();
-    first = new_cell();
-    second = new_cell();
-    third = new_cell();
-    fourth = new_cell();
+    root = new_cell(NULL);
+    first = new_cell(NULL);
+    second = new_cell(NULL);
+    third = new_cell(NULL);
+    fourth = new_cell(NULL);
 
     root->next = first;
     first->next = second;
@@ -201,24 +201,24 @@ int main(){
     /********************************* test pop_stack ********************/
     suite = new_suite("Pop stack branch tests");
 
-    root = new_cell();
+    root = new_cell(NULL);
 
-    first = new_cell();
+    first = new_cell(NULL);
     first->value = new_string_value_obj(str("first"));
 
-    second = new_cell();
+    second = new_cell(NULL);
     second->value = new_string_value_obj(str("second"));
 
-    third = new_cell();
+    third = new_cell(NULL);
     third->value = new_string_value_obj(str("third"));
 
-    fourth = new_cell();
+    fourth = new_cell(NULL);
     fourth->value = new_string_value_obj(str("fourth"));
     
-    fifth = new_cell();
+    fifth = new_cell(NULL);
     fifth->value = new_string_value_obj(str("fifth"));
 
-    sixth = new_cell();
+    sixth = new_cell(NULL);
     sixth->value = new_string_value_obj(str("sixth"));
 
     root->next = first;
@@ -256,19 +256,19 @@ int main(){
     global = new_closure(NULL);
     init_basic_library(global); 
 
-    root = new_cell();
+    root = new_cell(NULL);
     root->value = new_result_value_obj(NIL);
 
-    branch = new_cell();
+    branch = new_cell(NULL);
     branch->value = new_symbol_value_obj(str("+"));
 
-    second = new_cell();
+    second = new_cell(NULL);
     second->value = new_int_value_obj(1);
 
-    third = new_cell();
+    third = new_cell(NULL);
     third->value = new_int_value_obj(3);
 
-    fourth = new_cell();
+    fourth = new_cell(NULL);
     fourth->value = new_int_value_obj(-2);
 
     root->branch = branch;
@@ -293,29 +293,29 @@ int main(){
     /********************************* Variable Assignment Tests ********************/
     suite = new_suite("Variable assignment tests");
 
-    root = new_cell();
+    root = new_cell(NULL);
     global = new_closure(NULL);
 
     init_basic_library(global); 
 
-    root = new_cell();
+    root = new_cell(NULL);
     root->value = new_symbol_value_obj(str("let"));
 
-    second = new_cell();
+    second = new_cell(NULL);
     second->value = new_key_value_obj(str("one"));
 
-    third = new_cell();
+    third = new_cell(NULL);
     third->value = new_int_value_obj(1);
 
-    fourth = new_cell();
+    fourth = new_cell(NULL);
 
-    fifth = new_cell();
+    fifth = new_cell(NULL);
     fifth->value = new_symbol_value_obj(str("+"));
 
-    sixth = new_cell();
+    sixth = new_cell(NULL);
     sixth->value = new_int_value_obj(2);
 
-    seventh = new_cell();
+    seventh = new_cell(NULL);
     seventh->value = new_symbol_value_obj(str("one"));
 
     root->next = second;
@@ -340,43 +340,43 @@ int main(){
     /********************************* Function pointer test ********************/
     suite = new_suite("Function test");
 
-    root = new_cell();
-    first = new_cell();
+    root = new_cell(NULL);
+    first = new_cell(NULL);
     global = new_closure(NULL);
 
-    root = new_cell();
+    root = new_cell(NULL);
     root->value = new_symbol_value_obj(str("let"));
     root->id = 1;
 
     /* this is the symbol that will store the function branch */
-    second = new_cell();
+    second = new_cell(NULL);
     second->value = new_key_value_obj(str("show"));
     second->id = 2;
 
-        fourth = new_cell();
+        fourth = new_cell(NULL);
         fourth->value = new_symbol_value_obj(str("print"));
         fourth->id = 4;
 
-        fifth = new_cell();
+        fifth = new_cell(NULL);
         fifth->value = new_symbol_value_obj(str("message"));
         fifth->id = 5;
 
     /* atach the new function */
-    third = new_cell();
+    third = new_cell(NULL);
     third->id = 3;
 
-    sixth = new_cell();
+    sixth = new_cell(NULL);
     sixth->id = 6;
 
-    seventh = new_cell();
+    seventh = new_cell(NULL);
     seventh->value = new_symbol_value_obj(str("show"));
     seventh->id = 7;
 
-    eigth = new_cell();
+    eigth = new_cell(NULL);
     eigth->value = new_key_value_obj(str("message"));
     eigth->id = 8;
 
-    ninth = new_cell();
+    ninth = new_cell(NULL);
     ninth->value = new_string_value_obj(str("hello, crow-lisp"));
     ninth->id = 8;
 
@@ -415,6 +415,7 @@ int main(){
     print_cell(root->next);
     printf("\n");
 
+
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
@@ -423,6 +424,17 @@ int main(){
     script = "(let .hi \"there\")";
 
     root = parse_all(script);
+
+    printf("parse start: ");
+    print_cell(root);
+    printf("\n root->branch: ");
+    print_cell(root->branch);
+    printf("\nroot->branch->next: ");
+    print_cell(root->branch->next);
+    printf("\n root->next: ");
+    print_cell(root->next);
+    printf("\n");
+
 
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "let is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("let")) == 0, "let is the content of the symbol");
