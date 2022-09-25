@@ -1,11 +1,5 @@
 #include "../gekkota.h"
 
-static void set_custom_cell_as_head(struct crw_state *ctx, struct cell *cell){
-    ctx->cell = cell;
-    ctx->head = setup_new_head(new_head(), ctx->cell, ctx->head->closure);
-    ctx->head->closure = ctx->head->closure;
-}
-
 static void passthrough(struct crw_state *ctx, struct head *previous){
     struct head *head = ctx->head;
     ctx->previous = previous;

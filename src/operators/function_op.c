@@ -27,16 +27,19 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
     struct cell *func = ctx->head->cell;
 
+    /*
     printf("in func thing............\n");
     print_cell(func);
     printf(" ->\n    ");
     print_cell(func->next);
     printf("\n");
+    */
 
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
     if(func->branch){
         start_new_branch(ctx, func->branch, ctx->head->closure);
+        ctx->handle_state = CRW_IN_HEAD;
     }else{
         ctx->cell = func->next;
     }
