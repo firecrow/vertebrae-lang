@@ -20,7 +20,6 @@ struct parse_ctx *new_parse_ctx(){
         return NULL;
     }
     memset(ctx, 0, sizeof(struct parse_ctx));
-    ctx->root = ctx->cell = new_cell(NULL);
     return ctx;
 }
 
@@ -94,7 +93,9 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
+       /*
        printf("idx:%c:%d\n",c, idx-1);
+       */
 
        if(pattern->incr(pattern, ctx, c)){
             break;

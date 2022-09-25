@@ -37,18 +37,10 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    /*
-    ctx->cell->value = value;
-    ctx->cell->next = new_cell(NULL);
-    ctx->cell = ctx->cell->next;
-    */
+    printf("finalize: %d ", ctx->next_is_branch);
+    print_value(value);
+    printf("\n");
     struct cell *new = new_cell(value);
-    printf("cell: ");
-    print_cell(ctx->cell);
-    printf("\n");
-    printf("new: ");
-    print_cell(new);
-    printf("\n");
     if(ctx->cell){
         if(ctx->next_is_branch){
             ctx->cell->branch = new;
