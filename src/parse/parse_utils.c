@@ -45,8 +45,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     if(ctx->next_is_branch){
         if(ctx->accent == GKA_PARSE_QUOTE){
-            struct cell *quoted_new = new_cell(value);
             printf("quote\n");
+            struct cell *quoted_new = new_cell(value);
             quoted_new->value = new_cell_value_obj(new);
             ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
             ctx->cell->next = quoted_new;

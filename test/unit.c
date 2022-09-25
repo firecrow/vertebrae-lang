@@ -551,9 +551,6 @@ int main(){
     printf("no print runs");
     test(suite, state->context == NULL, "mock never runs");
 
-    return;
-
-
     script = "(\n    .hi \"there\"\n    .func '(\n        mock (print hi))\n    (func))";
     printf("%s\n", script);
 
@@ -570,6 +567,8 @@ int main(){
 
     test(suite, value && value->type == SL_TYPE_STRING, "returned is an string");
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
+
+    return;
 
     script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
     printf("%s\n", script);
