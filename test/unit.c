@@ -460,8 +460,8 @@ int main(){
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");
 
-    cell = root->branch->next->branch->next->next->next;
-    test(suite, cell->value == NULL, "next cell value is null");
+    cell = root->branch->next->branch->next->next;
+    print_cell(cell);
     test(suite, cell->next == NULL, "next cell next is null");
 
     printf("root: ");
