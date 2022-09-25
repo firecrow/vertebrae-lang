@@ -39,30 +39,34 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
     /*
-    printf("finalize: %d ", ctx->next_is_branch);
+    printf("\x1b[36mfinalize: %d ", ctx->next_is_branch);
     print_value(value);
-    printf("\n");
+    printf("\x1b[0m\n");
     */
 
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
-        if(ctx->accent == GKA_PARSE_QUOTE){
+        if(ctx->accent == GKA_PARSE_QUOTE && (value->type && SL_TYPE_CELL)){
 
-            struct cell *quoted_new = new_cell(value);
-            quoted_new->value = new_cell_value_obj(new);
+            struct cell *container = new_cell_value_obj(new);
+            struct cell *quoted_new = new_cell(container);
 
+            /*
             printf("quote_cell\n");
             print_cell(quoted_new);
             printf("\n");
+            */
 
             ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
             ctx->cell->next = quoted_new;
             ctx->cell = new; 
 
+            /*
             printf("new\n");
             print_cell(new);
             printf("\n");
+            */
 
             ctx->accent = GKA_PARSE_NO_ACCENT;
             ctx->next_is_branch = 0;
@@ -80,11 +84,13 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->cell = root_cell;
         }
 
+        /*
         printf("making branch of off: ");
         print_cell(ctx->cell);
         printf(" -> ");
         print_cell(new);
         printf("\n");
+        */
 
         ctx->cell->branch = new;
         ctx->cell = ctx->cell->branch;
@@ -94,6 +100,13 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         return;
 
     }else{
+        /*
+        printf("-----------> extending: ");
+        print_cell(ctx->cell);
+        printf("-----> ");
+        print_cell(new);
+        printf("\n");
+        */
         ctx->cell->next = new;
     }
     ctx->cell = new;

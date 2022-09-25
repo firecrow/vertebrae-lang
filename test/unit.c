@@ -545,7 +545,7 @@ int main(){
     /********************************* Function run test ********************/
     suite = new_suite("Function tests");
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print hi)))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -558,7 +558,7 @@ int main(){
     test(suite, state->context == NULL, "mock never runs");
 
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print hi))\n    (func))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        print hi)\n    (func))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -577,10 +577,7 @@ int main(){
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
     */
 
-    return;
-
-
-    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
+    script = "(\n    .hi \"there\"\n    .func '(\n        print \"hello, \" value)\n    (func \"one\" \"two\" \"three\"))";
     printf("%s\n", script);
 
     root = parse_all(script);

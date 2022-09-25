@@ -83,6 +83,7 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
+    /*
     printf("next_step cell: ");
     print_cell(ctx->cell);
     if(ctx->cell){
@@ -90,14 +91,17 @@ static void next_step(struct crw_state *ctx){
         print_cell(ctx->cell->next);
     }
     printf("\n");
+    */
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
     if(ctx->cell->branch){
+        /*
         printf("branching to: ");
         print_cell(ctx->cell->branch);
         printf("\n");
+        */
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
             return;

@@ -9,7 +9,9 @@ struct function_operator {
 
 
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /*
     printf("state %d\n", ctx->handle_state);
+    */
     struct function_operator *op = (struct function_operator *)_op;
     if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_PASSTHROUGH){
         default_next(ctx);
@@ -30,6 +32,12 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
     ctx->cell = func->next;
+
+    /*
+    printf("cell after func call");
+    print_cell(ctx->cell);
+    printf("\n");
+    */
 }
 
 struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type) {

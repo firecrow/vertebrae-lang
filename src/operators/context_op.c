@@ -7,7 +7,9 @@ void context_next(struct crw_state *ctx){
 }
 
 static void context_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    /*
     printf("\x1b[31mcontext handler (mock) called\x1b[0m\n");
+    */
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
     }
