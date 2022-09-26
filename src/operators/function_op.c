@@ -7,10 +7,23 @@ struct function_operator {
     struct cell *next;
 };
 
-
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
+
+    /*
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> funcion called");
+    print_cell(ctx->cell);
+    printf("\n");
+    */
+
     struct function_operator *op = (struct function_operator *)_op;
-    if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_PASSTHROUGH){
+    if(ctx->handle_state == CRW_IN_HEAD){
+        ctx->handle_state = CRW_IN_ARG;
+        /*
+        default_next(ctx);
+        return;
+        */
+    }
+    if(ctx->handle_state == CRW_IN_PASSTHROUGH){
         default_next(ctx);
         return;
     }
@@ -19,10 +32,12 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return;
     }
 
-    if(ctx->cell != NULL){
-        printf(".............\n");
+    if(ctx->cell){
+        /*
+        printf("adding value: ");
         print_value(ctx->cell->value);
         printf("\n");
+        */
         tree_add(ctx->head->closure->symbols, str("value"), ctx->cell->value);
     }
 
@@ -48,7 +63,6 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         ctx->cell = func->branch;
 
         ctx->handle_state = CRW_IN_HEAD;
-        printf("starting branch...........\n");
     }else{
         ctx->cell = func->next;
     }

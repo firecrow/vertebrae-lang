@@ -11,7 +11,6 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
 
     ctx->handle_state = CRW_IN_PASSTHROUGH;
     head->operator->handle(head->operator, ctx);
-    ctx->handle_state = CRW_IN_ARG;
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
@@ -26,10 +25,6 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 void close_branch(struct crw_state *ctx){
     ctx->handle_state = CRW_IN_CLOSE;
     ctx->head->operator->handle(ctx->head->operator, ctx);
-    if(ctx->handle_state == CRW_IN_CLOSE){
-        printf("in close branch\n");
-        ctx->handle_state = CRW_IN_ARG;
-    }
 }
 
 void pop_stack(struct crw_state *ctx){
@@ -64,8 +59,6 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
    state->cell = root;
    state->status = CRW_CONTINUE;
    state->next = next_step;
-
-   state->handle_state = CRW_IN_ARG;
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
@@ -108,12 +101,17 @@ static void next_step(struct crw_state *ctx){
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     if(!in_key){
+
+        /*
+        printf("calling.......\n");
+        print_cell(ctx->cell);
+        printf("\n");
+        */
+
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }else{
         default_next(ctx);
     }
-    printf("in next step\n");
-    ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){
         close_branch(ctx);

@@ -34,7 +34,8 @@ enum SL_TYPE {
     SL_TYPE_VALUE,
     SL_TYPE_COMMENT,
     SL_TYPE_QUOTE,
-    SL_TYPE_KEY
+    SL_TYPE_KEY,
+    SL_TYPE_SET_LEX
     /* custom types */
 };
 

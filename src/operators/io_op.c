@@ -10,6 +10,7 @@ struct print_operator {
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(ctx->handle_state == CRW_IN_HEAD){
         default_next(ctx);
+        ctx->handle_state = CRW_IN_ARG;
         return;
     }
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){

@@ -1,4 +1,4 @@
 (
-    .forecast "grey"
-    .share '(print (print "hi, " value) "end")
-    (share "one" "two" "three"))
+    .local 10
+    .call '(print (+ 1 value local) "")
+    (call 38))

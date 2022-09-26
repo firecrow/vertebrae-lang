@@ -8,7 +8,12 @@ struct arithmetic_operator {
 };
 
 static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_CLOSE){
+    if(ctx->handle_state == CRW_IN_HEAD){
+        ctx->handle_state = CRW_IN_ARG;
+        default_next(ctx);
+        return;
+    }
+    if(ctx->handle_state == CRW_IN_CLOSE){
         default_next(ctx);
         return;
     }
@@ -42,7 +47,6 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
-    print_head(head);
 
     default_next(ctx);
 }
