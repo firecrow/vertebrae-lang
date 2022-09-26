@@ -41,9 +41,6 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         }
     }
     default_next(ctx);
-    if(ctx->value){
-        ctx->head->value = ctx->value;
-    }
 }
 
 struct print_operator *print_singleton;

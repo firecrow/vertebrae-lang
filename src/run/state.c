@@ -26,7 +26,10 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 void close_branch(struct crw_state *ctx){
     ctx->handle_state = CRW_IN_CLOSE;
     ctx->head->operator->handle(ctx->head->operator, ctx);
-    ctx->handle_state = CRW_IN_ARG;
+    if(ctx->handle_state == CRW_IN_CLOSE){
+        printf("in close branch\n");
+        ctx->handle_state = CRW_IN_ARG;
+    }
 }
 
 void pop_stack(struct crw_state *ctx){
@@ -109,6 +112,7 @@ static void next_step(struct crw_state *ctx){
     }else{
         default_next(ctx);
     }
+    printf("in next step\n");
     ctx->handle_state = CRW_IN_ARG;
 
     if(ctx->cell == NULL){

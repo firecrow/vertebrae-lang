@@ -4,28 +4,32 @@ struct function_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
-    bool called;
+    struct cell *next;
 };
 
 
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    printf("state %d\n", ctx->handle_state);
     struct function_operator *op = (struct function_operator *)_op;
     if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_PASSTHROUGH){
         default_next(ctx);
         return;
     }
-    if(ctx->handle_state == CRW_IN_CLOSE && op->called){
+    if(ctx->handle_state == CRW_IN_CLOSE && op->next){
         default_next(ctx);
         return;
     }
-    op->called = 1;
 
     if(ctx->cell != NULL){
+        printf(".............\n");
+        print_value(ctx->cell->value);
+        printf("\n");
         tree_add(ctx->head->closure->symbols, str("value"), ctx->cell->value);
     }
 
     struct cell *func = ctx->head->cell;
+    if(!op->next){
+        op->next = ctx->cell;
+    }
 
     /*
     printf("in func thing............\n");
@@ -38,8 +42,13 @@ static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
     if(func->branch){
-        start_new_branch(ctx, func->branch, ctx->head->closure);
+
+        ctx->stack = push_stack(ctx, func);
+        ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
+        ctx->cell = func->branch;
+
         ctx->handle_state = CRW_IN_HEAD;
+        printf("starting branch...........\n");
     }else{
         ctx->cell = func->next;
     }

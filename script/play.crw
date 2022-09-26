@@ -1,1 +1,4 @@
-(print "hi")
+(
+    .forecast "grey"
+    .share '(print (print "hi, " value) "end")
+    (share "one" "two" "three"))

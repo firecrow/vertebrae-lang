@@ -42,6 +42,7 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
+    print_head(head);
 
     default_next(ctx);
 }
