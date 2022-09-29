@@ -1,6 +1,1 @@
-(
-    .local 10
-    .call '(if 
-        (false) 
-        (print (+ 1 value local) ""))
-    (call 38))
+(print (= hi there))

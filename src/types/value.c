@@ -64,11 +64,17 @@ static struct string *string_to_string(struct value_obj *value){
     return value->slot.string;
 }
 
+static struct string *string_eq(struct value_obj *a, struct value_obj *b){
+    printf("in sring eq....\n");
+    return string_cmp(a->slot.string, b->to_string(b)) == 0;
+}
+
 struct value_obj *new_string_value_obj(struct string *string){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_STRING;
     value->slot.string = string;
     value->to_string = string_to_string;
+    value->equals = string_eq;
     return value;
 }
 
