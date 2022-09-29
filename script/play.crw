@@ -1,6 +1,4 @@
 (
-    .local 10
-    .call '(if 
-        (false) 
-        (print (+ 1 value local) ""))
-    (call 38))
+    .hi 10 
+    (print 
+        (= hi 10)))
