@@ -501,16 +501,6 @@ int main(){
     /********************************* Basic run test ********************/
     suite = new_suite("Run tests");
 
-    script = "(print \"hi\")";
-
-    root = parse_all(script);
-    state = crw_new_state_context();
-    run_root(state, root);
-
-    print_head(state->head);
-    test(suite, state->head->value->type == SL_TYPE_STRING, "head value is string");
-    test(suite, string_cmp(state->head->value->slot.string, str("hi")) == 0, "string is the content of the string");
-
     script = "(+ 1 3 5)";
 
     root = parse_all(script);
