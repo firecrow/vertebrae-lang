@@ -22,13 +22,12 @@ static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct head *head = ctx->head;
     if(!op->value && ctx->cell){
         head->value =  ctx->builtins.false;
-        op->value = ctx->cell->value;
+        op->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         default_next(ctx);
         return;
     }
 
-
-    if(op->value->equals(op->value, ctx->cell->value)){
+    if(op->value->equals(op->value, swap_for_symbol(ctx->head->closure, ctx->cell->value))){
         head->value = ctx->builtins.true;
     }else{
         head->value = ctx->builtins.false;
