@@ -1,4 +1,4 @@
 (
-    .hi "there" 
+    .hi 10 
     (print 
-        (= hi "there")))
+        (= hi 10)))

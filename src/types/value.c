@@ -65,7 +65,6 @@ static struct string *string_to_string(struct value_obj *value){
 }
 
 static struct string *string_eq(struct value_obj *a, struct value_obj *b){
-    printf("in sring eq....\n");
     return string_cmp(a->slot.string, b->to_string(b)) == 0;
 }
 

@@ -73,41 +73,22 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
-    /*
-    printf("next_step cell: ");
-    print_cell(ctx->cell);
-    if(ctx->cell){
-        printf(" next -> ");
-        print_cell(ctx->cell->next);
-    }
-    printf("\n");
-    */
-
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
     while(ctx->cell->branch){
-        /*
-        printf("branching to: ");
-        print_cell(ctx->cell->branch);
-        printf("\n");
-        */
+        in_key = 0;
+
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
         if(ctx->cell && is_non_head_class(ctx->cell->value)){
             return;
         }
         ctx->handle_state = CRW_IN_HEAD;
+
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     if(!in_key){
-
-        /*
-        printf("calling.......\n");
-        print_cell(ctx->cell);
-        printf("\n");
-        */
-
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }else{
         default_next(ctx);
