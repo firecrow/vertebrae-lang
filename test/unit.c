@@ -41,7 +41,6 @@ static void summerize(struct suite *suite){
     }
     if(suite->pass){
         global_open_count--;
-        printf("\x1b[35m%d\n\x1b[0m\n", global_open_count);
         printf("%sSUITE PASS:", GREEN);
     }else{
         printf("%sSUITE FAIL:", RED);
