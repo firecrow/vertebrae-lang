@@ -67,27 +67,21 @@ static void next_step(struct crw_state *ctx){
         exit(1);
     }
 
-    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    bool in_key = crw_process_keys(ctx);
-
-    if(cell_incr(ctx, in_key)){
-        return;
-    }
-
-    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    if(!in_key){
+    crw_process_keys(ctx);
+    if(ctx->head){
+        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }else{
-        default_next(ctx);
+        cell_incr(ctx);
     }
 
     if(ctx->cell == NULL){
         close_branch(ctx);
-
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }
     }
+
     if(!ctx->cell){
         ctx->status = CRW_DONE;
         return;

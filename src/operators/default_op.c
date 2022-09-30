@@ -7,7 +7,7 @@ static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
     }
-    default_next(ctx);
+    cell_incr(ctx);
 }
 
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {

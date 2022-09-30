@@ -217,6 +217,7 @@ int main(){
     suite = new_suite("Pop stack branch tests");
 
     root = new_cell(NULL);
+    root->value = new_string_value_obj(str("root"));
 
     first = new_cell(NULL);
     first->value = new_string_value_obj(str("first"));
@@ -236,11 +237,14 @@ int main(){
     sixth = new_cell(NULL);
     sixth->value = new_string_value_obj(str("sixth"));
 
+    /* 
+     * ("first" "second" "third" (fourth" "fifth") "sixth")
+     */
     root->next = first;
     first->next = second;
     second->next = third;
-    second->branch = fourth;
-    fourth->next = fifth;
+        second->branch = fourth;
+        fourth->next = fifth;
     third->next = sixth;
 
     global = new_closure(NULL);
@@ -255,10 +259,10 @@ int main(){
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
     state->next(state);
-    test(suite, state->cell == fifth, "Fifth step is the next after the branch cell(fourth)");
+    test(suite, state->cell == fourth, "Fourth step is the next after the branch cell(fourth)");
 
     state->next(state);
-    test(suite, state->cell == third, "Fourth cell should be on main path again (Third)");
+    test(suite, state->cell == fifth, "Fourth cell should be on main path again (Third)");
 
     state->next(state);
     test(suite, state->cell == sixth, "Sixth cell should be on main path as well (Fifth)");
