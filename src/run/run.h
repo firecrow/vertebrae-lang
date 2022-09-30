@@ -39,6 +39,7 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell);
 void pop_stack(struct crw_state *ctx);
 void close_branch(struct crw_state *ctx);
 void run_root(struct crw_state *ctx, struct cell *root);
+bool cell_incr(struct crw_state *ctx, bool in_key);
 
 /* utils */
 struct cell *get_next(struct cell *cell);

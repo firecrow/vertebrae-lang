@@ -61,12 +61,6 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
    state->next = next_step;
 }
 
-void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
-    ctx->stack = push_stack(ctx, ctx->cell);
-    ctx->head = setup_new_head(new_head(), cell, closure);
-    ctx->cell = cell;
-}
-
 static void next_step(struct crw_state *ctx){
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
@@ -76,15 +70,8 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     bool in_key = crw_process_keys(ctx);
 
-    while(ctx->cell->branch){
-        in_key = 0;
-
-        start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
-        if(ctx->cell && is_non_head_class(ctx->cell->value)){
-            return;
-        }
-        ctx->handle_state = CRW_IN_HEAD;
-
+    if(cell_incr(ctx, in_key)){
+        return;
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
