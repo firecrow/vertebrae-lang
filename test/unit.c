@@ -11,11 +11,15 @@ struct suite {
     int pass;
 };
 
+int global_open_count = 0;
+
 static struct suite *new_suite(char *name){
     struct suite *suite = malloc(sizeof(struct suite));
     memset(suite, 0, sizeof(struct suite));
     suite->name = name;
     printf("SUITE ************ %s ************\n", name);
+
+    global_open_count++;
     return suite;
 }
 
@@ -36,12 +40,21 @@ static void summerize(struct suite *suite){
         suite->pass = 1;
     }
     if(suite->pass){
-        suite->passed++;
+        global_open_count--;
+        printf("\x1b[35m%d\n\x1b[0m\n", global_open_count);
         printf("%sSUITE PASS:", GREEN);
     }else{
         printf("%sSUITE FAIL:", RED);
     }
     printf(" *%s* %d PASSED, %d FAILED %s%s\n", suite->name, suite->passed, suite->failed, suite->name, NUETRAL);
+}
+
+static void show_global_success(){
+    if(!global_open_count){
+        printf("%sALL TESTS PASS%s\n", GREEN, NUETRAL);
+    }else {
+        printf("%sTEST FAILURES: %d%s\n", RED, global_open_count, NUETRAL);
+    }
 }
 
 struct suite *suite = NULL;
@@ -134,6 +147,7 @@ int main(){
     summerize(suite);
 
     /***************** STEP TESTS *************/
+    suite = new_suite("Step tests");
     struct crw_state *state = NULL;
 
     struct closure *global = NULL;
@@ -166,7 +180,9 @@ int main(){
 
     head = new_head();
 
-    /* test a few next steps */
+    summerize(suite);
+
+    /*************************** test a few next steps ***************/
     suite = new_suite("Basic step tests");
 
     root = new_cell(NULL);
@@ -396,8 +412,8 @@ int main(){
        state->next(state); 
     }
 
-    summerize(suite);
     */
+    summerize(suite);
 
     /********************************* Parse test ********************/
     suite = new_suite("Parse tests");
@@ -587,6 +603,8 @@ int main(){
 
 
     summerize(suite);
+
+    show_global_success();
 
     return 0;
 }
