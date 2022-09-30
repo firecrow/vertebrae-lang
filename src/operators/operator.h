@@ -30,9 +30,9 @@ typedef void (operator_handle_func)(struct operator_ifc *_op, struct crw_state *
 
 struct operator_ifc {
     enum OPERATOR_TYPE type;
-    enum gka_op_lifecycle lifecycle;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    enum gka_op_lifecycle lifecycle;
 };
 
 void default_next(struct crw_state *ctx);

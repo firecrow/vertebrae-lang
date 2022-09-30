@@ -9,8 +9,10 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = head->value;
     crw_process_keys(ctx);
 
+    /*
     ctx->handle_state = CRW_IN_PASSTHROUGH;
-    head->operator->handle(head->operator, ctx);
+    head->operator->close(head->operator, ctx);
+    */
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
@@ -23,8 +25,10 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void close_branch(struct crw_state *ctx){
+    /*
     ctx->handle_state = CRW_IN_CLOSE;
     ctx->head->operator->handle(ctx->head->operator, ctx);
+    */
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
@@ -56,18 +60,23 @@ struct crw_state *crw_new_state_context(){
 }
 
 void crw_setup_state_context(struct crw_state *state, struct cell* root, struct closure *global){
+   state->next = next_step;
+
    state->builtins.true = new_result_value_obj(TRUE);
    state->builtins.false = new_result_value_obj(FALSE);
    state->builtins.nil = new_result_value_obj(NIL);
    state->builtins.error = new_result_value_obj(ERROR);
 
-   state->head = setup_new_head(new_head(), root, global);
-   state->cell = root;
    state->status = CRW_CONTINUE;
-   state->next = next_step;
+
+   start_new_branch(state, root, global);
 }
 
 static void next_step(struct crw_state *ctx){
+    if(ctx->cell == NULL){
+        ctx->status = CRW_DONE;
+        return;
+    }
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     ctx->head->operator->handle(ctx->head->operator, ctx);
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
@@ -75,13 +84,12 @@ static void next_step(struct crw_state *ctx){
 }
 
 void cell_incr(struct crw_state *ctx){
+    if(!ctx->cell){
+        return;
+    }
     printf("entering incr: ");
     print_cell(ctx->cell);
     printf("\n");
-    if(!ctx->cell){
-        fprintf(stderr, "Error next_step called on empty cell\n");
-        exit(1);
-    }
 
     int is_moved = 0;
     while(ctx->cell->branch){

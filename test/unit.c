@@ -279,21 +279,6 @@ int main(){
 
     summerize(suite);
 
-    return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /********************************* test arithmetic ********************/
     suite = new_suite("Arithmetic tests");
 
@@ -324,13 +309,16 @@ int main(){
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
 
+    /*
+     * (+ 1 3 -2) 
+     */
+
     while(state->status != CRW_DONE){
        state->next(state); 
     }
 
-    /*
+    print_head(state->head);
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
-    */
 
     summerize(suite);
 
