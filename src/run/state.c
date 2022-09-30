@@ -62,17 +62,38 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 }
 
 static void next_step(struct crw_state *ctx){
+    if(ctx->cell && ctx->head){
+        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
+    }else{
+        cell_incr(ctx);
+    }
+    ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
+}
+
+void cell_incr(struct crw_state *ctx){
     if(!ctx->cell){
         fprintf(stderr, "Error next_step called on empty cell\n");
         exit(1);
     }
 
-    crw_process_keys(ctx);
-    if(ctx->head){
-        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-        ctx->head->operator->handle(ctx->head->operator, ctx);
-    }else{
-        cell_incr(ctx);
+    int is_moved = 0;
+    while(ctx->cell->branch){
+        /*
+        printf("->> branching");
+        */
+        is_moved = 1;
+        start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
+        if(!(ctx->cell && is_non_head_class(ctx->cell->value))){
+            ctx->handle_state = CRW_IN_HEAD;
+        }
+    }
+
+    if(!is_moved){
+        /*
+        printf("... nexting");
+        */
+        ctx->cell = ctx->cell->next;
     }
 
     if(ctx->cell == NULL){
@@ -81,12 +102,6 @@ static void next_step(struct crw_state *ctx){
             pop_stack(ctx);
         }
     }
-
-    if(!ctx->cell){
-        ctx->status = CRW_DONE;
-        return;
-    }
-    ctx->status = CRW_CONTINUE;
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
