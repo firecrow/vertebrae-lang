@@ -27,6 +27,12 @@ void close_branch(struct crw_state *ctx){
     ctx->head->operator->handle(ctx->head->operator, ctx);
 }
 
+void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
+    ctx->stack = push_stack(ctx, ctx->cell);
+    ctx->head = setup_new_head(new_head(), cell, closure);
+    ctx->cell = cell;
+}
+
 void pop_stack(struct crw_state *ctx){
     struct head *previous = ctx->head;
     ctx->cell = ctx->stack->cell;
@@ -65,6 +71,7 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
     ctx->head->operator->handle(ctx->head->operator, ctx);
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
+    printf("status %s\n", ctx->status == CRW_CONTINUE ? "CONTINUE" : "DONE");
 }
 
 void cell_incr(struct crw_state *ctx){
@@ -81,9 +88,6 @@ void cell_incr(struct crw_state *ctx){
         printf("->> branching\n");
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
-        if(!(ctx->cell && is_non_head_class(ctx->cell->value))){
-            ctx->handle_state = CRW_IN_HEAD;
-        }
     }
 
     if(!is_moved){
@@ -101,7 +105,7 @@ void cell_incr(struct crw_state *ctx){
         ctx->handle_state = CRW_IN_ARG;
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
-    printf("leaving incr: ");
+    printf("leaving incr(%d): ", ctx->handle_state);
     print_cell(ctx->cell);
     printf("\n");
 }

@@ -8,7 +8,9 @@ struct arithmetic_operator {
 };
 
 static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    printf("arithamtic.........%d\n", ctx->handle_state);
     if(ctx->handle_state == CRW_IN_HEAD){
+        printf("HEAD returning...\n");
         ctx->handle_state = CRW_IN_ARG;
         cell_incr(ctx);
         return;

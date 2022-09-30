@@ -185,10 +185,15 @@ int main(){
     suite = new_suite("Basic step tests");
 
     root = new_cell(NULL);
+    root->value = new_string_value_obj(str("root"));
     first = new_cell(NULL);
+    first->value = new_string_value_obj(str("first"));
     second = new_cell(NULL);
+    second->value = new_string_value_obj(str("second"));
     third = new_cell(NULL);
+    third->value = new_string_value_obj(str("third"));
     fourth = new_cell(NULL);
+    fourth->value = new_string_value_obj(str("fourth"));
 
     root->next = first;
     first->next = second;
@@ -273,6 +278,21 @@ int main(){
     test(suite, state->cell == sixth, "Sixth cell should be on main path as well (Fifth)");
 
     summerize(suite);
+
+    return;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /********************************* test arithmetic ********************/
     suite = new_suite("Arithmetic tests");
