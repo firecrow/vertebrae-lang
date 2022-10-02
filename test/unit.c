@@ -356,6 +356,10 @@ int main(){
     fourth->branch = fifth;
     fifth->next = sixth;
     sixth->next = seventh;
+    
+    /* 
+     * (let .one 1 (+ 2 one))
+     */
 
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
@@ -553,6 +557,7 @@ int main(){
     test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
 
     script = "(.hi \"there\" (mock))";
+    printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();

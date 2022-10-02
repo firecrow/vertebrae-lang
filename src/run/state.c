@@ -77,7 +77,15 @@ static void next_step(struct crw_state *ctx){
         ctx->status = CRW_DONE;
         return;
     }
+
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+
+    printf("swap from: \x1b[34m");
+    print_value(ctx->cell->value);
+    printf("\x1b[0mto: \x1b[34m");
+    print_value(ctx->value);
+    printf("\n\x1b[0m");
+
     ctx->head->operator->handle(ctx->head->operator, ctx);
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
     printf("status %s\n", ctx->status == CRW_CONTINUE ? "CONTINUE" : "DONE");
@@ -87,32 +95,32 @@ void cell_incr(struct crw_state *ctx){
     if(!ctx->cell){
         return;
     }
+
     printf("entering incr: ");
     print_cell(ctx->cell);
     printf("\n");
 
+    crw_process_keys(ctx);
+
     int is_moved = 0;
     while(ctx->cell->branch){
-        printf("->> branching\n");
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
     }
 
     if(!is_moved){
-        printf("... nexting\n");
         ctx->cell = ctx->cell->next;
     }
 
     if(ctx->cell == NULL){
         close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
-            printf("<<< popping\n");
             pop_stack(ctx);
         }
-        printf("::: landing\n");
         ctx->handle_state = CRW_IN_ARG;
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
+
     printf("leaving incr(%d): ", ctx->handle_state);
     print_cell(ctx->cell);
     printf("\n");
