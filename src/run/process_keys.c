@@ -1,10 +1,9 @@
 #include "../gekkota.h"
  
 void set_value(struct crw_state *ctx, struct value_obj *value){
-    printf("\x1b[36msetting a key's value\x1b[0m");
-    tree_update(ctx->head->closure->symbols, ctx->head->key_for_next->slot.string, value);
     struct value_obj *key = ctx->head->key_for_next;
     if(key->type == SL_TYPE_KEY){
+        printf("\x1b[36msetting SET\x1b[0m");
         tree_update(ctx->head->closure->symbols, key->slot.string, value);
         printf("in key......\n");
     } else if(key->type == SL_TYPE_SET_LEX) {
