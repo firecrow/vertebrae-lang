@@ -80,15 +80,19 @@ static void next_step(struct crw_state *ctx){
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
 
+    /*
     printf("swap from: \x1b[34m");
     print_value(ctx->cell->value);
     printf("\x1b[0mto: \x1b[34m");
     print_value(ctx->value);
     printf("\n\x1b[0m");
+    */
 
     ctx->head->operator->handle(ctx->head->operator, ctx);
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
+    /*
     printf("status %s\n", ctx->status == CRW_CONTINUE ? "CONTINUE" : "DONE");
+    */
 }
 
 void cell_incr(struct crw_state *ctx){
@@ -96,9 +100,11 @@ void cell_incr(struct crw_state *ctx){
         return;
     }
 
+    /*
     printf("entering incr: ");
     print_cell(ctx->cell);
     printf("\n");
+    */
 
     crw_process_keys(ctx);
 
@@ -121,9 +127,11 @@ void cell_incr(struct crw_state *ctx){
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
+    /*
     printf("leaving incr(%d): ", ctx->handle_state);
     print_cell(ctx->cell);
     printf("\n");
+    */
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){

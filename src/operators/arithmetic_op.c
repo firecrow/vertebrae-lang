@@ -47,10 +47,6 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
 
-    printf("\x1b[31mat the end of an arithmetic\x1b[0m");
-    print_value(head->value);
-    printf("\x1b[0m\n");
-
     cell_incr(ctx);
 }
 
