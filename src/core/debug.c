@@ -71,7 +71,7 @@ void print_head(struct head *head){
         printf("<H NULL>");
         return;
     }
-    printf("<H");
+    printf("<H%d", head->id);
     printf(" source value:");
     print_value(head->source);
     if(head->operator){

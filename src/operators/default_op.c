@@ -1,19 +1,12 @@
 #include "../gekkota.h"
 
-void default_next(struct crw_state *ctx){
-    if(ctx->cell){
-        ctx->cell = ctx->cell->next;
-    }
-}
-
-static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->handle_state == CRW_IN_HEAD){
-        ctx->handle_state = CRW_IN_ARG;
-    }
+static void default_handle(struct operator_ifc *op, struct crw_state *ctx){
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
     }
-    default_next(ctx);
+    if(ctx->handle_state == CRW_IN_ARG){
+        cell_incr(ctx);
+    }
 }
 
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {
@@ -22,5 +15,6 @@ struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {
     op->type = type;
     op->handle = default_handle;
     op->new = new_default_operator;
+    op->lifecycle = GKA_OP_NOT_STARTED;
     return op;
 }

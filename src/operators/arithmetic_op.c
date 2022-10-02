@@ -4,35 +4,34 @@ struct arithmetic_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    enum gka_op_lifecycle lifecycle;
     struct value *value;
 };
 
 static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->handle_state == CRW_IN_HEAD){
-        ctx->handle_state = CRW_IN_ARG;
-        default_next(ctx);
-        return;
-    }
-    if(ctx->handle_state == CRW_IN_CLOSE){
-        default_next(ctx);
+    struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
+    if(op->lifecycle == GKA_OP_NOT_STARTED){
+        op->lifecycle = GKA_OP_STARTED;
+        cell_incr(ctx);
         return;
     }
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){
-        default_next(ctx);
+        printf(" returning no value ");
+        cell_incr(ctx);
         return;
     }
     if(value->type != SL_TYPE_INT){
-        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d", value->type);
-        default_next(ctx);
+        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d ", value->type);
+        print_value(value);
+        printf("\n");
+        cell_incr(ctx);
         return;
-        /*exit(1);*/
     }
-    struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
         head->value = clone_value(value);
-        default_next(ctx);
+        cell_incr(ctx);
         return;
     }
 
@@ -48,7 +47,7 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value->slot.integer = head->value->slot.integer * new_value;
     }
 
-    default_next(ctx);
+    cell_incr(ctx);
 }
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {
@@ -56,5 +55,6 @@ struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {
     op->type = type;
     op->handle = arithmetic_handle;
     op->new = new_arithmetic_operator;
+    op->lifecycle = GKA_OP_NOT_STARTED;
     return (struct operator_ifc *)op;
 }

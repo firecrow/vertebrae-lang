@@ -1,18 +1,16 @@
 #include "../gekkota.h"
-
+int head_id = 0;
 struct head *new_head(){
     struct head *head = malloc(sizeof(struct head));
     if(head == NULL){
         return NULL;
     }
     memset(head, 0, sizeof(struct head));
+    head->id = head_id++;
     return head;
 }
 
 struct head *setup_new_head(struct head *head, struct cell *cell, struct closure *closure){
-    /*
-    printf("head\n");
-    */
     struct value_obj *value = swap_for_symbol(closure, cell->value);
 
     if(value && value->type == SL_TYPE_FUNCTION){

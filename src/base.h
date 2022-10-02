@@ -117,6 +117,7 @@ void print_cell(struct cell *cell);
 struct string *string_from_cstring(char *cstring);
 
 struct head {
+    int id;
     struct operator_ifc *operator;
     struct closure *closure;  
     struct value_obj *value;

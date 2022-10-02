@@ -15,6 +15,12 @@ enum OPERATOR_TYPE {
     SET
 };
 
+enum gka_op_lifecycle {
+    GKA_OP_NOT_STARTED = 0,
+    GKA_OP_STARTED,
+    GKA_OP_CLOSING,
+};
+
 enum SL_BRANCH_TYPE {
     SL_CONTINUE =0,
     SL_BREAK
@@ -26,6 +32,7 @@ struct operator_ifc {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    enum gka_op_lifecycle lifecycle;
 };
 
 void default_next(struct crw_state *ctx);

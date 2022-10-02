@@ -11,11 +11,15 @@ struct suite {
     int pass;
 };
 
+int global_open_count = 0;
+
 static struct suite *new_suite(char *name){
     struct suite *suite = malloc(sizeof(struct suite));
     memset(suite, 0, sizeof(struct suite));
     suite->name = name;
     printf("SUITE ************ %s ************\n", name);
+
+    global_open_count++;
     return suite;
 }
 
@@ -36,12 +40,20 @@ static void summerize(struct suite *suite){
         suite->pass = 1;
     }
     if(suite->pass){
-        suite->passed++;
+        global_open_count--;
         printf("%sSUITE PASS:", GREEN);
     }else{
         printf("%sSUITE FAIL:", RED);
     }
     printf(" *%s* %d PASSED, %d FAILED %s%s\n", suite->name, suite->passed, suite->failed, suite->name, NUETRAL);
+}
+
+static void show_global_success(){
+    if(!global_open_count){
+        printf("%sALL TESTS PASS%s\n", GREEN, NUETRAL);
+    }else {
+        printf("%sTEST FAILURES: %d%s\n", RED, global_open_count, NUETRAL);
+    }
 }
 
 struct suite *suite = NULL;
@@ -134,6 +146,7 @@ int main(){
     summerize(suite);
 
     /***************** STEP TESTS *************/
+    suite = new_suite("Step tests");
     struct crw_state *state = NULL;
 
     struct closure *global = NULL;
@@ -166,14 +179,21 @@ int main(){
 
     head = new_head();
 
-    /* test a few next steps */
+    summerize(suite);
+
+    /*************************** test a few next steps ***************/
     suite = new_suite("Basic step tests");
 
     root = new_cell(NULL);
+    root->value = new_string_value_obj(str("root"));
     first = new_cell(NULL);
+    first->value = new_string_value_obj(str("first"));
     second = new_cell(NULL);
+    second->value = new_string_value_obj(str("second"));
     third = new_cell(NULL);
+    third->value = new_string_value_obj(str("third"));
     fourth = new_cell(NULL);
+    fourth->value = new_string_value_obj(str("fourth"));
 
     root->next = first;
     first->next = second;
@@ -184,9 +204,11 @@ int main(){
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
 
+    printf("1\n");
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
 
+    printf("2\n");
     state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
@@ -202,6 +224,7 @@ int main(){
     suite = new_suite("Pop stack branch tests");
 
     root = new_cell(NULL);
+    root->value = new_string_value_obj(str("root"));
 
     first = new_cell(NULL);
     first->value = new_string_value_obj(str("first"));
@@ -221,12 +244,15 @@ int main(){
     sixth = new_cell(NULL);
     sixth->value = new_string_value_obj(str("sixth"));
 
+    /* 
+     * ("first" "second" ("third" fourth") "fifth" "sixth")
+     */
     root->next = first;
     first->next = second;
-    second->next = third;
-    second->branch = fourth;
-    fourth->next = fifth;
-    third->next = sixth;
+    second->next = fifth;
+        second->branch = third;
+        third->next = fourth;
+    fifth->next = sixth;
 
     global = new_closure(NULL);
     stack = new_stack_item(NULL, root, head);
@@ -240,10 +266,13 @@ int main(){
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
     state->next(state);
-    test(suite, state->cell == fifth, "Fifth step is the next after the branch cell(fourth)");
+    test(suite, state->cell == third, "Third step is the next after the branch cell(fourth)");
 
     state->next(state);
-    test(suite, state->cell == third, "Fourth cell should be on main path again (Third)");
+    test(suite, state->cell == fourth, "Fourth step is the next after the branch cell(fourth)");
+
+    state->next(state);
+    test(suite, state->cell == fifth, "Fifth cell should be on main path again (Third)");
 
     state->next(state);
     test(suite, state->cell == sixth, "Sixth cell should be on main path as well (Fifth)");
@@ -280,13 +309,16 @@ int main(){
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
 
+    /*
+     * (+ 1 3 -2) 
+     */
+
     while(state->status != CRW_DONE){
        state->next(state); 
     }
 
-    /*
+    print_head(state->head);
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
-    */
 
     summerize(suite);
 
@@ -324,6 +356,10 @@ int main(){
     fourth->branch = fifth;
     fifth->next = sixth;
     sixth->next = seventh;
+    
+    /* 
+     * (let .one 1 (+ 2 one))
+     */
 
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
@@ -396,8 +432,8 @@ int main(){
        state->next(state); 
     }
 
-    summerize(suite);
     */
+    summerize(suite);
 
     /********************************* Parse test ********************/
     suite = new_suite("Parse tests");
@@ -510,23 +546,15 @@ int main(){
     test(suite, state->head->value->type == SL_TYPE_INT, "head value is int");
     test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
-    script = "(mock .hi \"there\")";
+    script = "(.hi \"there\" (mock))";
     printf("%s\n", script);
 
     root = parse_all(script);
     state = crw_new_state_context();
     run_root(state, root);
 
-    struct value_obj *hi_value = tree_get(state->context->closure->symbols, str("hi"));
-    test(suite, string_cmp(hi_value->slot.string, str("there")) == 0, "hi key has 'there' value");
-
-    script = "(.hi \"there\" (mock))";
-
-    root = parse_all(script);
-    state = crw_new_state_context();
-    run_root(state, root);
-
-    value = swap_for_symbol(state->context->closure, new_symbol_value_obj(str("hi")));
+    value = state->head->value;
+    print_value(value);
 
     test(suite, value->type == SL_TYPE_STRING, "returned is an int");
     test(suite, string_cmp(value->slot.string, str("there")) == 0, "hi key has 'there' value");
@@ -587,6 +615,8 @@ int main(){
 
 
     summerize(suite);
+
+    show_global_success();
 
     return 0;
 }
