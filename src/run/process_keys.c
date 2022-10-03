@@ -31,7 +31,7 @@ bool crw_process_keys(struct crw_state *ctx){
 
         /* cant assign a branch, if a branch is quoted into a cell it can be assigned */
         if(ctx->cell->next && !ctx->cell->branch){
-            set_value(ctx, ctx->cell->value);
+            set_value(ctx, ctx->cell->next->value);
             ctx->cell = ctx->cell->next;
         }
     }
