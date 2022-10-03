@@ -2,10 +2,6 @@
 
 #include "suite.c"
 
-
-#include "tree_test.c"
-#include "head_test.c"
-
 /*
 #include "arithmetic_test.c"
 #include "basic_run_test.c"
@@ -23,6 +19,7 @@
 struct suite *suite = NULL;
 struct order_entry *order_entry = NULL;
 struct value_obj *result = NULL;
+struct crw_state *state = NULL;
 
 struct head *head = NULL;
 struct cell *cell = NULL;
@@ -31,45 +28,31 @@ struct value_obj *value = NULL;
 struct operator_ifc *op;
 struct string *op_name;
 
+struct closure *global = NULL;
+struct stack_item *stack = NULL;
+struct cell *root = NULL;
+struct cell *branch = NULL;
+struct cell *first = NULL;
+struct cell *second = NULL;
+struct cell *third = NULL;
+struct cell *fourth = NULL;
+struct cell *fifth = NULL;
+struct cell *sixth = NULL;
+struct cell *seventh = NULL;
+struct cell *eigth = NULL;
+struct cell *ninth = NULL;
+struct cell *tenth = NULL;
+struct cell *eleventh = NULL;
+
+#include "tree_test.c"
+#include "head_test.c"
+#include "step_test.c"
+
 int main(){
     test_tree();
     test_head();
+    test_steps();
 
-    /***************** Step tests *************/
-    suite = new_suite("Step tests");
-    struct crw_state *state = NULL;
-
-    struct closure *global = NULL;
-    struct stack_item *stack = NULL;
-    struct cell *root = NULL;
-    struct cell *branch = NULL;
-    struct cell *first = NULL;
-    struct cell *second = NULL;
-    struct cell *third = NULL;
-    struct cell *fourth = NULL;
-    struct cell *fifth = NULL;
-    struct cell *sixth = NULL;
-    struct cell *seventh = NULL;
-    struct cell *eigth = NULL;
-    struct cell *ninth = NULL;
-    struct cell *tenth = NULL;
-    struct cell *eleventh = NULL;
-
-
-    root = new_cell(NULL);
-    first = new_cell(NULL);
-    root->next = first;
-
-    global = new_closure(NULL);
-    state = crw_new_state_context();
-    crw_setup_state_context(state, root, global);
-
-    test(suite, state->cell == root, "Cell are assinged");
-    test(suite, state->head->closure->parent == global, "Global are assinged");
-
-    head = new_head();
-
-    summerize(suite);
 
     /*************************** test a few next steps ***************/
     suite = new_suite("Basic step tests");
