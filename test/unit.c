@@ -204,11 +204,9 @@ int main(){
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
 
-    printf("1\n");
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
 
-    printf("2\n");
     state->next(state);
     test(suite, state->cell == second, "Second cell should be current cell after step");
 
@@ -317,7 +315,6 @@ int main(){
        state->next(state); 
     }
 
-    print_head(state->head);
     test(suite, state->head->value->slot.integer == 2, "Arithemtic comes up with proper value");
 
     summerize(suite);
