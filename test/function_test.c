@@ -1,7 +1,6 @@
 void test_functions(){
     suite = new_suite("Function test");
 
-    /*
     root = new_cell(NULL);
     first = new_cell(NULL);
     global = new_closure(NULL);
@@ -57,6 +56,5 @@ void test_functions(){
        state->next(state); 
     }
 
-    */
     summerize(suite);
 }
