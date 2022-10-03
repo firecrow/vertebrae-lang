@@ -47,7 +47,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
-        if(ctx->accent == GKA_PARSE_QUOTE && (value->type && SL_TYPE_CELL)){
+        if(ctx->accent == GKA_PARSE_QUOTE && (value->type == SL_TYPE_CELL)){
 
             struct cell *container = new_cell_value_obj(new);
             struct cell *quoted_new = new_cell(container);
@@ -75,25 +75,19 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
 
         if(ctx->cell){
-            ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-        }else{
-            struct cell *root_cell = new_cell(NULL);
-            if(!ctx->root){
-                ctx->root = root_cell;
-            }
-            ctx->cell = root_cell;
         }
 
-        /*
-        printf("making branch of off: ");
-        print_cell(ctx->cell);
-        printf(" -> ");
-        print_cell(new);
-        printf("\n");
-        */
+        struct cell *stack_cell = new_cell(NULL);
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+        stack_cell->branch = new;
 
-        ctx->cell->branch = new;
-        ctx->cell = ctx->cell->branch;
+        if(ctx->cell){
+            ctx->cell->next = stack_cell;
+        }else{
+            ctx->cell = ctx->root = stack_cell;
+        }
+
+        ctx->cell = new;
 
         ctx->next_is_branch = 0;
 
