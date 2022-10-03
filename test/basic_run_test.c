@@ -1,38 +1,27 @@
-void test_basic(){
-    /*************************** test a few next steps ***************/
-    suite = new_suite("Basic step tests");
+void test_basic_run(){
+    suite = new_suite("Run tests");
 
-    root = new_cell(NULL);
-    root->value = new_string_value_obj(str("root"));
-    first = new_cell(NULL);
-    first->value = new_string_value_obj(str("first"));
-    second = new_cell(NULL);
-    second->value = new_string_value_obj(str("second"));
-    third = new_cell(NULL);
-    third->value = new_string_value_obj(str("third"));
-    fourth = new_cell(NULL);
-    fourth->value = new_string_value_obj(str("fourth"));
+    script = "(+ 1 3 5)";
 
-    root->next = first;
-    first->next = second;
-    second->next = third;
-    third->next = fourth;
-
-    stack = new_stack_item(NULL, root, head);
+    root = parse_all(script);
     state = crw_new_state_context();
-    crw_setup_state_context(state, root, global);
+    run_root(state, root);
 
-    state->next(state);
-    test(suite, state->cell == first, "First cell should be current cell after step");
+    test(suite, state->head->value->type == SL_TYPE_INT, "head value is int");
+    test(suite, state->head->value->slot.integer == 9, "arithmetic valu is the cntent of the cells");
 
-    state->next(state);
-    test(suite, state->cell == second, "Second cell should be current cell after step");
+    script = "(.hi \"there\" (mock))";
+    printf("%s\n", script);
 
-    state->next(state);
-    test(suite, state->cell == third, "Third cell should be current cell after step");
+    root = parse_all(script);
+    state = crw_new_state_context();
+    run_root(state, root);
 
-    state->next(state);
-    test(suite, state->cell == fourth, "Fourth cell should be current cell after step");
-    
+    value = state->head->value;
+    print_value(value);
+
+    test(suite, value->type == SL_TYPE_STRING, "returned is an int");
+    test(suite, string_cmp(value->slot.string, str("there")) == 0, "hi key has 'there' value");
+
     summerize(suite);
 }
