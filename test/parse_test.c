@@ -43,25 +43,26 @@ void test_parse(){
     /*
     printf("%s\n", script);
     print_cell(root->branch);
+    printf("\n");
     print_cell(root->branch->next);
-    print_cell(root->branch->next->branch);
+    printf("\n");
     print_cell(root->branch->next->next);
+    printf("\n");
     */
 
-    cell = root->branch->next->branch;
+    cell = root->branch->next->next->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
 
-    cell = root->branch->next->branch->next;
+    cell = root->branch->next->next->branch->next;
     test(suite, cell->value->type == SL_TYPE_INT, "1 is an integer");
     test(suite, cell->value->slot.integer == 1, "1 is 1");
 
-    cell = root->branch->next->branch->next->next;
+    cell = root->branch->next->next->branch->next->next;
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");
 
-    cell = root->branch->next->branch->next->next;
-    print_cell(cell);
+    cell = root->branch->next->next->branch->next->next;
     test(suite, cell->next == NULL, "next cell next is null");
 
     /*
@@ -74,7 +75,7 @@ void test_parse(){
     printf("\n");
     */
 
-    cell = root->branch->next->next;
+    cell = root->branch->next->next->next;
     print_cell(root->branch->next);
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
