@@ -9,11 +9,9 @@ struct function_operator {
 
 static void function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
-    /*
     printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> funcion called");
     print_cell(ctx->cell);
     printf("\n");
-    */
 
     struct function_operator *op = (struct function_operator *)_op;
     if(ctx->handle_state == CRW_IN_HEAD){

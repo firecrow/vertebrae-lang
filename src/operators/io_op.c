@@ -5,11 +5,23 @@ struct print_operator {
     int type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    enum gka_op_lifecycle lifecycle;
 };
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct print_operator *op = (struct print_operator *) _op;
+    if(op->lifecycle == GKA_OP_NOT_STARTED){
+        op->lifecycle = GKA_OP_STARTED;
+        cell_incr(ctx);
+        return;
+    }
+    if(ctx->previous){
+        op->lifecycle = GKA_OP_STARTED;
+        ctx->head->value = ctx->previous->value;
+        return;
+    }
     if(ctx->handle_state == CRW_IN_HEAD){
-        default_next(ctx);
+        cell_incr(ctx);
         ctx->handle_state = CRW_IN_ARG;
         return;
     }
@@ -41,7 +53,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
             printf("\n");
         }
     }
-    default_next(ctx);
+    cell_incr(ctx);
 }
 
 struct print_operator *print_singleton;
@@ -52,5 +64,6 @@ struct operator_ifc *new_print_operator(enum OPERATOR_TYPE type) {
         print_singleton->handle = print_handle;
         print_singleton->new = new_print_operator;
     }
+    print_singleton->lifecycle = GKA_OP_NOT_STARTED;
     return (struct operator_ifc *)print_singleton;
 }

@@ -28,6 +28,8 @@ struct crw_state {
     } builtins;
     void (*next)(struct crw_state *ctx);
     void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
+    struct crw_ctx_data *data;
+
     /* for debugging */
     int nesting;
 };

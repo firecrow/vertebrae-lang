@@ -12,7 +12,8 @@ enum OPERATOR_TYPE {
     DEFINITION,
     CLOSURE,
     FUNCTION,
-    SET
+    SET,
+    SAVE_HEAD
 };
 
 enum gka_op_lifecycle {
@@ -47,3 +48,4 @@ struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_set_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_context_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type);

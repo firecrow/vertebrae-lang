@@ -1,12 +1,29 @@
 void test_run_functions(){
-    suite = new_suite("Function tests");
+
+    global = new_closure(NULL);
+    init_basic_library(global); 
+    state = crw_new_state_context();
+
+    suite = new_suite("Function run tests");
+
+    script = "(\n    print (save-head (+ 1 2 3)))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->data->type == SL_TYPE_HEAD, "mock head set");
+    test(suite, state->data->slot.head->value->type == SL_TYPE_INT, "mock value is int");
+    test(suite, state->data->slot.head->value->slot.integer == 6, "mock value is sum of numbers");
+    return;
 
     script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);
 
     root = parse_all(script);
-    printf("-----------------------------\n");
-    fflush(stdout);
+
     state = crw_new_state_context();
     run_root(state, root);
 

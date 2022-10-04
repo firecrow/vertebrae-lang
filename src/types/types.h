@@ -54,3 +54,17 @@ struct tree *new_tree();
 struct value_obj *tree_get(struct tree *tree, struct string *key);
 void tree_add(struct tree *tree, struct string *key, struct value_obj *value);
 void tree_update(struct tree *tree, struct string *key, struct value_obj *value);
+
+/* data */
+struct crw_ctx_data {
+    enum SL_TYPE type;   
+    int id;
+    union {
+        struct cell *cell;
+        struct value_obj *value;
+        struct head *head;
+        struct string *string;
+        int integer;
+    } slot;
+};
+struct crw_ctx_data *new_data();

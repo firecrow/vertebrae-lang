@@ -3,6 +3,7 @@
 static void default_handle(struct operator_ifc *op, struct crw_state *ctx){
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
+        return;
     }
     if(ctx->handle_state == CRW_IN_ARG){
         cell_incr(ctx);

@@ -5,11 +5,11 @@ COREOBJ := build/cell.o build/head.o \
 	build/state.o build/process_keys.o  build/utils.o
 
 TYPESOBJ := build/string.o build/regex.o build/tree.o \
-	build/value.o
+	build/value.o build/data.o
 
 OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/equal_op.o build/default_op.o build/function_op.o\
-	build/set_op.o
+	build/set_op.o build/save_head_op.o
 
 PARSEOBJ := build/run_parser.o
 

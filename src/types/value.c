@@ -26,7 +26,7 @@ struct value_obj *clone_value(struct value_obj *value){
 }
 
 static struct string *default_to_string(struct value_obj *value){
-    return str("<Value>");
+    return new_string_xprintf("<Value %d>", value->type);
 }
 
 struct value_obj *new_value(){

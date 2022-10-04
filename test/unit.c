@@ -45,17 +45,26 @@ struct cell *eleventh = NULL;
 #include "swap_symbol_test.c"
 
 int main(){
+    /* manual tests 
     test_tree();
     test_head();
     test_steps();
     test_basic();
     test_pop_stack();
     test_parse();
+    test_swap_symbol();
+    */
+
+    /* running tests 
+    test_basic_run();
     test_arithmetic();
+    */
+
+    /* tests including functions */
+    /*
     test_variables();
     test_functions();
-    test_swap_symbol();
-    test_basic_run();
+    */
     test_run_functions();
 
     show_global_success();
