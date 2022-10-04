@@ -1,9 +1,7 @@
 #include "../gekkota.h"
 
 static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
-    printf("--------- in save head\n");
     if(ctx->previous){
-        printf("--------- setting\n");
 
         /* saving the head to context data */
         struct crw_ctx_data *data = new_data();

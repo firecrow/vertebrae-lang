@@ -5,7 +5,6 @@ void test_run_functions(){
     state = crw_new_state_context();
 
     suite = new_suite("Function run tests");
-    print_tree(global->symbols);
 
     script = "(\n    print (save-head (+ 1 2 3)))";
     printf("%s\n", script);
@@ -15,10 +14,10 @@ void test_run_functions(){
     state = crw_new_state_context();
     run_root(state, root);
 
-    printf("data type: %d", state->data->type);
-    print_head(state->data->slot.head);
-
-    test(suite, state->context == NULL, "mock never runs");
+    test(suite, state->data->type == SL_TYPE_HEAD, "mock head set");
+    test(suite, state->data->slot.head->value->type == SL_TYPE_INT, "mock value is int");
+    test(suite, state->data->slot.head->value->slot.integer == 6, "mock value is sum of numbers");
+    return;
 
     script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);

@@ -10,15 +10,12 @@ struct print_operator {
 
 static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct print_operator *op = (struct print_operator *) _op;
-    printf("---- print called %d", op->lifecycle);
     if(op->lifecycle == GKA_OP_NOT_STARTED){
-        printf("-------- returning\n");
         op->lifecycle = GKA_OP_STARTED;
         cell_incr(ctx);
         return;
     }
     if(ctx->previous){
-        printf("-------- no incr io\n");
         op->lifecycle = GKA_OP_STARTED;
         ctx->head->value = ctx->previous->value;
         return;
