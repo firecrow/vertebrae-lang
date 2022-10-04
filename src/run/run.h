@@ -10,6 +10,18 @@ enum CRW_HANDLE_STATE {
    CRW_IN_PASSTHROUGH
 };
 
+struct crw_ctx_data {
+    enum SL_TYPE type;   
+    union {
+        struct cell *cell;
+        struct value_obj *value;
+        struct head *head;
+        struct string *string;
+        int integer;
+    } slog;
+    
+};
+
 struct crw_state {
     enum CRW_STATUS status;
     enum CRW_HANDLE_STATE handle_state;
@@ -28,6 +40,8 @@ struct crw_state {
     } builtins;
     void (*next)(struct crw_state *ctx);
     void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
+    struct crw_ctx_data data;
+
     /* for debugging */
     int nesting;
 };

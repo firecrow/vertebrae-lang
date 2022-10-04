@@ -2,6 +2,10 @@
  
 void set_value(struct crw_state *ctx, struct value_obj *value){
     struct value_obj *key = ctx->head->key_for_next;
+    printf("setting value: ");
+    printf("%s -> ", key->slot.string->content);
+    print_value(value);
+    printf("\n");
     if(key->type == SL_TYPE_KEY){
         tree_update(ctx->head->closure->symbols, key->slot.string, value);
     } else if(key->type == SL_TYPE_SET_LEX) {

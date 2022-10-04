@@ -1,5 +1,5 @@
 void test_run_functions(){
-    suite = new_suite("Function tests");
+    suite = new_suite("Function run tests");
 
     script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);

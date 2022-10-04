@@ -1,5 +1,4 @@
 void test_steps(){
-    /***************** Step tests *************/
     suite = new_suite("Step tests");
     struct crw_state *state = NULL;
 
