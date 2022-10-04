@@ -61,8 +61,10 @@ int main(){
     */
 
     /* tests including functions */
+    /*
     test_variables();
     test_functions();
+    */
     test_run_functions();
 
     show_global_success();

@@ -12,8 +12,22 @@ struct head *new_head(){
 
 struct head *setup_new_head(struct head *head, struct cell *cell, struct closure *closure){
     struct value_obj *value = swap_for_symbol(closure, cell->value);
+    print_value(cell->value);
+    print_value(value);
+    fflush(stdout);
 
+    printf("\n");
     if(value && value->type == SL_TYPE_FUNCTION){
+        printf("is null?: %d\n", value->slot.operator == NULL);
+        head->operator = value->slot.operator;
+        printf("2\n");
+        head->operator = value->slot.operator->new;
+        printf("3\n");
+        head->operator = value->slot.operator->new(value->slot.operator->type);
+        printf("4\n");
+        head->operator = value->slot.operator->new(value->slot.operator->type);
+        printf("5\n");
+
         head->operator = value->slot.operator->new(value->slot.operator->type);
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){

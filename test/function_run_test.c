@@ -1,12 +1,30 @@
 void test_run_functions(){
+
+    global = new_closure(NULL);
+    init_basic_library(global); 
+    state = crw_new_state_context();
+
     suite = new_suite("Function run tests");
+    print_tree(global->symbols);
+
+    script = "(\n    print (save-head (+ 1 2 3)))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    printf("data type: %d", state->data->type);
+    print_head(state->data->slot.head);
+
+    test(suite, state->context == NULL, "mock never runs");
 
     script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);
 
     root = parse_all(script);
-    printf("-----------------------------\n");
-    fflush(stdout);
+
     state = crw_new_state_context();
     run_root(state, root);
 
