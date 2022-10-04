@@ -7,6 +7,8 @@ void init_basic_library(struct closure *closure){
     closure_add_value(closure, str("nil"), new_result_value_obj(NIL));
     closure_add_value(closure, str("error"), new_result_value_obj(ERROR));
 
+    closure_add_function(closure, str("save-head"), new_set_head_operator(SAVE_HEAD));
+
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
     closure_add_function(closure, str("="), new_equal_operator(EQUAL));
