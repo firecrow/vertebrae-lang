@@ -12,8 +12,7 @@ static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
         ctx->data = data;
 
         ctx->head->value = ctx->previous->value;
-    }
-    if(ctx->handle_state == CRW_IN_ARG){
+    }else{
         cell_incr(ctx);
     }
 }

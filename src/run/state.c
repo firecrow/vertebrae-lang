@@ -1,18 +1,16 @@
 #include "../gekkota.h"
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
+    printf("\x1b[35mpassthrough\x1b[0m\n");
     struct head *head = ctx->head;
     ctx->previous = previous;
     ctx->value = previous->value;
 
     head->value = previous->value;
     ctx->value = head->value;
-    crw_process_keys(ctx);
 
-    /*
-    ctx->handle_state = CRW_IN_PASSTHROUGH;
-    head->operator->close(head->operator, ctx);
-    */
+    head->operator->handle(head->operator, ctx);
+    ctx->previous = NULL;
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){

@@ -17,8 +17,14 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         cell_incr(ctx);
         return;
     }
+    if(ctx->previous){
+        printf("-------- no incr io\n");
+        op->lifecycle = GKA_OP_STARTED;
+        ctx->head->value = ctx->previous->value;
+        return;
+    }
     if(ctx->handle_state == CRW_IN_HEAD){
-        default_next(ctx);
+        cell_incr(ctx);
         ctx->handle_state = CRW_IN_ARG;
         return;
     }
@@ -50,7 +56,7 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
             printf("\n");
         }
     }
-    default_next(ctx);
+    cell_incr(ctx);
 }
 
 struct print_operator *print_singleton;
