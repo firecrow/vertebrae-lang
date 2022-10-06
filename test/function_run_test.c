@@ -42,7 +42,6 @@ void test_run_functions(){
     test(suite, state->data->type == SL_TYPE_VALUE, "mock value set");
     test(suite, state->data->slot.value->type == SL_TYPE_INT, "mock value is int");
     test(suite, state->data->slot.value->slot.integer == 1, "mock value is the number");
-    return;
 
     script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);

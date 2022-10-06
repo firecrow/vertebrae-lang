@@ -14,9 +14,8 @@ void test_namespaces(){
 
     test(suite, state->data->type == SL_TYPE_HEAD, "mock head set");
 
-    print_head(state->data->slot.head);
-    printf("\n");
-    print_tree(state->data->slot.head->closure->symbols);
-    printf("\n");
+    struct value_obj *hi_value = tree_get(state->data->slot.head->closure->symbols, str("hi"));
+    test(suite, !string_cmp(hi_value->slot.string, str("there")), "symbol 'hi' should have value 'there'");
 
+    summerize(suite);
 }
