@@ -2,17 +2,22 @@
 
 static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
     if(ctx->previous){
-
-        /* saving the head to context data */
+        ctx->head->value = ctx->previous->value;
         struct crw_ctx_data *data = new_data();
         data->type = SL_TYPE_HEAD;
         data->slot.head = ctx->previous;
         ctx->data = data;
 
-        ctx->head->value = ctx->previous->value;
-    }else{
-        cell_incr(ctx);
+        return;
     }
+
+    /* saving the head to context data */
+    struct crw_ctx_data *data = new_data();
+    data->type = SL_TYPE_HEAD;
+    data->slot.head = ctx->head;
+    ctx->data = data;
+
+    cell_incr(ctx);
 }
 
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type) {
