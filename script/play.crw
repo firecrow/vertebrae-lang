@@ -1,2 +1,5 @@
-(print 
-    (+ 1 10))
+(
+    .hi "hello, " 
+    (print
+        hi 
+        (+ 1 10))
