@@ -48,6 +48,7 @@ struct cell *eleventh = NULL;
 #include "nested_function_test.c"
 
 int main(){
+
     /* manual tests */
     test_tree();
     test_head();

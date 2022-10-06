@@ -83,9 +83,9 @@ static void next_step(struct crw_state *ctx){
 
     if(ctx->cell->value){
         ctx->head->operator->handle(ctx->head->operator, ctx);
-    }else{
-        cell_incr(ctx);
     }
+    cell_incr(ctx);
+    
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
 
     /*
@@ -132,7 +132,6 @@ void cell_incr(struct crw_state *ctx){
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
         }
-        ctx->handle_state = CRW_IN_ARG;
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
