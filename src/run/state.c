@@ -102,9 +102,11 @@ void cell_incr(struct crw_state *ctx){
         return;
     }
 
+    /*
     printf("entering incr: ");
     print_cell(ctx->cell);
     printf("\n");
+    */
 
     crw_process_keys(ctx);
 
@@ -123,7 +125,9 @@ void cell_incr(struct crw_state *ctx){
     }
 
     if(ctx->cell == NULL){
+        /*
         printf("close branch\n");
+        */
         close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
@@ -132,9 +136,11 @@ void cell_incr(struct crw_state *ctx){
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
+    /*
     printf("leaving incr(%d): ", ctx->handle_state);
     print_cell(ctx->cell);
     printf("\n");
+    */
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){

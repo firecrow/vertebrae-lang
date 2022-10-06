@@ -51,7 +51,6 @@ void test_pop_stack(){
     test(suite, state->cell == fourth, "Fourth step is the next after the branch cell(fourth)");
 
     state->next(state);
-    print_cell(state->cell);
     test(suite, state->cell == fifth, "Fifth cell should be on main path again (Third)");
 
     state->next(state);
