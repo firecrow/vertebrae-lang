@@ -27,9 +27,10 @@ void test_run_functions(){
     state = crw_new_state_context();
     run_root(state, root);
 
-    test(suite, state->data->type == SL_TYPE_CELL, "mock cell set");
-    test(suite, state->data->slot.cell->value->type == SL_TYPE_INT, "mock value is int");
-    test(suite, state->data->slot.cell->value->slot.integer == 10, "mock value is sum of numbers");
+    print_cell(state->data->slot.cell);
+    test(suite, state->data->type == SL_TYPE_CELL, "mock-cell set");
+    test(suite, state->data->slot.cell->value->type == SL_TYPE_INT, "mock-cell value is int");
+    test(suite, state->data->slot.cell->value->slot.integer == 10, "mock-cell value is sum of numbers");
 
     script = "(save-value (+ 1))";
     printf("%s\n", script);

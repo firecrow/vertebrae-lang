@@ -17,8 +17,6 @@ static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
     data->type = SL_TYPE_HEAD;
     data->slot.head = ctx->head;
     ctx->data = data;
-
-    cell_incr(ctx);
 }
 
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type) {
