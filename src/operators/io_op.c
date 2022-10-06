@@ -15,16 +15,6 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
         cell_incr(ctx);
         return;
     }
-    if(ctx->previous){
-        op->lifecycle = GKA_OP_STARTED;
-        ctx->head->value = ctx->previous->value;
-        return;
-    }
-    if(ctx->handle_state == CRW_IN_HEAD){
-        cell_incr(ctx);
-        ctx->handle_state = CRW_IN_ARG;
-        return;
-    }
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");
         print_head(ctx->head);
@@ -53,7 +43,12 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
             printf("\n");
         }
     }
-    cell_incr(ctx);
+    if(ctx->previous){
+        ctx->head->value = ctx->previous->value;
+        cell_next(ctx);
+    }else{
+        cell_incr(ctx);
+    }
 }
 
 struct print_operator *print_singleton;

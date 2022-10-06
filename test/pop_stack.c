@@ -8,8 +8,8 @@ void test_pop_stack(){
     first = new_cell(NULL);
     first->value = new_string_value_obj(str("first"));
 
+    /* branch cell */
     second = new_cell(NULL);
-    second->value = new_string_value_obj(str("second"));
 
     third = new_cell(NULL);
     third->value = new_string_value_obj(str("third"));
@@ -24,7 +24,7 @@ void test_pop_stack(){
     sixth->value = new_string_value_obj(str("sixth"));
 
     /* 
-     * ("first" "second" ("third" fourth") "fifth" "sixth")
+     * ("first" ("third" fourth") "fifth" "sixth")
      */
     root->next = first;
     first->next = second;
@@ -42,7 +42,7 @@ void test_pop_stack(){
     test(suite, state->cell == first, "First cell should be current cell after step");
 
     state->next(state);
-    test(suite, state->cell == second, "Second cell should be current cell after step");
+    test(suite, state->cell == second, "Second step is the next");
 
     state->next(state);
     test(suite, state->cell == third, "Third step is the next after the branch cell(fourth)");
