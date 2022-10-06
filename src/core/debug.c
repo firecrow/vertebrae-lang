@@ -73,11 +73,11 @@ void print_head(struct head *head){
         printf("<H NULL>");
         return;
     }
-    printf("<H%d", head->id);
+    printf("<H%d ", head->id);
     printf(" source value:");
     print_value(head->source);
     if(head->operator){
-        printf(" opp type %d", head->operator->type);
+        printf(" opp type %d ", head->operator->type);
     }else{
         printf(" no op ");
     }
