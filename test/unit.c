@@ -48,26 +48,29 @@ struct cell *eleventh = NULL;
 #include "nested_function_test.c"
 
 int main(){
-    /* manual tests */
+    /* manual tests 
     test_tree();
     test_head();
     test_steps();
     test_basic();
+    */
     test_pop_stack();
+    /*
     test_parse();
     test_swap_symbol();
 
-    /* running tests */
+    /* running tests * /
     test_basic_run();
     test_arithmetic();
 
-    /* tests including functions */
+    /* tests including functions 
     test_variables();
     test_functions();
     test_run_functions();
     test_namespaces();
     test_passthrough();
     test_nested_function();
+    */
 
     show_global_success();
 

@@ -5,9 +5,6 @@ static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->previous = previous;
     ctx->value = previous->value;
 
-    head->value = previous->value;
-    ctx->value = head->value;
-
     head->operator->handle(head->operator, ctx);
     ctx->previous = NULL;
 }
@@ -96,25 +93,23 @@ static void next_step(struct crw_state *ctx){
     */
 }
 
+void cell_next(struct crw_state *ctx){
+    ctx->cell = ctx->cell->next;
+}
+
 void cell_incr(struct crw_state *ctx){
     if(!ctx->cell){
         return;
     }
 
-    /*
     printf("entering incr: ");
     print_cell(ctx->cell);
     printf("\n");
-    */
 
     crw_process_keys(ctx);
 
     int is_moved = 0;
-    while(ctx->cell->branch && ctx->cell->branch){
-        /*
-        printf("branching--->\n");
-        */
-
+    while(ctx->cell->branch){
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
     }
@@ -128,6 +123,7 @@ void cell_incr(struct crw_state *ctx){
     }
 
     if(ctx->cell == NULL){
+        printf("close branch\n");
         close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
             pop_stack(ctx);
@@ -136,11 +132,9 @@ void cell_incr(struct crw_state *ctx){
         ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
-    /*
     printf("leaving incr(%d): ", ctx->handle_state);
     print_cell(ctx->cell);
     printf("\n");
-    */
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
