@@ -23,6 +23,18 @@ struct condition_operator {
  * such that each successful branch will run it's next cell on the op->next level
  */
 static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    printf("\x1b[36mcell:");
+    print_cell(ctx->cell);
+    print_cell(ctx->cell->next);
+    printf("\x1b[0m\n");
+    struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    if(value && !value->truthy(value)){
+        cell_next(ctx); 
+        if(ctx->cell->branch){
+            cell_next(ctx);
+        }
+    }
+    /*
     if(ctx->handle_state == CRW_IN_HEAD){
         default_next(ctx);
         return;
@@ -33,7 +45,6 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
 
     if(!op->done){
-        /* skip if not truthy */
         if(ctx->previous && ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
             if(op->next && op->next->next){
                 ctx->cell = op->next = op->next->next->next;
@@ -49,6 +60,7 @@ static void condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     } else {
         ctx->cell = NULL;
     }
+    */
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {
