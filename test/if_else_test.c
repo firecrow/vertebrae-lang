@@ -101,9 +101,9 @@ void test_if_else(){
 
     value = state->data->slot.cell->value;
     print_value(value);
-    test(suite, !string_cmp(value->slot.string, str("again\n")), "value 'again' should be assined indicating it ran");
+    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false");
 
-    /* basic test of else if else with two false */
+    /* basic test of else if else with two false and a true*/
 
     script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") true (save-cell \"no\n\"))";
     printf("%s\n", script);
@@ -117,7 +117,7 @@ void test_if_else(){
 
     value = state->data->slot.cell->value;
     print_value(value);
-    test(suite, !string_cmp(value->slot.string, str("again\n")), "test of else if else with two false");
+    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false and a true");
 
 
     summerize(suite);

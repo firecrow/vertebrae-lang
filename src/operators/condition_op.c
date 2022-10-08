@@ -33,6 +33,7 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
     /*
     printf("in test %d\n", op->in_test);
+    printf("done %d\n", op->done);
     printf("\x1b[36mcell:");
     print_cell(ctx->cell);
     print_cell(ctx->cell->next);
