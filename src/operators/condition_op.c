@@ -55,32 +55,6 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
     op->in_test = !op->in_test;
     return 0;
-    /*
-    if(ctx->handle_state == CRW_IN_HEAD){
-        default_next(ctx);
-        return;
-    }
-    if(!op->next){
-        op->next = ctx->head->cell->next;
-    }
-
-    if(!op->done){
-        if(ctx->previous && ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
-            if(op->next && op->next->next){
-                ctx->cell = op->next = op->next->next->next;
-            }else{
-                ctx->cell = NULL;
-            }
-            return;
-        }else{
-            op->done = 1;
-            ctx->cell = op->next = op->next->next;
-            ctx->head->value = ctx->cell->value;
-        }       
-    } else {
-        ctx->cell = NULL;
-    }
-    */
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {
