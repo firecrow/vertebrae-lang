@@ -14,7 +14,7 @@ void test_if_else(){
     state = crw_new_state_context();
     run_root(state, root);
 
-    test(suite, state->data->type == SL_TYPE_CELL, "mock cell 'yes' is set");
+    test(suite, state->data->type == SL_TYPE_CELL, "basic test of truthy runs next");
 
     value = state->data->slot.cell->value;
     test(suite, !string_cmp(value->slot.string, str("yes\n")), "value yes should be assined indicating it ran");
@@ -28,7 +28,7 @@ void test_if_else(){
     state = crw_new_state_context();
     run_root(state, root);
 
-    test(suite, state->data == NULL, "mock cell did not run");
+    test(suite, state->data == NULL, "basic test of truthy does not run next");
 
     /* basic test of else */
 
@@ -43,7 +43,7 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "mock 'no' cell is set");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("no\n")), "value 'no' should be assined indicating the else it ran");
+    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else");
 
     script = "(if false (save-cell \"yes\n\") (let \"no\n\"))";
     printf("%s\n", script);
@@ -55,9 +55,57 @@ void test_if_else(){
 
     test(suite, state->data == NULL, "mock 'yes' cell is not set");
 
-    /* basic test of else if */
+    /* basic test of else if else */
 
     script = "(if false (save-cell \"yes\n\") true (save-cell \"again\n\") (save-cell \"no\n\"))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else");
+
+    value = state->data->slot.cell->value;
+    print_value(value);
+    test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else");
+
+    /* basic test of else if else with no second branch */
+
+    script = "(if false (save-cell \"yes\n\") false false true (save-cell \"again\n\") (save-cell \"no\n\"))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with no second branch");
+
+    value = state->data->slot.cell->value;
+    print_value(value);
+    test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else with no second branch");
+
+    /* basic test of else if else with two false */
+
+    script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") (save-cell \"no\n\"))";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with two false");
+
+    value = state->data->slot.cell->value;
+    print_value(value);
+    test(suite, !string_cmp(value->slot.string, str("again\n")), "value 'again' should be assined indicating it ran");
+
+    /* basic test of else if else with two false */
+
+    script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") true (save-cell \"no\n\"))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -69,7 +117,8 @@ void test_if_else(){
 
     value = state->data->slot.cell->value;
     print_value(value);
-    test(suite, !string_cmp(value->slot.string, str("again\n")), "value 'again' should be assined indicating it ran");
+    test(suite, !string_cmp(value->slot.string, str("again\n")), "test of else if else with two false");
+
 
     summerize(suite);
 }

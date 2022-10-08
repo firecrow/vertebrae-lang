@@ -29,7 +29,7 @@ enum SL_BRANCH_TYPE {
     SL_BREAK
 };
 
-typedef void (operator_handle_func)(struct operator_ifc *_op, struct crw_state *ctx);
+typedef bool (operator_handle_func)(struct operator_ifc *_op, struct crw_state *ctx);
 
 struct operator_ifc {
     enum OPERATOR_TYPE type;

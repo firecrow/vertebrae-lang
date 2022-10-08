@@ -81,10 +81,13 @@ static void next_step(struct crw_state *ctx){
     printf("\n\x1b[0m");
     */
 
+    bool skip_incr = 0;
     if(ctx->cell->value){
-        ctx->head->operator->handle(ctx->head->operator, ctx);
+        skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
     }
-    cell_incr(ctx);
+    if(!skip_incr){
+        cell_incr(ctx);
+    }
     
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
 
