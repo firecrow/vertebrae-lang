@@ -46,6 +46,7 @@ struct cell *eleventh = NULL;
 #include "namespace_test.c"
 #include "passthrough_test.c"
 #include "nested_function_test.c"
+#include "if_else_test.c"
 
 int main(){
 
@@ -69,6 +70,8 @@ int main(){
     test_namespaces();
     test_passthrough();
     test_nested_function();
+
+    test_if_else();
 
     show_global_success();
 

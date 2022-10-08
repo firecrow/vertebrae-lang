@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
+static bool save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
     ctx->head->value = ctx->value;
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
@@ -9,7 +9,7 @@ static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
         data->slot.head = ctx->previous;
         ctx->data = data;
 
-        return;
+        return 0;
     }
 
     /* saving the head to context data */
@@ -17,6 +17,7 @@ static void save_head_handle(struct operator_ifc *op, struct crw_state *ctx){
     data->type = SL_TYPE_HEAD;
     data->slot.head = ctx->head;
     ctx->data = data;
+    return 0;
 }
 
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type) {
