@@ -47,7 +47,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
-        if(ctx->accent == GKA_PARSE_QUOTE && (value->type == SL_TYPE_CELL)){
+        if(ctx->accent == GKA_PARSE_QUOTE){
 
             struct cell *container = new_cell_value_obj(new);
             struct cell *quoted_new = new_cell(container);
@@ -72,9 +72,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->next_is_branch = 0;
 
             return;
-        }
-
-        if(ctx->cell){
         }
 
         struct cell *stack_cell = new_cell(NULL);

@@ -15,7 +15,8 @@ enum OPERATOR_TYPE {
     SET,
     SAVE_HEAD,
     SAVE_CELL,
-    SAVE_VALUE
+    SAVE_VALUE,
+    SAVE_COUNT
 };
 
 enum gka_op_lifecycle {
@@ -53,3 +54,4 @@ struct operator_ifc * new_context_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_cell_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_value_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type);

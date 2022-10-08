@@ -51,7 +51,6 @@ struct cell *eleventh = NULL;
 
 int main(){
 
-    /* manual tests */
     test_tree();
     test_head();
     test_steps();
@@ -59,12 +58,8 @@ int main(){
     test_pop_stack();
     test_parse();
     test_swap_symbol();
-
-    /* running tests */
     test_basic_run();
     test_arithmetic();
-
-    /* tests including functions */
     test_variables();
     test_functions();
     test_run_functions();
@@ -72,8 +67,6 @@ int main(){
     test_passthrough();
     test_nested_function();
     test_if_else();
-
-    /* function pointers */
     test_function_pointers();
 
     show_global_success();

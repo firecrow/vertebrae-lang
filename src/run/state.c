@@ -115,13 +115,21 @@ void cell_incr(struct crw_state *ctx){
 
     int is_moved = 0;
     while(ctx->cell->branch){
+        /*
+        printf("branching: ");
+        print_cell(ctx->cell->branch);
+        printf("\n");
+        */
+
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
     }
 
     if(!is_moved){
         /*
-        printf("nexting--->\n");
+        printf("nexting--->");
+        print_cell(ctx->cell->branch);
+        printf("\n");
         */
 
         ctx->cell = ctx->cell->next;
