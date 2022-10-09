@@ -25,11 +25,7 @@ struct condition_operator {
  */
 static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct condition_operator *op = (struct condition_operator *)_op;
-    struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
+    struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->value);
 
     /*
     printf("in test %d\n", op->in_test);
@@ -55,32 +51,6 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
     op->in_test = !op->in_test;
     return 0;
-    /*
-    if(ctx->handle_state == CRW_IN_HEAD){
-        default_next(ctx);
-        return;
-    }
-    if(!op->next){
-        op->next = ctx->head->cell->next;
-    }
-
-    if(!op->done){
-        if(ctx->previous && ctx->previous->value && !ctx->previous->value->truthy(ctx->previous->value)){
-            if(op->next && op->next->next){
-                ctx->cell = op->next = op->next->next->next;
-            }else{
-                ctx->cell = NULL;
-            }
-            return;
-        }else{
-            op->done = 1;
-            ctx->cell = op->next = op->next->next;
-            ctx->head->value = ctx->cell->value;
-        }       
-    } else {
-        ctx->cell = NULL;
-    }
-    */
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {

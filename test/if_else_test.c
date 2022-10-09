@@ -68,7 +68,6 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else");
 
     value = state->data->slot.cell->value;
-    print_value(value);
     test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else");
 
     /* basic test of else if else with no second branch */
@@ -84,7 +83,6 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with no second branch");
 
     value = state->data->slot.cell->value;
-    print_value(value);
     test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else with no second branch");
 
     /* basic test of else if else with two false */
@@ -100,7 +98,6 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with two false");
 
     value = state->data->slot.cell->value;
-    print_value(value);
     test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false");
 
     /* basic test of else if else with two false and a true*/
@@ -116,7 +113,6 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "mock 'again' cell is set");
 
     value = state->data->slot.cell->value;
-    print_value(value);
     test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false and a true");
 
 

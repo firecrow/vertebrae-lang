@@ -47,10 +47,10 @@ struct cell *eleventh = NULL;
 #include "passthrough_test.c"
 #include "nested_function_test.c"
 #include "if_else_test.c"
+#include "function_pointers.c"
 
 int main(){
 
-    /* manual tests */
     test_tree();
     test_head();
     test_steps();
@@ -58,20 +58,16 @@ int main(){
     test_pop_stack();
     test_parse();
     test_swap_symbol();
-
-    /* running tests */
     test_basic_run();
     test_arithmetic();
-
-    /* tests including functions */
     test_variables();
     test_functions();
     test_run_functions();
     test_namespaces();
     test_passthrough();
     test_nested_function();
-
     test_if_else();
+    test_function_pointers();
 
     show_global_success();
 

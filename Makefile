@@ -10,7 +10,7 @@ TYPESOBJ := build/string.o build/regex.o build/tree.o \
 OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/equal_op.o build/default_op.o build/function_op.o\
 	build/set_op.o build/save_head_op.o build/save_cell_op.o \
-	build/save_value_op.o
+	build/save_value_op.o build/save_count_op.o
 
 PARSEOBJ := build/run_parser.o
 

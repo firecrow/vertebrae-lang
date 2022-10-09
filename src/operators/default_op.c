@@ -1,9 +1,8 @@
 #include "../gekkota.h"
 
-static void default_handle(struct operator_ifc *op, struct crw_state *ctx){
-    if(ctx->previous){
-        ctx->head->value = ctx->previous->value;
-    }
+static bool default_handle(struct operator_ifc *op, struct crw_state *ctx){
+    ctx->head->value = ctx->value;
+    return 0;
 }
 
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {

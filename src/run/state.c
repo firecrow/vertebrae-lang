@@ -1,12 +1,10 @@
 #include "../gekkota.h"
 
-static void passthrough(struct crw_state *ctx, struct head *previous){
-    struct head *head = ctx->head;
-    ctx->previous = previous;
-    ctx->value = previous->value;
+int debug = 0; 
 
-    head->operator->handle(head->operator, ctx);
-    ctx->previous = NULL;
+static void passthrough(struct crw_state *ctx, struct head *previous){
+    ctx->value = previous->value;
+    ctx->head->operator->handle(ctx->head->operator, ctx);
 }
 
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
@@ -19,21 +17,26 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void close_branch(struct crw_state *ctx){
-    /*
-    ctx->handle_state = CRW_IN_CLOSE;
-    ctx->head->operator->handle(ctx->head->operator, ctx);
-    */
+    if(ctx->head->operator->close){
+        ctx->head->operator->close(ctx->head->operator, ctx);
+    }
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
     ctx->stack = push_stack(ctx, ctx->cell);
+    ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
-    ctx->cell = cell;
+    /* this can happen if the app is just starting up */
+    if(!ctx->cell){
+        ctx->cell = cell;
+    }else{
+        ctx->cell = cell->next;
+    }
 }
 
 void pop_stack(struct crw_state *ctx){
     struct head *previous = ctx->head;
-    ctx->cell = ctx->stack->cell;
+    ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
     ctx->head = ctx->stack->head;
     ctx->stack = ctx->stack->previous;
     passthrough(ctx, previous);
@@ -68,22 +71,33 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 
 static void next_step(struct crw_state *ctx){
     if(ctx->cell == NULL){
+        printf("done...\n");
         ctx->status = CRW_DONE;
         return;
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
 
-    /*
-    print_value(ctx->cell->value);
-    printf("\x1b[0mto: \x1b[34m");
-    print_value(ctx->value);
-    printf("\n\x1b[0m");
-    */
+    if(debug){
+        print_value(ctx->cell->value);
+        printf("\x1b[0mto: \x1b[34m");
+        print_value(ctx->value);
+        printf("\n\x1b[0m");
+    }
 
     bool skip_incr = 0;
     if(ctx->cell->value){
+        if(debug){
+            printf("calling handle...................\n");
+            print_head(ctx->head);
+            printf("\n");
+            print_head(ctx->head);
+            printf("\n");
+        }
         skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
+        if(debug){
+            printf("skip incr: %d\n", skip_incr);
+        }
     }
     if(!skip_incr){
         cell_incr(ctx);
@@ -105,44 +119,56 @@ void cell_incr(struct crw_state *ctx){
         return;
     }
 
-    /*
-    printf("entering incr: ");
-    print_cell(ctx->cell);
-    printf("\n");
-    */
+    if(debug){
+        printf("\x1b[35mentering incr: ");
+        print_cell(ctx->cell);
+        printf("\n\x1b[0m");
+    }
 
     crw_process_keys(ctx);
 
     int is_moved = 0;
-    while(ctx->cell->branch){
+    while(ctx->cell && ctx->cell->branch){
+        if(debug){
+            printf("branching: ");
+            print_cell(ctx->cell->branch);
+            printf("\n");
+        }
+
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
     }
 
     if(!is_moved){
-        /*
-        printf("nexting--->\n");
-        */
+
+        if(debug){
+            printf("nexting--->");
+            print_cell(ctx->cell->branch);
+            printf("\n");
+        }
 
         ctx->cell = ctx->cell->next;
     }
 
     if(ctx->cell == NULL){
-        /*
-        printf("close branch\n");
-        */
+        if(debug){
+            printf("close branch\n");
+        }
+
         close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
+            if(debug){
+                printf("popping\n");
+            }
             pop_stack(ctx);
         }
-        ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
-    /*
-    printf("leaving incr(%d): ", ctx->handle_state);
-    print_cell(ctx->cell);
-    printf("\n");
-    */
+    if(debug){
+        printf("\x1b[36mleaving incr(%d): ", ctx->handle_state);
+        print_cell(ctx->cell);
+        printf("\n\x1b[0m");
+    }
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){

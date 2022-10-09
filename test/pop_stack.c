@@ -37,7 +37,6 @@ void test_pop_stack(){
     stack = new_stack_item(NULL, root, new_head());
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
-    print_head(state->head);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
@@ -45,8 +44,7 @@ void test_pop_stack(){
     state->next(state);
     test(suite, state->cell == second, "Second step is the next");
 
-    state->next(state);
-    test(suite, state->cell == third, "Third step is the next after the branch cell(fourth)");
+    test(suite, state->cell != third, "Third step skipped because its the head");
 
     state->next(state);
     test(suite, state->cell == fourth, "Fourth step is the next after the branch cell(fourth)");

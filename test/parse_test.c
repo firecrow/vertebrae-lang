@@ -76,9 +76,15 @@ void test_parse(){
     */
 
     cell = root->branch->next->next->next;
-    print_cell(root->branch->next);
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
+    
+    /* parse a function pointer */
+    script = "(.func '(print (+ 1 2 3)))";
+
+    root = parse_all(script);
+
+    test(suite, root->branch->next->value->type == SL_TYPE_CELL, "quoted branch is a cell");
 
     summerize(suite);
 }

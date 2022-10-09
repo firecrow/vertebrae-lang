@@ -4,16 +4,13 @@ struct arithmetic_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
     struct value *value;
 };
 
 static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){

@@ -44,7 +44,7 @@ void test_run_functions(){
     test(suite, state->data->slot.value->type == SL_TYPE_INT, "mock value is int");
     test(suite, state->data->slot.value->slot.integer == 1, "mock value is the number");
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
+    script = "(\n    let .hi \"there\"\n    .func '(\n        print hi))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -56,7 +56,7 @@ void test_run_functions(){
     test(suite, state->context == NULL, "mock never runs");
 
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        print hi)\n    (func))";
+    script = "(\n    let .hi \"there\"\n    .func '(\n        print hi)\n    (func))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -75,7 +75,7 @@ void test_run_functions(){
     test(suite, value && string_cmp(value->slot.string, str("there")) == 0, "after function call mock has 'there' value");
     */
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
+    script = "(\n    let .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
     printf("%s\n", script);
 
     root = parse_all(script);
