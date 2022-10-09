@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
  
 void set_value(struct crw_state *ctx, struct value_obj *value){
     if(debug){
@@ -12,7 +12,6 @@ void set_value(struct crw_state *ctx, struct value_obj *value){
     struct value_obj *key = ctx->head->key_for_next;
     if(key->type == SL_TYPE_KEY){
         tree_update(ctx->head->closure->symbols, key->slot.string, value);
-        print_tree(ctx->head->closure->symbols);
     } else if(key->type == SL_TYPE_SET_LEX) {
         struct closure *closure = ctx->head->closure;
         struct closure *previous = closure;

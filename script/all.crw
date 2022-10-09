@@ -3,7 +3,7 @@
     .level 10
 
 
-    .set-it '(print ^default "hi")
+    .set-it '(^default "hi")
     (set-it)
 
     .prop-func '(print default " " name)
