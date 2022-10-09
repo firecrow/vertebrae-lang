@@ -34,7 +34,7 @@ void test_variables(){
     sixth->next = seventh;
     
     /* 
-     * (let .one 1 (+ 2 one))
+     * (.one 1 (+ 2 one))
      */
 
     state = crw_new_state_context();

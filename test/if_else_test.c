@@ -45,7 +45,7 @@ void test_if_else(){
     value = state->data->slot.cell->value;
     test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else");
 
-    script = "(if false (save-cell \"yes\n\") (let \"no\n\"))";
+    script = "(if false (save-cell \"yes\n\") (\"no\n\"))";
     printf("%s\n", script);
 
     root = parse_all(script);
