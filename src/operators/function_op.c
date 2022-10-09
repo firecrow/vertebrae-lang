@@ -58,7 +58,7 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
     ctx->stack = push_stack(ctx, op->next);
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
-    ctx->cell = func;
+    ctx->cell = func->next;
 
     return 1;
 }

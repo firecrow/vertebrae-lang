@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 0;
+static int debug = 1;
 
 struct save_count_operator {
     enum OPERATOR_TYPE type;
@@ -13,10 +13,6 @@ struct save_count_operator {
 
 static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct save_count_operator *op = (struct save_count_operator *)_op;
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
     op->count++;
     
     if(debug){
@@ -25,9 +21,6 @@ static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("\n");
     }
 
-    if(ctx->previous){
-        ctx->head->value = ctx->previous->value;
-    }
 
     struct crw_ctx_data *data = new_data();
     data->type = SL_TYPE_VALUE;
@@ -36,14 +29,15 @@ static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
     return 0;
 }
 
-struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type) {
 
-    struct save_count_operator *op = malloc(sizeof(struct save_count_operator));
-    memset(op, 0, sizeof(struct operator_ifc));
-    op->type = type;
-    op->handle = save_count_handle;
-    op->new = new_save_count_operator;
-    op->lifecycle = GKA_OP_NOT_STARTED;
-    op->count = 0;
-    return op;
+struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type) {
+    if(!count_op){
+        count_op = malloc(sizeof(struct save_count_operator));
+        memset(count_op, 0, sizeof(struct operator_ifc));
+    }
+    count_op->type = type;
+    count_op->handle = save_count_handle;
+    count_op->new = new_save_count_operator;
+    count_op->lifecycle = GKA_OP_NOT_STARTED;
+    return count_op;
 }

@@ -1,7 +1,6 @@
 #include "../gekkota.h"
 
-static void save_cell_handle(struct operator_ifc *op, struct crw_state *ctx){
-
+static bool save_cell_handle(struct operator_ifc *op, struct crw_state *ctx){
     struct crw_ctx_data *data = new_data();
     data->type = SL_TYPE_CELL;
     data->slot.cell = ctx->cell;
@@ -10,6 +9,7 @@ static void save_cell_handle(struct operator_ifc *op, struct crw_state *ctx){
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
     }
+    return 0;
 }
 
 struct operator_ifc * new_save_cell_operator(enum OPERATOR_TYPE type) {

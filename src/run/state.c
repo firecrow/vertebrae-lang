@@ -24,6 +24,7 @@ void close_branch(struct crw_state *ctx){
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
     ctx->stack = push_stack(ctx, ctx->cell);
+    ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
     /* this can happen if the app is just starting up */
     if(!ctx->cell){
@@ -87,7 +88,7 @@ static void next_step(struct crw_state *ctx){
     bool skip_incr = 0;
     if(ctx->cell->value){
         if(debug){
-            printf("calling head...................\n");
+            printf("calling handle...................\n");
             print_head(ctx->head);
             printf("\n");
             print_head(ctx->head);

@@ -41,10 +41,12 @@ void test_function_pointers(){
     state = crw_new_state_context();
     run_root(state, root);
 
+    print_value(state->data->slot.value);
+    printf("\n");
     test(suite, state->data != NULL, "test basic function runs: save-head is not null");
     test(suite, state->data->type == SL_TYPE_VALUE, "mock value head set");
     test(suite, state->data->slot.value->type == SL_TYPE_INT, "mock value is int");
-    test(suite, state->data->slot.value->slot.integer == 1, "mock value is sum of numbers");
+    test(suite, state->data->slot.value->slot.integer == 3, "mock value is sum of numbers");
 
     summerize(suite);
 }
