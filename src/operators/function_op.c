@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
 
 struct function_operator {
     enum OPERATOR_TYPE type;
@@ -12,7 +12,6 @@ struct function_operator {
 };
 
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    printf("handle called.....");
     struct function_operator *op = (struct function_operator *)_op;
 
     if(op->lifecycle == GKA_OP_NOT_STARTED){
@@ -69,7 +68,6 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 }
 
 static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
-    printf("close called.....");
     struct function_operator *op = (struct function_operator *)_op;
 
     if(!op->next){

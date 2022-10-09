@@ -17,7 +17,6 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void close_branch(struct crw_state *ctx){
-    print_head(ctx->head);
     if(ctx->head->operator->close){
         ctx->head->operator->close(ctx->head->operator, ctx);
     }

@@ -1,5 +1,7 @@
 #include "../gekkota.h"
 
+static int debug = 0;
+
 struct save_count_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
@@ -11,7 +13,17 @@ struct save_count_operator {
 
 static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct save_count_operator *op = (struct save_count_operator *)_op;
+    if(op->lifecycle == GKA_OP_NOT_STARTED){
+        op->lifecycle = GKA_OP_STARTED;
+        return 0;
+    }
     op->count++;
+    
+    if(debug){
+        printf("count incr....");
+        print_cell(ctx->cell);
+        printf("\n");
+    }
 
     if(ctx->previous){
         ctx->head->value = ctx->previous->value;
@@ -25,6 +37,7 @@ static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
 }
 
 struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type) {
+
     struct save_count_operator *op = malloc(sizeof(struct save_count_operator));
     memset(op, 0, sizeof(struct operator_ifc));
     op->type = type;
