@@ -1,0 +1,8 @@
+(
+    .default "hello"
+    ^default "hi"
+    (print default)
+
+    .prop-func '(print default " " name)
+    (prop-func .name "sally"))
+

@@ -79,8 +79,9 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
 
     if(debug){
+        printf("\x1b[34mswap ");
         print_value(ctx->cell->value);
-        printf("\x1b[0mto: \x1b[34m");
+        printf("mto: \x1b[34m");
         print_value(ctx->value);
         printf("\n\x1b[0m");
     }
@@ -139,15 +140,13 @@ void cell_incr(struct crw_state *ctx){
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
     }
 
-    if(!is_moved){
-
+    if(!is_moved && ctx->cell){
+        ctx->cell = ctx->cell->next;
         if(debug){
             printf("nexting--->");
-            print_cell(ctx->cell->branch);
+            print_cell(ctx->cell);
             printf("\n");
         }
-
-        ctx->cell = ctx->cell->next;
     }
 
     if(ctx->cell == NULL){

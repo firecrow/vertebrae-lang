@@ -45,12 +45,19 @@ static bool print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     return 0;
 }
 
+static bool print_close(struct operator_ifc *_op, struct crw_state *ctx){
+    printf("\n");
+    return 0;
+}
+
+
 struct print_operator *print_singleton;
 struct operator_ifc *new_print_operator(enum OPERATOR_TYPE type) {
     if(!print_singleton){
         print_singleton = malloc(sizeof(struct print_operator));
         print_singleton->type = type;
         print_singleton->handle = print_handle;
+        print_singleton->close = print_close;
         print_singleton->new = new_print_operator;
     }
     print_singleton->lifecycle = GKA_OP_NOT_STARTED;
