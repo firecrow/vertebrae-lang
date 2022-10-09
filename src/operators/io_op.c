@@ -11,10 +11,6 @@ struct print_operator {
 
 static bool print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct print_operator *op = (struct print_operator *) _op;
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");
         print_head(ctx->head);

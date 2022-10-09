@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 0;
+int debug = 0; 
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;
@@ -25,7 +25,12 @@ void close_branch(struct crw_state *ctx){
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->head = setup_new_head(new_head(), cell, closure);
-    ctx->cell = cell;
+    /* this can happen if the app is just starting up */
+    if(!ctx->cell){
+        ctx->cell = cell;
+    }else{
+        ctx->cell = cell->next;
+    }
 }
 
 void pop_stack(struct crw_state *ctx){
@@ -65,6 +70,7 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 
 static void next_step(struct crw_state *ctx){
     if(ctx->cell == NULL){
+        printf("done...\n");
         ctx->status = CRW_DONE;
         return;
     }
@@ -121,7 +127,7 @@ void cell_incr(struct crw_state *ctx){
     crw_process_keys(ctx);
 
     int is_moved = 0;
-    while(ctx->cell->branch){
+    while(ctx->cell && ctx->cell->branch){
         if(debug){
             printf("branching: ");
             print_cell(ctx->cell->branch);

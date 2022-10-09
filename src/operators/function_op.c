@@ -14,10 +14,6 @@ struct function_operator {
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
 
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
     if(!ctx->cell){
         return 0;
     }

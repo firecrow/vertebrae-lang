@@ -4,7 +4,7 @@ void test_nested_function(){
     global = new_closure(NULL);
     init_basic_library(global); 
 
-    script = "(.hi \"there\" (let (save-head \"say, \" hi)))";
+    script = "(let .hi \"there\" (let (save-head \"say, \" hi)))";
     printf("%s\n", script);
 
     root = parse_all(script);

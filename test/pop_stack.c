@@ -44,8 +44,7 @@ void test_pop_stack(){
     state->next(state);
     test(suite, state->cell == second, "Second step is the next");
 
-    state->next(state);
-    test(suite, state->cell == third, "Third step is the next after the branch cell(fourth)");
+    test(suite, state->cell != third, "Third step skipped because its the head");
 
     state->next(state);
     test(suite, state->cell == fourth, "Fourth step is the next after the branch cell(fourth)");

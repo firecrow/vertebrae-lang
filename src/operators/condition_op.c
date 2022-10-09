@@ -26,10 +26,6 @@ struct condition_operator {
 static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct condition_operator *op = (struct condition_operator *)_op;
     struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->value);
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
 
     /*
     printf("in test %d\n", op->in_test);

@@ -11,10 +11,6 @@ struct arithmetic_operator {
 
 static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
-    if(op->lifecycle == GKA_OP_NOT_STARTED){
-        op->lifecycle = GKA_OP_STARTED;
-        return 0;
-    }
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){

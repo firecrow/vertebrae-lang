@@ -19,7 +19,7 @@ void test_function_pointers(){
     test(suite, state->data == NULL, "test basic function does not run: save-head is null");
 
     /* test basic function runs */
-    script = "(\n  .func '(save-head (+ 1 2 3)) (func))";
+    script = "(\n  let .func '(save-head (+ 1 2 3)) (func))";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -33,7 +33,7 @@ void test_function_pointers(){
     test(suite, state->data->slot.head->value->slot.integer == 6, "mock value is sum of numbers");
 
     /* test basic function runs a count of times */
-    script = "(\n  .func '(\n      save-count true)\n  (func 1 2 3))";
+    script = "(\n  let .func '(\n      save-count true)\n  (func 1 2 3))";
     printf("%s\n", script);
 
     root = parse_all(script);
