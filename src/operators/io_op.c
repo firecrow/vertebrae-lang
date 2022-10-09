@@ -5,6 +5,7 @@ struct print_operator {
     int type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
 };
 

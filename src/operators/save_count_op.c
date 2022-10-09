@@ -4,6 +4,7 @@ struct save_count_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
     int count;
 };

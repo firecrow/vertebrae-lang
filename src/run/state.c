@@ -17,10 +17,10 @@ struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
 }
 
 void close_branch(struct crw_state *ctx){
-    /*
-    ctx->handle_state = CRW_IN_CLOSE;
-    ctx->head->operator->handle(ctx->head->operator, ctx);
-    */
+    print_head(ctx->head);
+    if(ctx->head->operator->close){
+        ctx->head->operator->close(ctx->head->operator, ctx);
+    }
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
