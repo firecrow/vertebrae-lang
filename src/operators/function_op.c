@@ -13,9 +13,16 @@ struct function_operator {
 
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
+    printf("\x1b[31m");
+    print_cell(ctx->cell);
+    printf("\x1b[0m\n");
 
     if(ctx->cell && (ctx->cell->value->type == SL_TYPE_KEY || ctx->cell->value->type == SL_TYPE_SET_LEX)){
+        printf("adding\n");
         crw_process_keys(ctx);
+        printf("\n");
+        print_tree(ctx->head->closure->symbols);
+        printf("\n");
     }
 
     if(!ctx->cell){
@@ -37,6 +44,10 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         op->next = ctx->cell;
     }else if(op->next != NULL){
         op->next = op->next->next;
+    }
+
+    if(op->next == NULL){
+        return 1;
     }
 
     /*
@@ -68,6 +79,9 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
 static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
+    printf("\x1b[31m");
+    print_cell(ctx->cell);
+    printf("\x1b[0m\n");
 
     if(!op->next){
         struct cell *func = ctx->head->cell;

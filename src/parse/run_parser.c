@@ -35,12 +35,12 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
+  ctx->patterns[i++] = setup_pattern(open_cell_incr);
+  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
   ctx->patterns[i++] = setup_pattern(quote_incr);
-  ctx->patterns[i++] = setup_pattern(open_cell_incr);
-  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   /*
   ctx->patterns[i++] = setup_pattern(not_incr);

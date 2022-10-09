@@ -2,21 +2,22 @@
     .default "hello"
     .level 10
 
-
-    .set-it '(^default "hi")
-    (set-it)
-
-    .prop-func '(print default " " name)
-    (prop-func .name "sally")
-
-    .list-func '(print default " " value ", how are your?")
-    (list-func "yo" "dummy" "nail" "scratch")
-
     .nested-func '(
         if (false)
                 '(print "the right answer is " (+ 1))
-            (true)
+           (true)
                 '(print "the wrong answer is " (+ 3)))
-    (nested-func)
 
-    (print .data))
+    .set-it '(^default "hi")
+
+    .prop-func '((print .tree) (print default " " name))
+
+    .list-func '(print default " " value ", how are you?")
+
+    (print .data)
+    (set-it)
+    (prop-func .name "sally")
+    (list-func "bear" "dummy" "nail" "scratch")
+
+    (.func (nested-func))
+    (func))

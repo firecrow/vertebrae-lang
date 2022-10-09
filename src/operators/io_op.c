@@ -11,6 +11,9 @@ struct print_operator {
 
 static bool print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct print_operator *op = (struct print_operator *) _op;
+    print_cell(ctx->cell);
+    print_tree(ctx->head->closure->symbols);
+    print_tree(ctx->head->closure->symbols);
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");
         print_head(ctx->head);

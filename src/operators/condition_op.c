@@ -1,5 +1,7 @@
 #include "../gekkota.h"
 
+static int debug = 0; 
+
 enum phases {
     NOT_STARTEd = 0,
     IF,
@@ -28,15 +30,15 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct condition_operator *op = (struct condition_operator *)_op;
     struct value_obj *value = swap_for_symbol(ctx->head->closure, ctx->value);
 
-    /*
-    printf("in test %d\n", op->in_test);
-    printf("done %d\n", op->done);
-    printf("\x1b[36mcell:");
-    print_cell(ctx->cell);
-    print_cell(ctx->cell->next);
-    print_cell(ctx->cell->branch);
-    printf("\x1b[0m\n");
-    */
+    if(debug){
+        printf("in test %d\n", op->in_test);
+        printf("done %d\n", op->done);
+        printf("\x1b[36mcell:");
+        print_cell(ctx->cell);
+        print_cell(ctx->cell->next);
+        print_cell(ctx->cell->branch);
+        printf("\x1b[0m\n");
+    }
 
     if(op->done){
         while(ctx->cell){
