@@ -1,0 +1,1 @@
+(.func '((print "hi") (print "there")) (func))

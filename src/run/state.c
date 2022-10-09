@@ -92,8 +92,6 @@ static void next_step(struct crw_state *ctx){
             printf("calling handle...................\n");
             print_head(ctx->head);
             printf("\n");
-            print_head(ctx->head);
-            printf("\n");
         }
         skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
         if(debug){

@@ -1,3 +1,5 @@
+static int debug = 0;
+
 bool is_allnum(char c){
   if(c >= '0' && c <= '9'){
     return 1;
@@ -38,18 +40,21 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
-    /*
-    printf("\x1b[36mfinalize: %d ", ctx->next_is_branch);
-    print_value(value);
-    printf("\x1b[0m\n");
-    */
+    if(debug){
+        printf("\x1b[36mfinalize: %d ", ctx->next_is_branch);
+        print_value(value);
+        printf("\x1b[0m\n");
+    }
 
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
         if(ctx->accent == GKA_PARSE_QUOTE){
 
-            struct cell *container = new_cell_value_obj(new);
+            struct cell *stack_cell = new_cell(NULL);
+            stack_cell->branch = new;
+
+            struct cell *container = new_cell_value_obj(stack_cell);
             struct cell *quoted_new = new_cell(container);
 
             /*

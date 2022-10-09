@@ -80,11 +80,24 @@ void test_parse(){
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
     
     /* parse a function pointer */
-    script = "(.func '(print (+ 1 2 3)))";
+    script = "(.func '((print \"hi\") (print \"there\")) (func))";
+    printf("%s\n", script);
 
     root = parse_all(script);
+    printf("root: ");
+    print_cell(root);
+    printf("\n");
+    printf("root->branch: ");
+    print_cell(root->branch);
+    printf("\n");
+    printf("root->branch->next: ");
+    print_cell(root->branch->next);
+    printf("\n");
+    struct cell *func = root->branch->next->value->slot.cell;
+    printf("\n");
 
-    test(suite, root->branch->next->value->type == SL_TYPE_CELL, "quoted branch is a cell");
+    test(suite, func->branch != NULL, "func branch exists");
+    test(suite, func->branch->branch != NULL, "func branch has another branch");
 
     summerize(suite);
 }

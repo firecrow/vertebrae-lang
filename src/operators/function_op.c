@@ -13,16 +13,9 @@ struct function_operator {
 
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
-    printf("\x1b[31m");
-    print_cell(ctx->cell);
-    printf("\x1b[0m\n");
 
     if(ctx->cell && (ctx->cell->value->type == SL_TYPE_KEY || ctx->cell->value->type == SL_TYPE_SET_LEX)){
-        printf("adding\n");
         crw_process_keys(ctx);
-        printf("\n");
-        print_tree(ctx->head->closure->symbols);
-        printf("\n");
     }
 
     if(!ctx->cell){
@@ -50,19 +43,17 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return 1;
     }
 
-    /*
-    printf(">>>>>>> op->next: ");
-    print_cell(op->next);
-    printf("\n");
-    */
+    if(debug){
+        printf(">>>>>>> op->next: ");
+        print_cell(op->next);
+        printf("\n");
 
-    /*
-    printf("in func thing............\n");
-    print_cell(func);
-    printf(" ->\n    ");
-    print_cell(func->next);
-    printf("\n");
-    */
+        printf("in func thing............\n");
+        print_cell(func);
+        printf(" ->\n    ");
+        print_cell(func->branch);
+        printf("\n");
+    }
 
     /*
     printf("\x1b[36mvalue befor branch: ");
@@ -71,17 +62,14 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     */
 
     ctx->stack = push_stack(ctx, op->next);
-    ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
-    ctx->cell = func->next;
+    ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
+    ctx->cell = func->branch->next;
 
     return 1;
 }
 
 static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
-    printf("\x1b[31m");
-    print_cell(ctx->cell);
-    printf("\x1b[0m\n");
 
     if(!op->next){
         struct cell *func = ctx->head->cell;
