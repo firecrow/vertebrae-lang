@@ -156,7 +156,6 @@ void cell_incr(struct crw_state *ctx){
             }
             pop_stack(ctx);
         }
-        ctx->cell = ctx->cell ? ctx->cell->next : NULL;
     }
 
     if(debug){

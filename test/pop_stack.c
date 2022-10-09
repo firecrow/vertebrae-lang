@@ -37,7 +37,6 @@ void test_pop_stack(){
     stack = new_stack_item(NULL, root, new_head());
     state = crw_new_state_context();
     crw_setup_state_context(state, root, global);
-    print_head(state->head);
 
     state->next(state);
     test(suite, state->cell == first, "First cell should be current cell after step");
