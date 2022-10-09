@@ -2,13 +2,17 @@
     .default "hello"
     .level 10
 
+
+    .set-it '(^default "hi")
+    (set-it)
+
     .prop-func '(print default " " name)
     (prop-func .name "sally")
 
-    .list-func '(print default " hello you are ? " value)
+    .list-func '(print default " " value ", how are your?")
     (list-func "yo" "dummy" "nail" "scratch")
 
-    .nested-func (
+    .nested-func '(
         if (false)
                 '(print "the right answer is " (+ 1))
             (true)

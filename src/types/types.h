@@ -20,6 +20,7 @@ struct value_obj *clone_value(struct value_obj *value);
 struct value_obj *new_string_value_obj(struct string *string);
 struct value_obj *new_symbol_value_obj(struct string *string);
 struct value_obj *new_key_value_obj(struct string *string);
+struct value_obj *new_lex_value_obj(struct string *string);
 struct value_obj *new_int_value_obj(int intval);
 struct value_obj *new_cell_value_obj(struct cell *cell);
 struct value_obj *new_result_value_obj(enum CRW_RESULT result);
