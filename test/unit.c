@@ -48,6 +48,7 @@ struct cell *eleventh = NULL;
 #include "nested_function_test.c"
 #include "if_else_test.c"
 #include "function_pointers.c"
+#include "function_value_variable_test.c"
 
 int main(){
 
@@ -68,6 +69,7 @@ int main(){
     test_nested_function();
     test_if_else();
     test_function_pointers();
+    test_function_value_variable();
 
     show_global_success();
 
