@@ -44,6 +44,7 @@ static void summerize(struct suite *suite){
         printf("%sSUITE FAIL:", RED);
     }
     printf(" *%s* %d PASSED, %d FAILED %s%s\n", suite->name, suite->passed, suite->failed, suite->name, NUETRAL);
+    fflush(stdout);
 }
 
 static void show_global_success(){
