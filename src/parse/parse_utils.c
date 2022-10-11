@@ -49,49 +49,61 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
-        if(ctx->accent == GKA_PARSE_QUOTE){
+        while(ctx->next_is_branch){
+            if(ctx->accent == GKA_PARSE_QUOTE){
 
-            struct cell *stack_cell = new_cell(NULL);
-            stack_cell->branch = new;
+                struct cell *stack_cell = new_cell(NULL);
+                struct cell *blank = new_cell(NULL);
 
-            struct cell *container = new_cell_value_obj(stack_cell);
-            struct cell *quoted_new = new_cell(container);
+                struct cell *container = new_cell_value_obj(stack_cell);
+                struct cell *quoted_new = new_cell(container);
 
-            /*
-            printf("quote_cell\n");
-            print_cell(quoted_new);
-            printf("\n");
-            */
+                /*
+                printf("quote_cell\n");
+                print_cell(quoted_new);
+                printf("\n");
+                */
 
-            ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
-            ctx->cell->next = quoted_new;
-            ctx->cell = new; 
+                ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
+                ctx->cell->next = quoted_new;
 
-            /*
-            printf("new\n");
-            print_cell(new);
-            printf("\n");
-            */
+                if(ctx->next_is_branch == 1){
+                    stack_cell->branch = new;
+                    ctx->cell = new; 
+                }else{
+                    stack_cell->branch = blank;
+                    ctx->cell = blank; 
+                }
 
-            ctx->accent = GKA_PARSE_NO_ACCENT;
-            ctx->next_is_branch = 0;
+                /*
+                printf("new\n");
+                print_cell(new);
+                printf("\n");
+                */
 
-            return;
+                ctx->accent = GKA_PARSE_NO_ACCENT;
+
+            }else{
+                struct cell *stack_cell = new_cell(NULL);
+                ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+                if(ctx->next_is_branch == 1){
+                    stack_cell->branch = new;
+                    if(ctx->cell){
+                        ctx->cell->next = stack_cell;
+                    }else{
+                        ctx->cell = ctx->root = stack_cell;
+                    }
+                    ctx->cell = new;
+                }else{
+                    struct cell *blank = new_cell(NULL);
+                    stack_cell->branch = blank;
+                    ctx->cell->next = stack_cell;
+                    ctx->cell = blank;
+                }
+            }
+
+            ctx->next_is_branch--;
         }
-
-        struct cell *stack_cell = new_cell(NULL);
-        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-        stack_cell->branch = new;
-
-        if(ctx->cell){
-            ctx->cell->next = stack_cell;
-        }else{
-            ctx->cell = ctx->root = stack_cell;
-        }
-
-        ctx->cell = new;
-
-        ctx->next_is_branch = 0;
 
         return;
 
