@@ -71,10 +71,9 @@ void test_function_pointers(){
     root = parse_all(script);
 
     state = crw_new_state_context();
+    printf("running\n");
     run_root(state, root);
 
-    print_value(state->data->slot.value);
-    printf("\n");
     test(suite, state->data != NULL, "test basic function runs: save-value is not null");
     test(suite, state->data->type == SL_TYPE_VALUE, "mock value head set");
     test(suite, state->data->slot.value->type == SL_TYPE_STRING, "mock value is string");

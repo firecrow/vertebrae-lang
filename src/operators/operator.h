@@ -56,7 +56,4 @@ struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_cell_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_value_operator(enum OPERATOR_TYPE type);
 
-/* note not assining this is unstable only used for testing */
-struct save_count_operator *count_op;
 struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type);
-

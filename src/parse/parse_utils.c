@@ -1,4 +1,4 @@
-static int debug = 0;
+static int debug = 1;
 
 bool is_allnum(char c){
   if(c >= '0' && c <= '9'){
@@ -50,7 +50,10 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
         while(ctx->next_is_branch){
+            printf("1\n");
             if(ctx->accent == GKA_PARSE_QUOTE){
+
+                printf("2\n");
 
                 struct cell *stack_cell = new_cell(NULL);
                 struct cell *blank = new_cell(NULL);
@@ -58,11 +61,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 struct cell *container = new_cell_value_obj(stack_cell);
                 struct cell *quoted_new = new_cell(container);
 
-                /*
-                printf("quote_cell\n");
-                print_cell(quoted_new);
-                printf("\n");
-                */
+                if(debug){
+                    printf("quote_cell\n");
+                    print_cell(quoted_new);
+                    printf("\n");
+                }
 
                 ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
                 ctx->cell->next = quoted_new;
@@ -75,18 +78,21 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                     ctx->cell = blank; 
                 }
 
-                /*
-                printf("new\n");
-                print_cell(new);
-                printf("\n");
-                */
+                if(debug){
+                    printf("new\n");
+                    print_cell(new);
+                    printf("\n");
+                }
 
                 ctx->accent = GKA_PARSE_NO_ACCENT;
+                printf("3\n");
 
             }else{
+                printf("4\n");
                 struct cell *stack_cell = new_cell(NULL);
                 ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
                 if(ctx->next_is_branch == 1){
+                    printf("4.1\n");
                     stack_cell->branch = new;
                     if(ctx->cell){
                         ctx->cell->next = stack_cell;
@@ -95,11 +101,16 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                     }
                     ctx->cell = new;
                 }else{
+                    printf("4.2\n");
                     struct cell *blank = new_cell(NULL);
                     stack_cell->branch = blank;
+                    if(!ctx->cell){
+                        ctx->cell = new_cell(NULL);
+                    }
                     ctx->cell->next = stack_cell;
                     ctx->cell = blank;
                 }
+                printf("5\n");
             }
 
             ctx->next_is_branch--;

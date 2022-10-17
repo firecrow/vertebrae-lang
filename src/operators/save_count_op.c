@@ -30,6 +30,7 @@ static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
 }
 
 
+struct save_count_operator *count_op = NULL;
 struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type) {
     if(!count_op){
         count_op = malloc(sizeof(struct save_count_operator));
