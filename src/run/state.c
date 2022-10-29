@@ -92,8 +92,6 @@ static void next_step(struct crw_state *ctx){
             printf("calling handle...................\n");
             print_head(ctx->head);
             printf("\n");
-            print_head(ctx->head);
-            printf("\n");
         }
         skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
         if(debug){
@@ -171,6 +169,10 @@ void cell_incr(struct crw_state *ctx){
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
+    if(root == NULL){
+        fprintf(stderr, "Error root is NULL\n");
+        exit(1);
+    }
     struct closure *global = new_closure(NULL);
 
     init_basic_library(global); 

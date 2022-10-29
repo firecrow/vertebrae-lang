@@ -78,13 +78,27 @@ void test_parse(){
     cell = root->branch->next->next->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
+
+    /* double parens */
+    script = "(print ((+ 1 2 3)))";
+    printf("%s\n", script);
+
+    /*
+    test(suite, func->branch != NULL, "func branch exists");
+    test(suite, func->branch->branch != NULL, "func branch has another branch");
+    */
     
     /* parse a function pointer */
-    script = "(.func '(print (+ 1 2 3)))";
+    script = "(.func '((print \"hi\") (print \"there\")) (func))";
+    printf("%s\n", script);
 
     root = parse_all(script);
 
-    test(suite, root->branch->next->value->type == SL_TYPE_CELL, "quoted branch is a cell");
+    struct cell *func = root->branch->next->value->slot.cell;
+    test(suite, func->branch != NULL, "func branch exists");
+    test(suite, func->branch->branch == NULL, "func branch does not have an immediate branch");
+    test(suite, func->branch->next->branch->value->type == SL_TYPE_SYMBOL, "tymbol type is the second inset branch");
+    test(suite, !string_cmp(func->branch->next->branch->value->slot.string, str("print")), "print is the second inset branch");
 
     summerize(suite);
 }

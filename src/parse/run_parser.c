@@ -1,5 +1,7 @@
 #include "../gekkota.h"
 
+static int debug = 0;
+
 #include "parse_utils.c"
 
 #include "close_cell_incr.c"
@@ -12,6 +14,7 @@
 #include "string_incr.c"
 #include "super_incr.c"
 #include "symbol_incr.c"
+
 
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
@@ -35,12 +38,12 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
+  ctx->patterns[i++] = setup_pattern(open_cell_incr);
+  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
   ctx->patterns[i++] = setup_pattern(quote_incr);
-  ctx->patterns[i++] = setup_pattern(open_cell_incr);
-  ctx->patterns[i++] = setup_pattern(close_cell_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   /*
   ctx->patterns[i++] = setup_pattern(not_incr);
@@ -93,12 +96,16 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-       /*
-       printf("idx:%c:%d\n",c, idx-1);
-       */
+       if(debug){
+           printf("idx:%c:%d\n",c, idx-1);
+       }
+       
+       fflush(stdout);
 
        if(pattern->incr(pattern, ctx, c)){
+            fflush(stdout);
             break;
        }
+       fflush(stdout);
     }
 }

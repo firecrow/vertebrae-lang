@@ -47,5 +47,19 @@ void test_variables(){
     test(suite, tree_get(state->head->closure->symbols, str("one"))->slot.integer = 1,"Variable one is set with value 1");
     test(suite, state->head->value->slot.integer == 3, "Final value reflects variable value");
 
+    /* set lext test */
+    global = new_closure(NULL);
+    init_basic_library(global); 
+    char script[] = "(.greeting \"hello\" ^greeting \"hi\" (save-value greeting))";
+
+    printf("%s\n", script);
+
+    root = parse_all(script);
+
+    state = crw_new_state_context();
+    run_root(state, root);
+
+    test(suite, !string_cmp(state->data->slot.value->slot.string, str("hi")), "Variable was updated");
+
     summerize(suite);
 }

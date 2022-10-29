@@ -39,19 +39,21 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         op->next = op->next->next;
     }
 
-    /*
-    printf(">>>>>>> op->next: ");
-    print_cell(op->next);
-    printf("\n");
-    */
+    if(op->next == NULL){
+        return 1;
+    }
 
-    /*
-    printf("in func thing............\n");
-    print_cell(func);
-    printf(" ->\n    ");
-    print_cell(func->next);
-    printf("\n");
-    */
+    if(debug){
+        printf(">>>>>>> op->next: ");
+        print_cell(op->next);
+        printf("\n");
+
+        printf("in func thing............\n");
+        print_cell(func);
+        printf(" ->\n    ");
+        print_cell(func->branch);
+        printf("\n");
+    }
 
     /*
     printf("\x1b[36mvalue befor branch: ");
@@ -60,8 +62,8 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     */
 
     ctx->stack = push_stack(ctx, op->next);
-    ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
-    ctx->cell = func->next;
+    ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
+    ctx->cell = func->branch->next;
 
     return 1;
 }
