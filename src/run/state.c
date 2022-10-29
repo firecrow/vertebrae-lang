@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 1;
+int debug = 0;
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;
@@ -169,7 +169,6 @@ void cell_incr(struct crw_state *ctx){
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
-    print_cell(root);
     if(root == NULL){
         fprintf(stderr, "Error root is NULL\n");
         exit(1);
