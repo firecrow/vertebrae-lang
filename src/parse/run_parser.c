@@ -1,5 +1,7 @@
 #include "../gekkota.h"
 
+static int debug = 0;
+
 #include "parse_utils.c"
 
 #include "close_cell_incr.c"
@@ -12,6 +14,7 @@
 #include "string_incr.c"
 #include "super_incr.c"
 #include "symbol_incr.c"
+
 
 struct parse_ctx *new_parse_ctx(){
     struct parse_ctx *ctx = malloc(sizeof(struct parse_ctx));
@@ -90,19 +93,19 @@ struct cell *parse_file(int fd){
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
-    printf("parseing:%c\n", c);
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-       printf("idx:%c:%d\n",c, idx-1);
+       if(debug){
+           printf("idx:%c:%d\n",c, idx-1);
+       }
+       
        fflush(stdout);
 
        if(pattern->incr(pattern, ctx, c)){
-            printf("breaking\n");
             fflush(stdout);
             break;
        }
-       printf("end\n");
        fflush(stdout);
     }
 }

@@ -169,6 +169,11 @@ void cell_incr(struct crw_state *ctx){
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
+    print_cell(root);
+    if(root == NULL){
+        fprintf(stderr, "Error root is NULL\n");
+        exit(1);
+    }
     struct closure *global = new_closure(NULL);
 
     init_basic_library(global); 
