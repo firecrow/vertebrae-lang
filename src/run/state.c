@@ -124,8 +124,6 @@ void cell_incr(struct crw_state *ctx){
         printf("\n\x1b[0m");
     }
 
-    crw_process_keys(ctx);
-
     int is_moved = 0;
     while(ctx->cell && ctx->cell->branch){
         if(debug){

@@ -14,10 +14,6 @@ struct function_operator {
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
 
-    if(ctx->cell && (ctx->cell->value->type == SL_TYPE_KEY || ctx->cell->value->type == SL_TYPE_SET_LEX)){
-        crw_process_keys(ctx);
-    }
-
     if(!ctx->cell){
         return 0;
     }
