@@ -36,7 +36,6 @@ struct crw_state {
 
 struct crw_state *crw_new_state_context();
 void crw_setup_state_context(struct crw_state *state, struct cell* root, struct closure *global);
-bool crw_process_keys(struct crw_state *ctx);
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell);
 void pop_stack(struct crw_state *ctx);
 void close_branch(struct crw_state *ctx);

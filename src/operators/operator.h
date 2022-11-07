@@ -1,5 +1,7 @@
 enum OPERATOR_TYPE {
     CUSTOM = 0,
+    DEFINE,
+    SET,
     DEFAULT,
     CONTEXT,
     CONDITION,
@@ -12,7 +14,6 @@ enum OPERATOR_TYPE {
     DEFINITION,
     CLOSURE,
     FUNCTION,
-    SET,
     SAVE_HEAD,
     SAVE_CELL,
     SAVE_VALUE,
@@ -42,6 +43,8 @@ struct operator_ifc {
 
 void default_next(struct crw_state *ctx);
 
+struct operator_ifc * new_def_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_set_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_definition_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_print_operator(enum OPERATOR_TYPE type);
