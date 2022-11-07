@@ -1,71 +1,78 @@
 #include "../gekkota.h"
 
 static int debug = 0;
+
+struct def_operator {
+    int type;
+    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
+    operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
+    void (*handle_value)(struct crw_state *ctx, struct value_obj *value, struct value_obj *key);
+    struct value_obj *key;
+};
  
-static void set_value(struct crw_state *ctx, struct value_obj *value){
+static void def_value(struct crw_state *ctx, struct value_obj *value, struct value_obj *key){
+    if(debug){
+        printf("defining value: ");
+        print_value(value);
+        printf("\n");
+    }
+
+    struct closure *closure = ctx->head->closure->parent;
+    tree_add(closure->symbols, key->slot.string, value);
+}
+
+static void set_value(struct crw_state *ctx, struct value_obj *value, struct value_obj *key){
     if(debug){
         printf("setting value: ");
         print_value(value);
         printf("\n");
     }
 
-    struct value_obj *key = ctx->head->key_for_next;
-    if(key->type == SL_TYPE_KEY){
-        tree_update(ctx->head->closure->symbols, key->slot.string, value);
-    } else if(key->type == SL_TYPE_SET_LEX) {
-        struct closure *closure = ctx->head->closure;
-        struct closure *previous = closure;
-        struct value_obj *result = NULL;
-        while(closure && (!result || value_is_nil(result))){
-            previous = closure;
-            result = tree_get(closure->symbols, key->slot.string);
-            closure = closure->parent;
-        }
-        if(result){
-            tree_add(previous->symbols, key->slot.string, value);
-        }
+    struct closure *closure = ctx->head->closure;
+    struct closure *previous = closure;
+    struct value_obj *result = NULL;
+
+    while(closure && !result){
+        previous = closure;
+        result = tree_get(closure->symbols, key->slot.string);
+        closure = closure->parent;
     }
-    ctx->head->key_for_next = NULL;
-    return 1;
+
+    if(result){
+        tree_add(previous->symbols, key->slot.string, value);
+    }
 }
 
-static bool def_values(struct crw_state *ctx){
-    struct value_obj *value = ctx->cell->value;
-    if(!ctx->head){
-        return 0;
-    }
-    if(value && (value->type == SL_TYPE_KEY)){
-        if(debug){
-            printf("\x1b[35mdef keys: ");
-            print_cell(ctx->cell);
-            printf("\x1b[0m\n");
-        }
-        tree_update(ctx->head->closure->symbols, value->slot.string, ctx->builtins.nil);
-        ctx->head->key_for_next = value;
+static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct def_operator *op = (struct def_operator *) _op;
 
-        /* cant assign a branch, if a branch is quoted into a cell it can be assigned */
-        if(ctx->cell->next && !ctx->cell->branch){
-            set_value(ctx, ctx->cell->next->value);
-            ctx->cell = ctx->cell->next;
-        }
-    }else if(value && (value->type == SL_TYPE_SET_LEX)){
-        if(debug){
-            printf("\x1b[35mset keys: ");
-            print_cell(ctx->cell);
-            printf("\x1b[0m\n");
-        }
-        ctx->head->key_for_next = value;
-
-        /* cant assign a branch, if a branch is quoted into a cell it can be assigned */
-        if(ctx->cell->next && !ctx->cell->branch){
-            set_value(ctx, ctx->cell->next->value);
-            ctx->cell = ctx->cell->next;
-        }
-    }else{
-        if(debug){
-            printf("\x1b[36mno keys: ");
-            print_cell(ctx->cell);
-            printf("\x1b[0m\n");
-        }
+    if(op->key == NULL && ctx->value->type == SL_TYPE_SYMBOL){
+        op->key = ctx->value;
+    }else if(!value_is_nil(ctx->value)){
+        op->handle_value(ctx, op->key, ctx->cell->value);
+        op->key = NULL;
     }
+    return 0;
+}
+
+struct operator_ifc * new_def_operator(enum OPERATOR_TYPE type) {
+    struct def_operator *op = malloc(sizeof(struct def_operator));
+    memset(op, 0, sizeof(struct def_operator));
+    op->type = type;
+    op->handle = def_handle;
+    op->handle_value = def_value;
+    op->new = new_def_operator;
+    return op;
+}
+
+struct operator_ifc * new_set_operator(enum OPERATOR_TYPE type) {
+    struct def_operator *op = malloc(sizeof(struct def_operator));
+    memset(op, 0, sizeof(struct def_operator));
+    op->type = type;
+    op->handle = def_handle;
+    op->handle_value = set_value;
+    op->new = new_set_operator;
+    return op;
 }

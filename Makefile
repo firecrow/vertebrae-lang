@@ -11,7 +11,7 @@ OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/equal_op.o build/default_op.o build/function_op.o\
 	build/save_head_op.o build/save_cell_op.o \
 	build/save_value_op.o build/save_count_op.o \
-	build/def_values_op.o build/set_values_op.o
+	build/def_values_op.o
 
 PARSEOBJ := build/run_parser.o
 
