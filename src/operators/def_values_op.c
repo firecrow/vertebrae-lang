@@ -12,7 +12,7 @@ struct def_operator {
     struct value_obj *key;
 };
  
-static void def_value(struct crw_state *ctx, struct value_obj *value, struct value_obj *key){
+static void def_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
     if(debug){
         printf("defining value: ");
         print_value(value);
@@ -23,7 +23,7 @@ static void def_value(struct crw_state *ctx, struct value_obj *value, struct val
     tree_add(closure->symbols, key->slot.string, value);
 }
 
-static void set_value(struct crw_state *ctx, struct value_obj *value, struct value_obj *key){
+static void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
     if(debug){
         printf("setting value: ");
         print_value(value);
@@ -48,8 +48,10 @@ static void set_value(struct crw_state *ctx, struct value_obj *value, struct val
 static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct def_operator *op = (struct def_operator *) _op;
 
-    if(op->key == NULL && ctx->value->type == SL_TYPE_SYMBOL){
-        op->key = ctx->value;
+    if(op->key == NULL){
+        if(ctx->value->type == SL_TYPE_SYMBOL){
+            op->key = ctx->value;
+        }
     }else if(!value_is_nil(ctx->value)){
         op->handle_value(ctx, op->key, ctx->cell->value);
         op->key = NULL;
