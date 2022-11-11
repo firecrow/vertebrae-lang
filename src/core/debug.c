@@ -29,6 +29,9 @@ void print_value(struct value_obj *value){
         printf("NONE");
         return;
     }
+    if(value->accent == GKA_PARSE_QUOTE){
+        printf("'");
+    }
     if(value->type == SL_TYPE_SYMBOL){
         printf("%s", value->slot.string->content);
     }

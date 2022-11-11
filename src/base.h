@@ -97,12 +97,12 @@ struct value_obj {
     struct string *(*to_string)(struct value_obj *value);
     bool (*truthy)(struct value_obj *value);
     bool (*equals)(struct value_obj *source, struct value_obj *compare);
+    enum parse_accent accent;
 };
 
 struct cell {
     int id;
     struct value_obj *value;
-    enum parse_accent accent;
     struct cell *next;
     struct cell *branch;
 };
