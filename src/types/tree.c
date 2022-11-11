@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "types.h"
+#include "../gekkota.h"
 
 int tree_id = 0;
 struct tree *new_tree(){
@@ -23,7 +20,7 @@ static struct tree_entry *new_tree_entry(){
     return entry;
 }
 
-static struct tree_entry *new_order_entry(){
+static struct order_entry *new_order_entry(){
     struct order_entry *entry = malloc(sizeof(struct order_entry));
     if(entry == NULL){
         return NULL;

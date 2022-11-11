@@ -1,26 +1,23 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
-#include "../run/run.h"
-#include "core.h"
+#include "../gekkota.h"
 
 static char *debug_SL_TYPE[] = {
     "SL_TYPE_NONE",
     "SL_TYPE_BOOLEAN_RESULT",
-    "SL_TYPE_SYMBOL",
-    "SL_TYPE_INT",
-    "SL_TYPE_FLOAT",
-    "SL_TYPE_CHAR",
-    "SL_TYPE_STRING",
-    "SL_TYPE_TREE",
     "SL_TYPE_CELL",
+    "SL_TYPE_CHAR",
     "SL_TYPE_CLOSURE",
-    "SL_TYPE_FUNCTION",
-    "SL_TYPE_VALUE",
     "SL_TYPE_COMMENT",
+    "SL_TYPE_FLOAT",
+    "SL_TYPE_FUNCTION",
+    "SL_TYPE_HEAD",
+    "SL_TYPE_INT",
+    "SL_TYPE_KEY",
     "SL_TYPE_QUOTE",
-    "SL_TYPE_KEY"
+    "SL_TYPE_SET_LEX",
+    "SL_TYPE_STRING",
+    "SL_TYPE_SYMBOL",
+    "SL_TYPE_TREE",
+    "SL_TYPE_VALUE"
 };
 
 void print_value(struct value_obj *value){
@@ -31,6 +28,9 @@ void print_value(struct value_obj *value){
     if(!value->type){
         printf("NONE");
         return;
+    }
+    if(value->accent == GKA_PARSE_QUOTE){
+        printf("'");
     }
     if(value->type == SL_TYPE_SYMBOL){
         printf("%s", value->slot.string->content);
@@ -72,11 +72,15 @@ void print_cell(struct cell *cell){
 }
 
 void print_head(struct head *head){
-    printf("<H");
+    if(!head){
+        printf("<H NULL>");
+        return;
+    }
+    printf("<H%d ", head->id);
     printf(" source value:");
     print_value(head->source);
     if(head->operator){
-        printf(" opp type %d", head->operator->type);
+        printf(" opp type %d ", head->operator->type);
     }else{
         printf(" no op ");
     }
@@ -109,7 +113,6 @@ void print_tree(struct tree *tree){
     printf("<tree %d\n", tree->id);
     struct order_entry *oentry = tree->order;
     while(oentry){
-        printf("");
         if(oentry->entry){
             if(oentry->entry->key){
                 printf("    %s:", oentry->entry->key->content);

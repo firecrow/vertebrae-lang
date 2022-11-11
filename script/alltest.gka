@@ -1,0 +1,11 @@
+(
+    .default "hello"
+    .level 10
+
+    .prop-func '(print default " " name)
+    (prop-func .name "sally")
+
+    .list-func '(print default " hello you are ? " value)
+    (list-func "yo" "dummy" "nail" "scratch")
+
+    (print .data))

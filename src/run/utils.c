@@ -1,9 +1,11 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../operators/operator.h"
-#include "run.h"
+#include "../gekkota.h"
+
+void default_next(struct crw_state *ctx){
+    if(ctx->cell){
+        ctx->cell = ctx->cell->next;
+    }
+}
+
 
 struct cell *get_next(struct cell *cell){
     if(cell){

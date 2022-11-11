@@ -1,38 +1,31 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../run/run.h"
-#include "operator.h"
+#include "../gekkota.h"
 
 struct arithmetic_operator {
     enum OPERATOR_TYPE type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
     struct value *value;
 };
 
-static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->handle_state == CRW_IN_HEAD || ctx->handle_state == CRW_IN_CLOSE){
-        default_next(ctx);
-        return;
-    }
+static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){
-        return;
+        printf(" returning no value ");
+        return 0;
     }
     if(value->type != SL_TYPE_INT){
-        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d", value->type);
-        default_next(ctx);
-        return;
-        /*exit(1);*/
+        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d ", value->type);
+        print_value(value);
+        printf("\n");
+        return 0;
     }
-    struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
     if(!head->value){
         head->value = clone_value(value);
-        default_next(ctx);
-        return;
+        return 0;
     }
 
     int new_value = value->slot.integer;
@@ -45,9 +38,12 @@ static void arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value->slot.integer = head->value->slot.integer / new_value;
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
+    }else if(op->type == GREATER_THAN){
+        head->value = (new_value > head->value->slot.integer) ?  ctx->builtins.true :  ctx->builtins.false;
+    }else if(op->type == LESS_THAN){
+        head->value = (new_value < head->value->slot.integer) ?  ctx->builtins.true :  ctx->builtins.false;
     }
-
-    default_next(ctx);
+    return 0;
 }
 
 struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {
@@ -55,5 +51,6 @@ struct operator_ifc * new_arithmetic_operator(enum OPERATOR_TYPE type) {
     op->type = type;
     op->handle = arithmetic_handle;
     op->new = new_arithmetic_operator;
+    op->lifecycle = GKA_OP_NOT_STARTED;
     return (struct operator_ifc *)op;
 }

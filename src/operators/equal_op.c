@@ -1,9 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../run/run.h"
-#include "operator.h"
+#include "../gekkota.h"
 
 struct equal_operator {
     enum OPERATOR_TYPE type;
@@ -14,19 +9,25 @@ struct equal_operator {
 
 static void equal_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(ctx->handle_state == CRW_IN_HEAD){
+        ctx->handle_state = CRW_IN_ARG;
+        default_next(ctx);
+        return;
+    }
+    if(ctx->handle_state == CRW_IN_CLOSE){
         default_next(ctx);
         return;
     }
         
     struct equal_operator *op = (struct equal_operator *)_op;
     struct head *head = ctx->head;
-    if(!op->value){
-        head->value =  ctx->builtins.true;
-        op->value = ctx->value;
+    if(!op->value && ctx->cell){
+        head->value =  ctx->builtins.false;
+        op->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        default_next(ctx);
         return;
     }
 
-    if(op->value->equals(op->value, ctx->value)){
+    if(op->value->equals(op->value, swap_for_symbol(ctx->head->closure, ctx->cell->value))){
         head->value = ctx->builtins.true;
     }else{
         head->value = ctx->builtins.false;

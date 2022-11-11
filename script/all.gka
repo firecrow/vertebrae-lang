@@ -1,0 +1,7 @@
+(
+        if (false)
+                (print "the right answer is " (+ 1))
+           (true)
+                (print "the wrong answer is " (+ 3)))
+
+

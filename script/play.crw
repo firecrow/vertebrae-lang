@@ -1,6 +1,0 @@
-(
-.i 1
-(print i)
-(set .i (+ 3 2 i))
-(print i)
-(print .data))

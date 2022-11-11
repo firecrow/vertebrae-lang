@@ -9,30 +9,6 @@ Where possible patterns are expected to stay continous, e.e. there are no positi
 
 The system is modular and intended to be extended from the C source code level.
 
-## Our first program example
-After a while f development, here and there, the first working example to test the functional behaviour was as follows.
-
-```
-(
-    .i 0
-    .incr '(
-        set .i (+ 1 i))
-    .count '(
-        (incr)
-        (print "we have counted up to " i " with " value))
-
-(count "alpha" "bravo" "charlie" "delta"))
-```
-
-which outputs the following:
-
-```
-we have counted up to 1 with alpha
-we have counted up to 2 with bravo
-we have counted up to 3 with charlie
-we have counted up to 4 with delta
-```
-
 ## Usablility ideas
 The main goal is to have something that can be cooperative multiprocessing so the language is implemented engirely without recursion, the whole runtime is processed with a stack based structure, so that it can be paused and resumed in line with the needs of any other part of an application or library.
 

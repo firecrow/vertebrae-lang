@@ -1,7 +1,4 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "types.h"
+#include "../gekkota.h"
 
 /* this is for debugging */
 int next_value_id = 0;
@@ -22,14 +19,14 @@ bool is_type(struct value_obj *value, enum SL_TYPE type){
 
 struct value_obj *clone_value(struct value_obj *value){
    /* TODO: not yet implemented */
-   if(value->type = SL_TYPE_INT){
+   if(value->type == SL_TYPE_INT){
         return new_int_value_obj(value->slot.integer);
    }
    return value;
 }
 
 static struct string *default_to_string(struct value_obj *value){
-    return str("<Value>");
+    return new_string_xprintf("<Value %d>", value->type);
 }
 
 struct value_obj *new_value(){
@@ -67,11 +64,16 @@ static struct string *string_to_string(struct value_obj *value){
     return value->slot.string;
 }
 
+static struct string *string_eq(struct value_obj *a, struct value_obj *b){
+    return string_cmp(a->slot.string, b->to_string(b)) == 0;
+}
+
 struct value_obj *new_string_value_obj(struct string *string){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_STRING;
     value->slot.string = string;
     value->to_string = string_to_string;
+    value->equals = string_eq;
     return value;
 }
 
@@ -143,7 +145,7 @@ static struct string *int_to_string(struct value_obj *value){
 }
 
 
-static struct string *int_truthy(struct value_obj *value){
+bool int_truthy(struct value_obj *value){
     if(value->type != SL_TYPE_INT){
         fprintf(stderr, "Type not int for int to string");
     }
@@ -213,6 +215,13 @@ struct value_obj *new_key_value_obj(struct string *string){
     return value;
 }
 
+struct value_obj *new_lex_value_obj(struct string *string){
+    struct value_obj *value = new_value();
+    value->type = SL_TYPE_SET_LEX;
+    value->slot.string = string;
+    value->to_string = string_to_string;
+    return value;
+}
 
 /*----- factories/utils -----*/
 
@@ -224,41 +233,8 @@ bool is_non_head_class(struct value_obj *value){
         value->type == SL_TYPE_KEY;
 }
 
-struct value_obj *value_from_token(enum SL_PARSE_STATE state, struct string *token){
-
-    if(state == IN_STRING){
-        return new_string_value_obj(token);
-    }
-
-    if(state == IN_QUOTE){
-        struct value_obj *value = new_string_value_obj(token);
-        value->type = SL_TYPE_QUOTE;
-        return value;
-    }
-
-    if(state == IN_KEY){
-        struct value_obj *value = new_string_value_obj(token);
-        value->type = SL_TYPE_KEY;
-        return value;
-    }
-
-    struct value_obj *value = new_value();
-    if(state == IN_COMMENT){
-        value->type = SL_TYPE_COMMENT;
-        value->slot.string = token;
-        value->to_string = string_to_string;
-        return value;
-    }
-
-    if(regex_match("^[0-9]\\+$", token)){
-        return new_int_value_obj(atoi(token->content));
-    }
-
-    return new_symbol_value_obj(token);
-}
-
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value){
-    if(!value || value->type != SL_TYPE_SYMBOL){
+    if(value == NULL || (value->type != SL_TYPE_SYMBOL) || value->accent == GKA_PARSE_QUOTE){
         return value;
     }
     struct value_obj *prior = NULL;

@@ -1,18 +1,8 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../run/run.h"
-#include "operator.h"
+#include "../gekkota.h"
 
-void default_next(struct crw_state *ctx){
-    if(ctx->cell){
-        ctx->cell = ctx->cell->next;
-    }
-}
-
-static void default_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    default_next(ctx);
+static bool default_handle(struct operator_ifc *op, struct crw_state *ctx){
+    ctx->head->value = ctx->value;
+    return 0;
 }
 
 struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {
@@ -21,5 +11,6 @@ struct operator_ifc * new_default_operator(enum OPERATOR_TYPE type) {
     op->type = type;
     op->handle = default_handle;
     op->new = new_default_operator;
+    op->lifecycle = GKA_OP_NOT_STARTED;
     return op;
 }

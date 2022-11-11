@@ -1,0 +1,14 @@
+(
+    .mpd-port 2900
+    .call-mpd '(
+        .sock (make-sock .port mpd-port)
+        (sock.send value)
+        .result (sock.read)
+        (loop-lines result .func '(print value)))
+
+     .play (call "play")
+     .play-artist '(call-mpd (
+        join .sep "\n" ("findadd (Artist =~ '%s')" artist) "play"))
+
+
+     (play-artist .artist "Amber")

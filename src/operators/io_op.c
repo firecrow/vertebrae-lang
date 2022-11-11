@@ -1,22 +1,17 @@
-#include "../external.h"
-#include "../ssimple.h"
-#include "../core/core.h"
-#include "../types/types.h"
-#include "../run/run.h"
-#include "operator.h"
+#include "../gekkota.h"
 
 /* =========== print ==========*/
 struct print_operator {
     int type;
     struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
     operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
 };
 
-static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
-    if(ctx->handle_state == CRW_IN_HEAD){
-        default_next(ctx);
-        return;
-    }
+static bool print_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    struct print_operator *op = (struct print_operator *) _op;
+
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");
         print_head(ctx->head);
@@ -45,9 +40,17 @@ static void print_handle(struct operator_ifc *_op, struct crw_state *ctx){
             printf("\n");
         }
     }
-    default_next(ctx);
-    ctx->head->value = ctx->value;
+    if(ctx->previous){
+        ctx->head->value = ctx->previous->value;
+    }
+    return 0;
 }
+
+static bool print_close(struct operator_ifc *_op, struct crw_state *ctx){
+    printf("\n");
+    return 0;
+}
+
 
 struct print_operator *print_singleton;
 struct operator_ifc *new_print_operator(enum OPERATOR_TYPE type) {
@@ -55,7 +58,9 @@ struct operator_ifc *new_print_operator(enum OPERATOR_TYPE type) {
         print_singleton = malloc(sizeof(struct print_operator));
         print_singleton->type = type;
         print_singleton->handle = print_handle;
+        print_singleton->close = print_close;
         print_singleton->new = new_print_operator;
     }
+    print_singleton->lifecycle = GKA_OP_NOT_STARTED;
     return (struct operator_ifc *)print_singleton;
 }

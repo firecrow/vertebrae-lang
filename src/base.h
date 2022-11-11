@@ -6,6 +6,12 @@
 
 #define STRING_DEFAULT_SIZE 4
 
+#define max(AARG, BARG) \
+    (AARG) > (BARG) ? (AARG) : (BARG)
+
+#define min(AARG, BARG) \
+    (AARG) < (BARG) ? (AARG) : (BARG)
+
 enum CRW_RESULT {
     FALSE = 0,
     TRUE,
@@ -16,30 +22,29 @@ enum CRW_RESULT {
 enum SL_TYPE {
     SL_TYPE_NONE = 0,
     SL_TYPE_BOOLEAN_RESULT,
-    SL_TYPE_SYMBOL,
-    SL_TYPE_INT,
-    SL_TYPE_FLOAT,
-    SL_TYPE_CHAR,
-    SL_TYPE_STRING,
-    SL_TYPE_TREE,
     SL_TYPE_CELL,
+    SL_TYPE_CHAR,
     SL_TYPE_CLOSURE,
-    SL_TYPE_FUNCTION,
-    SL_TYPE_VALUE,
     SL_TYPE_COMMENT,
+    SL_TYPE_FLOAT,
+    SL_TYPE_FUNCTION,
+    SL_TYPE_HEAD,
+    SL_TYPE_INT,
+    SL_TYPE_KEY,
     SL_TYPE_QUOTE,
-    SL_TYPE_KEY
-    /* custom types */
+    SL_TYPE_SET_LEX,
+    SL_TYPE_STRING,
+    SL_TYPE_SYMBOL,
+    SL_TYPE_TREE,
+    SL_TYPE_VALUE
 };
 
-enum SL_PARSE_STATE {
-    START = 0,
-    IN_CELL_STARTED,
-    IN_CELL,
-    IN_COMMENT,
-    IN_STRING,
-    IN_QUOTE,
-    IN_KEY
+enum parse_accent {
+  GKA_PARSE_NO_ACCENT,
+  GKA_PARSE_QUOTE,
+  GKA_PARSE_SUPER,
+  GKA_PARSE_DOT,
+  GKA_PARSE_NOT
 };
 
 #define bool char
@@ -59,7 +64,7 @@ struct closure_entry {
     enum SL_TYPE type;
     union {
         struct cell *cell;
-        struct value *value;
+        struct value_obj *value;
         struct operator_ifc *function;
     } body;
 };
@@ -92,6 +97,7 @@ struct value_obj {
     struct string *(*to_string)(struct value_obj *value);
     bool (*truthy)(struct value_obj *value);
     bool (*equals)(struct value_obj *source, struct value_obj *compare);
+    enum parse_accent accent;
 };
 
 struct cell {
@@ -99,18 +105,6 @@ struct cell {
     struct value_obj *value;
     struct cell *next;
     struct cell *branch;
-};
-
-struct parse_ctx {
-    struct cell *current;
-    struct cell *root;
-    struct stack_item *stack;
-    enum SL_PARSE_STATE state;
-    enum SL_PARSE_STATE prev_state;
-    bool in_escape;
-    bool has_comment_char;
-    struct string *token;
-    char closing_char;
 };
 
 struct stack_item {
@@ -123,12 +117,12 @@ void print_cell(struct cell *cell);
 struct string *string_from_cstring(char *cstring);
 
 struct head {
+    int id;
     struct operator_ifc *operator;
     struct closure *closure;  
     struct value_obj *value;
     struct value_obj *source;
     struct cell *cell;
-    struct value_obj *key_for_next;
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);

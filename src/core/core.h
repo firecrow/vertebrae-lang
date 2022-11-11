@@ -1,6 +1,6 @@
 /* cell.c */
 struct value_obj *get_or_create_value(struct cell *cell);
-struct cell *new_cell();
+struct cell *new_cell(struct value_obj *value);
 bool is_branch_cell(struct cell *cell);
 
 /* closure.c */
@@ -21,12 +21,6 @@ void print_state(struct crw_state *ctx, bool show_tree);
 /* head.c */
 struct head *new_head();
 struct head *setup_new_head(struct head *head, struct cell *branch, struct closure *closure);
-
-/* parse.c */
-struct parse_ctx *new_parse_ctx();
-struct cell *parse_all(struct string *string);
-struct cell *parse_file(int fd);
-void parse_char(struct parse_ctx *ctx, char c);
 
 /* stack.c */
 struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell, struct head *head);
