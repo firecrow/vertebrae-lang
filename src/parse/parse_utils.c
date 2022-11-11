@@ -44,7 +44,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         printf("\x1b[0m\n");
     }
 
-    if(ctx->accent == GKA_PARSE_QUOTE){
+    if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
         value->accent = GKA_PARSE_QUOTE;
     }
 

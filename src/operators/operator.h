@@ -17,7 +17,9 @@ enum OPERATOR_TYPE {
     SAVE_HEAD,
     SAVE_CELL,
     SAVE_VALUE,
-    SAVE_COUNT
+    SAVE_COUNT,
+    GREATER_THAN,
+    LESS_THAN
 };
 
 enum gka_op_lifecycle {
