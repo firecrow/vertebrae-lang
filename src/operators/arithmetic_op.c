@@ -38,6 +38,10 @@ static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         head->value->slot.integer = head->value->slot.integer / new_value;
     }else if(op->type == MULTIPLY){
         head->value->slot.integer = head->value->slot.integer * new_value;
+    }else if(op->type == GREATER_THAN){
+        head->value = (new_value > head->value->slot.integer) ?  ctx->builtins.true :  ctx->builtins.false;
+    }else if(op->type == LESS_THAN){
+        head->value = (new_value < head->value->slot.integer) ?  ctx->builtins.true :  ctx->builtins.false;
     }
     return 0;
 }

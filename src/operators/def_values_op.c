@@ -53,7 +53,7 @@ static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
             op->key = ctx->value;
         }
     }else if(!value_is_nil(ctx->value)){
-        op->handle_value(ctx, op->key, ctx->cell->value);
+        op->handle_value(ctx, op->key, ctx->value);
         op->key = NULL;
     }
     return 0;

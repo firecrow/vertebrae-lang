@@ -19,10 +19,7 @@ void init_basic_library(struct closure *closure){
     /*
     closure_add_function(closure, str("and"), new_and_operator(CONDITION));
     closure_add_function(closure, str("or"), new_or_operator(CONDITION));
-    closure_add_function(closure, str("="), new_equal_operator(CONDITION));
     closure_add_function(closure, str("!"), new_not_operator(CONDITION));
-    closure_add_function(closure, str("<"), new_less_than_operator(CONDITION));
-    closure_add_function(closure, str(">"), new_greater_than_operator(CONDITION));
     closure_add_function(closure, str("?"), new_nil_operator(CONDITION));
     */
 
@@ -35,6 +32,9 @@ void init_basic_library(struct closure *closure){
     closure_add_function(closure, str("/"), new_arithmetic_operator(DIVIDE));
     /* * */
     closure_add_function(closure, str("*"), new_arithmetic_operator(MULTIPLY));
+
+    closure_add_function(closure, str("<"), new_arithmetic_operator(LESS_THAN));
+    closure_add_function(closure, str(">"), new_arithmetic_operator(GREATER_THAN));
 
     /* ---------- io ---------- */
     /* print */

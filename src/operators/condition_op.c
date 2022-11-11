@@ -33,10 +33,6 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(debug){
         printf("in test %d\n", op->in_test);
         printf("done %d\n", op->done);
-        printf("\x1b[36mcell:");
-        print_cell(ctx->cell);
-        print_cell(ctx->cell->next);
-        print_cell(ctx->cell->branch);
         printf("\x1b[0m\n");
     }
 
@@ -46,7 +42,11 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         }
     }else if(value && !value->truthy(value)){
         cell_next(ctx); 
-        cell_next(ctx);
+        if(debug){
+            printf("moving to: ");
+            print_cell(ctx->cell);
+            printf("\n");
+        }   
         op->in_test = 1;
         return 1;
     }else if(op->in_test){
