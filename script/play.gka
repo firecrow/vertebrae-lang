@@ -1,5 +1,5 @@
 (
-    (def hi "there") 
+    (def hi "there")
     (print hi)
-    (set hi "hello")
+    (set 'hi "hello")
     (print hi))

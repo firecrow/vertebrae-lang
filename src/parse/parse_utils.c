@@ -44,6 +44,10 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         printf("\x1b[0m\n");
     }
 
+    if(ctx->accent == GKA_PARSE_QUOTE){
+        value->accent = GKA_PARSE_QUOTE;
+    }
+
     struct cell *new = new_cell(value);
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_branch){
@@ -128,4 +132,5 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         ctx->cell->next = new;
     }
     ctx->cell = new;
+    ctx->accent = GKA_PARSE_NO_ACCENT;
 }
