@@ -34,11 +34,14 @@ my-func <- "sam" "danny" "kazaa" "kim" "shana"
 ```
 
 outputs:
+
+```
 sammy has 4 ducks
 danny has 3 ducks
 kazaa has 2 ducks
 kim has 1 ducks
 shana has 0 ducks
+```
 
 it has a syntax somewhere in the common lisp universe but is adjusted to focus on more direct access for less formal consistency.
 
