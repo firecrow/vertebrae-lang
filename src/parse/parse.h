@@ -24,7 +24,10 @@ struct match_pattern {
 struct parse_ctx {
     struct cell *cell;
     struct cell *root;
+    struct cell *previous;
+    struct cell *grand_previous;
     bool next_is_branch;
+    bool next_is_into;
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;
@@ -45,3 +48,4 @@ static struct match_pattern *setup_pattern(pattern_incr_func func);
 void setup_parse_ctx(struct parse_ctx *ctx);
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head);
 static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx);
+void finalize_parse(struct parse_ctx *ctx);
