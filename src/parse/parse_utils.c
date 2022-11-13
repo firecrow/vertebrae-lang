@@ -104,20 +104,23 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
             }else{
                 struct cell *stack_cell = new_cell(NULL);
-                ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
                 if(ctx->next_is_into == 1){
                     if(!ctx->grand_previous){
                       ctx->root = ctx->cell = ctx->grand_previous = stack_cell;
                     }
                     if(ctx->previous){
                         /* set the previous cell as a stack cell */
-                        ctx->grand_previous->branch = ctx->previous;
+                        ctx->grand_previous->next = stack_cell;
+                        stack_cell->branch = ctx->previous;
+                        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
                         ctx->cell = ctx->previous;
-                        set_previous(ctx);
+
                         /* now append the new cell */
                         ctx->cell->next = new;
                         ctx->previous = ctx->cell;
                         ctx->cell = new;
+
+                        set_previous(ctx);
                     }
                     ctx->cell = new;
                 }else{

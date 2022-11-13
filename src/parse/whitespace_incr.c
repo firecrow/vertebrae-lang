@@ -1,5 +1,5 @@
 int whitespace_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
-  if(c == '\0' || c == '\n' || c == ' ' || c == '\t'){
+  if(c == '\0' || c == '\n' || c == ' ' || c == '\t' || c == ','){
     pattern->state = GKA_PARSE_DONE;
     return complete_previous(pattern, ctx);
   }
