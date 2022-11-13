@@ -1,4 +1,3 @@
-
 # Gekkota
 Iteration Based Programming Language
 
@@ -29,29 +28,31 @@ The `operator` objects are the way behavior is excecuted, they behave much like 
 The `context` object is designed to handle execution iteratively to allow for asynchonous functionality (coming in  latter version). The context object holds everything about the current state of the runtime, this is the context object.
 
 
-        struct crw_state {
-            enum CRW_STATUS status;
-            enum CRW_HANDLE_STATE handle_state;
-            struct head *head;
-            struct head *previous;
-            /* used mostly by unit tests for now */
-            struct head *context;
-            struct cell *cell;
-            struct stack_item *stack;
-            struct value_obj *value;
-            struct {
-                struct value_obj *true;
-                struct value_obj *false;
-                struct value_obj *nil;
-                struct value_obj *error;
-            } builtins;
-            void (*next)(struct crw_state *ctx);
-            void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
-            struct crw_ctx_data *data;
+```c
+struct crw_state {
+    enum CRW_STATUS status;
+    enum CRW_HANDLE_STATE handle_state;
+    struct head *head;
+    struct head *previous;
+    /* used mostly by unit tests for now */
+    struct head *context;
+    struct cell *cell;
+    struct stack_item *stack;
+    struct value_obj *value;
+    struct {
+        struct value_obj *true;
+        struct value_obj *false;
+        struct value_obj *nil;
+        struct value_obj *error;
+    } builtins;
+    void (*next)(struct crw_state *ctx);
+    void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
+    struct crw_ctx_data *data;
 
-            /* for debugging */
-            int nesting;
-        };
+    /* for debugging */
+    int nesting;
+};
+```
 
 
 # Layout of the code
@@ -71,37 +72,43 @@ This directory handles all central actions like instantiating `head` objects for
 ### operator
 The operator directory contains all the operators that can be assigned to heads for the to handle the cells sent to them. These are broken out into individual operations using a struct convention.
 
-        struct operator_ifc {
-            enum OPERATOR_TYPE type;
-            struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
-            operator_handle_func *handle;
-            operator_handle_func *close;
-            enum gka_op_lifecycle lifecycle;
-        };
+```c
+typedef bool (operator_handle_func)(struct operator_ifc *_op, struct crw_state *ctx);
+
+struct operator_ifc {
+    enum OPERATOR_TYPE type;
+    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
+    operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
+};
+```
 
 `handle` is a custom function pointer for each operator, this struct interface is used to call all of the operators, by code inside _run_.
 
 ### types
 This has the value objects and how they are parsed from strings into thier respective types. Value objects use teh following struct as an interface.
   
-        struct value_obj {
-            int id;
-            enum SL_TYPE type;
-            union {
-                float float_value;
-                int integer;
-                struct string *string;
-                struct cell *cell;
-                struct operator_ifc *operator;
-                char c;
-                void *custom;
-                enum CRW_RESULT result;
-            } slot;
-            struct string *(*to_string)(struct value_obj *value);
-            bool (*truthy)(struct value_obj *value);
-            bool (*equals)(struct value_obj *source, struct value_obj *compare);
-            enum parse_accent accent;
-        };
+```c
+struct value_obj {
+    int id;
+    enum SL_TYPE type;
+    union {
+        float float_value;
+        int integer;
+        struct string *string;
+        struct cell *cell;
+        struct operator_ifc *operator;
+        char c;
+        void *custom;
+        enum CRW_RESULT result;
+    } slot;
+    struct string *(*to_string)(struct value_obj *value);
+    bool (*truthy)(struct value_obj *value);
+    bool (*equals)(struct value_obj *source, struct value_obj *compare);
+    enum parse_accent accent;
+};
+```
 
 
 # Diagrams
@@ -114,9 +121,11 @@ This is the flow of how functions (represented by the head of the segment) are f
 
 This code would look like:
 
-       print <- "Its", 
-           + 10 4,
-           "Degrees Outside"
+```
+print <- "Its", 
+   + 10 4,
+   "Degrees Outside"
+```
 
 And it would output `It's 14 Degrees Outside"`
 
