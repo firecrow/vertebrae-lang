@@ -1,23 +1,25 @@
 void test_parse(){
     suite = new_suite("Parse tests");
-    char *script = "(+ 127)";
+    char *script = "+ <- 127";
 
     root = parse_all(script);
 
-    /*
     printf("root: ");
     print_cell(root);
+    printf("\n");
     printf("root->branch: ");
     print_cell(root->branch);
-    printf("root->next: ");
-    print_cell(root->next);
     printf("\n");
-    */
+    printf("root->branch->next: ");
+    print_cell(root->branch->next);
+    printf("\n");
+    printf("\n");
 
     test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, root->branch->next->value->slot.integer == 127, "1 is 127");
+    return;
 
     script = "(let .hi \"there\")";
 
