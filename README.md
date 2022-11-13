@@ -75,13 +75,13 @@ Presently the base set of functions are working (on the original syntax), this i
 
 # Roadmap 
 
-### Memory management
+* Memory management -
 There is a design for a reference counting memeory manager that bakes into the `value_obj` system, but it has not yet been implemented.
 
-### Full arrow syntax support
+* Full arrow syntax support -
 Presently some functionality is still only supported on the navite '(' based syntax not the new '<-' based one.
 
-### System functionality 
+* System functionality -
 System utils, execvp and io are two main areas of development
 
 # Diagrams
