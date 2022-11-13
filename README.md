@@ -2,7 +2,45 @@
 Iteration Based Programming Language
 
 ## About
-Gekkota is a language inspired by lisp, it has a syntax somewhere in the common lisp universe but is adjusted to focus on more direct access for less formal consistency.
+Gekkota is an iteration based language. As a default all functions accept variable length arguments, a design inspired by lisp. In practice, arguments can be chained to effectively produce programs which  require very little code to achieve data processing, and data minipulation tasks.
+
+Here are some examples of the langauge
+
+hello world"
+```
+print <- "hello" "world"
+```
+or
+```
+!hi <- "hello";
+print <- hi "world"
+```
+math (10)
+```
+!x <- + 1 2 3 4 
+print <- x
+```
+
+functions
+```
+!available <- 5
+!itemtype <- "ducks"
+
+!my-func '<-
+    ^available <- sub <- 1 available
+    print <- value "has" available itemtype 
+
+my-func <- "sam" "danny" "kazaa" "kim" "shana"
+```
+
+outputs:
+sammy has 4 ducks
+danny has 3 ducks
+kazaa has 2 ducks
+kim has 1 ducks
+shana has 0 ducks
+
+it has a syntax somewhere in the common lisp universe but is adjusted to focus on more direct access for less formal consistency.
 
 Where possible patterns are expected to stay continous, e.e. there are no positional arguments, there are binary counds like if/else but never cases where the first argument does something different than all the rest. all paradigms are indended to be consistent.
 
