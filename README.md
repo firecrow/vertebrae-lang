@@ -63,28 +63,7 @@ is still supported as is this:
 print <- 1 2 3
 ```
 
-# Status
-Presently the base set of functions are working (on the original syntax), this includes
-
-* Iteration based branching and nested control flow
-* Lexical variable looking and assignment
-* If else branching logic
-* Basic operators (+,-,=,*,<,>)
-* Basic types with toString and Truthy values
-* Functions and function pointers (lamngdas)
-
-# Roadmap 
-
-* Memory management -
-There is a design for a reference counting memeory manager that bakes into the `value_obj` system, but it has not yet been implemented.
-
-* Full arrow syntax support -
-Presently some functionality is still only supported on the navite '(' based syntax not the new '<-' based one.
-
-* System functionality -
-System utils, execvp and io are two main areas of development
-
-# Diagrams
+# Diagrams flows
 
 ### Cell/branch flow
 
@@ -107,6 +86,28 @@ And it would output `It's 14 Degrees Outside"`
 As each segment head is encountered, it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
 ![Gekkota Head Flow](docs/gekkota-head-value-flow.png)
+
+# Status
+Presently the base set of functions are working (on the original syntax), this includes
+
+* Iteration based branching and nested control flow
+* Lexical variable looking and assignment
+* If else branching logic
+* Basic operators (+,-,=,*,<,>)
+* Basic types with toString and Truthy values
+* Functions and function pointers (lamngdas)
+
+# Roadmap 
+
+* Memory management -
+There is a design for a reference counting memeory manager that bakes into the `value_obj` system, but it has not yet been implemented.
+
+* Full arrow syntax support -
+Presently some functionality is still only supported on the navite '(' based syntax not the new '<-' based one.
+
+* System functionality -
+System utils, execvp and io are two main areas of development
+
 
 # Most influential objects
 
@@ -209,3 +210,11 @@ struct value_obj {
 ```
 
 
+# Tech debt
+
+These are areas where the work done so far is not sustainable for the upcoming features.
+
+* The run/state.c has some complexity that could be simpler, the pattern of where branches are started is spread out. _Benefit: implementing system features and async behavior will need this_
+* Parse file structure is inconsistent, run_parser initiates the flow but parse_utils has most of the parsing functions in it. _Benefit, new syntax will be better with this._
+* Parse src/parse/parse_utils:finalize is not well factored. _Benefit: function pointers in the new syntax will need this._
+* Types are mixed with archetecture behavior and data type models. _Benefit: structuring this will help the system features as the types for that are significantly more complex_
