@@ -36,10 +36,10 @@ The `context` object is designed to handle execution iteratively to allow for as
 *src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
 
 ### parse
-The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime. Individual units of work, such as number/string patterns or open/close cell syntax are in seperate functions which are looped over with the introduction of each new character. This allows the script to be parsed as a stream, and may later be used for just in time parsing.
+The parse directory handles parsing the script and turning it into a structures that can be run by the runtime. Individual units of work, such as number/string patterns, or open/close cell syntax, are in seperate objects. Thes objects are processd in a loop with the introduction of each new character. This allows the script to be parsed as a stream, and may later be used for just in time parsing.
 
 ### run
-The run directory is the entry for the runtime, it holds a minimal router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder. All navigation is based off of the `state` object (`ctx` in the code). This object is fomed in such a way that the execution of the langaue can easily be paused and resumed, to alow for asynchonous processing.
+The run directory is the entry for the runtime, it holds a minimal router for running through the cells, some operators also run effect navigation such as the if/else operator (`contition_op.c`). All navigation is based off of the `state` object (`ctx` in the code). This object is formed in such a way that the execution of the langaue can easily be paused and resumed, to alow for asynchonous processing.
 
 ```c
 struct crw_state {
@@ -68,10 +68,10 @@ struct crw_state {
 ```
 
 ### core
-This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associated an `operator` whith that `head`. And managing `closure` objects.
+This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associating an `operator` with that `head`. `closure` objects are also mahnaged here.
 
 ### operator
-The operator directory contains all the operators that can be assigned to heads for the to handle the cells sent to them. These are broken out into individual operations using a struct convention.
+The operator directory contains all the operators that can be assigned to heads to handle the cells sent to them. These are broken out into individual operations using a struct convention.
 
 ```c
 typedef bool (operator_handle_func)(struct operator_ifc *_op, struct crw_state *ctx);
@@ -86,6 +86,8 @@ struct operator_ifc {
 ```
 
 `handle` is a custom function pointer for each operator, this struct interface is used to call all of the operators, by code inside _run_.
+
+Most of the behavior in the language is delegated to `operators`.
 
 ### types
 This has the value objects and how they are parsed from strings into thier respective types. Value objects use teh following struct as an interface.
@@ -116,7 +118,7 @@ struct value_obj {
 
 ### Cell/branch flow
 
-This is the flow of how functions (represented by the head of the segment) are follow by cells which make up the control flow of the language.
+This is the flow of how functions (represented by the head of the set of cells) flow through the language.
 
 ![Gekkota cell flow](docs/gekkota-cell-flow.png)
 
@@ -132,6 +134,6 @@ And it would output `It's 14 Degrees Outside"`
 
 ### Head/Operator flow 
 
-As each segment head is encourtered it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
+As each segment head is encountered, it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
 ![Gekkota Head Flow](docs/gekkota-head-value-flow.png)
