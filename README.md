@@ -33,7 +33,7 @@ The `context` object is designed to handle execution iteratively to allow for as
 *src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
 
 ### parse
-The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime.
+The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime. Individual units of work, such as number/string patterns or open/close cell syntax are in seperate functions which are looped over with the introduction of each new character. This allows the script to be parsed as a stream, and may later be used for just in time parsing.
 
 ### run
 The run directory is the entry for the runtime, it holds a minimal router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder. All navigation is based off of the `state` object (`ctx` in the code). This object is fomed in such a way that the execution of the langaue can easily be paused and resumed, to alow for asynchonous processing.
