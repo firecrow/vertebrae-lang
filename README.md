@@ -28,20 +28,20 @@ The `operator` objects are the way behavior is excecuted, they behave much like 
 
 # Layout of the code
 
-## Root dirs 
+### Root dirs 
 *src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
 
-## core
+### core
 This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object. head objects are essentially like functions they recieve cells and do operations on them.
 
-## run
+### run
 The run directory holds a minimum router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder.
 
 
 
 # Diagrams
 
-## Cell/branch flow
+### Cell/branch flow
 
 This is the flow of how functions (represented by the head of the segment) are follow by cells which make up the control flow of the language.
 
@@ -55,7 +55,7 @@ This code would look like:
 
 And it would output `It's 14 Degrees Outside"`
 
-## Head/Operator flow 
+### Head/Operator flow 
 
 As each segment head is encourtered it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
