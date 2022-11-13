@@ -22,6 +22,16 @@ This is the flow of how functions (represented by the head of the segment) are f
 
 ![Gekkota cell flow](docs/gekkota-cell-flow.png)
 
+This code would look like:
+
+       ```
+       print <- "Its", 
+           + 10 4,
+           "Degrees Outside"
+       ```
+
+And it would output `It's 14 Degrees Outside"`
+
 ## Head/Operator flow 
 
 As each segment head is encourtered it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
