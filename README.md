@@ -25,18 +25,83 @@ The `operator` objects are the way behavior is excecuted, they behave much like 
 ## Head
 `head` objects are records that join a series of cells to an operator.
 
+## Context
+The `context` object is designed to handle execution iteratively to allow for asynchonous functionality (coming in  latter version). The context object holds everything about the current state of the runtime, this is the context object.
+
+
+        struct crw_state {
+            enum CRW_STATUS status;
+            enum CRW_HANDLE_STATE handle_state;
+            struct head *head;
+            struct head *previous;
+            /* used mostly by unit tests for now */
+            struct head *context;
+            struct cell *cell;
+            struct stack_item *stack;
+            struct value_obj *value;
+            struct {
+                struct value_obj *true;
+                struct value_obj *false;
+                struct value_obj *nil;
+                struct value_obj *error;
+            } builtins;
+            void (*next)(struct crw_state *ctx);
+            void (*default_handle)(struct operator_ifc *_op, struct crw_state *ctx); 
+            struct crw_ctx_data *data;
+
+            /* for debugging */
+            int nesting;
+        };
+
 
 # Layout of the code
 
 ### Root dirs 
 *src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
 
-### core
-This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object. head objects are essentially like functions they recieve cells and do operations on them.
+### parse
+The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime.
 
 ### run
-The run directory holds a minimum router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder.
+The run directory is the entry for the runtime, it holds a minimal router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder.
 
+### core
+This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associated an `operator` whith that `head`. 
+
+### operator
+The operator directory contains all the operators that can be assigned to heads for the to handle the cells sent to them. These are broken out into individual operations using a struct convention.
+
+        struct operator_ifc {
+            enum OPERATOR_TYPE type;
+            struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
+            operator_handle_func *handle;
+            operator_handle_func *close;
+            enum gka_op_lifecycle lifecycle;
+        };
+
+`handle` is a custom function pointer for each operator, this struct interface is used to call all of the operators, by code inside _run_.
+
+### types
+This has the value objects and how they are parsed from strings into thier respective types. Value objects use teh following struct as an interface.
+  
+        struct value_obj {
+            int id;
+            enum SL_TYPE type;
+            union {
+                float float_value;
+                int integer;
+                struct string *string;
+                struct cell *cell;
+                struct operator_ifc *operator;
+                char c;
+                void *custom;
+                enum CRW_RESULT result;
+            } slot;
+            struct string *(*to_string)(struct value_obj *value);
+            bool (*truthy)(struct value_obj *value);
+            bool (*equals)(struct value_obj *source, struct value_obj *compare);
+            enum parse_accent accent;
+        };
 
 
 # Diagrams
