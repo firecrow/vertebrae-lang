@@ -15,18 +15,28 @@ Functions are run by being the first element of a list indicated by parenthesis.
 
 # Most influential objects
 
-## Cell
-A cell is a single unit of value, this value can be a static value like a number or string, or it can be a symbol pointing to another value or an operator.
+### Cell
+A cell is a single navigation, it holds an initial value or symbol name.
 
-## Operator
+### Operator
 The `operator` objects are the way behavior is excecuted, they behave much like the functions of bodies and are assigned to a `head` object when the `head` object is  going to recieves a series of cells.
 
-## Head
+### Head
 `head` objects are records that join a series of cells to an operator.
 
-## Context
-The `context` object is designed to handle execution iteratively to allow for asynchonous functionality (coming in  latter version). The context object holds everything about the current state of the runtime, this is the context object.
+### Context
+The `context` object is designed to handle execution iteratively to allow for asynchonous functionality (coming in  latter version). The context object holds everything about the current state of the runtime.
 
+# Layout of the code
+
+### Root dirs 
+*src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
+
+### parse
+The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime.
+
+### run
+The run directory is the entry for the runtime, it holds a minimal router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder. All navigation is based off of the `state` object (`ctx` in the code). This object is fomed in such a way that the execution of the langaue can easily be paused and resumed, to alow for asynchonous processing.
 
 ```c
 struct crw_state {
@@ -53,18 +63,6 @@ struct crw_state {
     int nesting;
 };
 ```
-
-
-# Layout of the code
-
-### Root dirs 
-*src* holds all of the langauge code and *test* holds all of the tests, for the rest of this section it is assumed *src* is the root directory.
-
-### parse
-The parse directory handles all the parsing of the script and turning it into the structures that can be run by the runtime.
-
-### run
-The run directory is the entry for the runtime, it holds a minimal router for the running through the cells, some operators (covered below) also run through the cells for operations such as if/else navigation which is not handled in this folder.
 
 ### core
 This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associated an `operator` whith that `head`. 
