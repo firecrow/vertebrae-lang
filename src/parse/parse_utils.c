@@ -43,6 +43,54 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
     return 0;
 }
 
+/**
+ * create a cell that contains a value _containing_ a  cell so that it can be
+ * used as a function pointer 
+ */
+function setup_quote_cell(struct parse_ctx *ctx, struct value_obj *value, struct cell *previous, struct cell *grand_previous){
+    struct cell *stack_cell = new_cell(NULL);
+    struct cell *blank = new_cell(NULL);
+
+    struct cell *container = new_cell_value_obj(stack_cell);
+    struct cell *quoted_new = new_cell(container);
+
+    if(debug){
+        printf("quote_cell\n");
+        print_cell(quoted_new);
+        printf("\n");
+    }
+
+    ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
+    ctx->cell->next = quoted_new;
+    set_previous(ctx);
+
+    if(ctx->next_is_into == 1){
+        /* make the branch cell the previous cell
+        stack_cell->branch = previous;
+        ctx->cell = previous;
+        /* now append the new cell */
+        ctx->cell->next = new;
+        ctx->previous = ctx->cell;
+        ctx->cell = new;
+        set_previous(ctx);
+    }else{
+        stack_cell->branch = blank;
+        ctx->cell = blank; 
+    }
+
+    if(debug){
+        printf("new\n");
+        print_cell(new);
+        printf("\n");
+    }
+
+    if(!ctx->root){
+        ctx->root = ctx->cell;
+    }
+
+    ctx->accent = GKA_PARSE_NO_ACCENT;
+}
+
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     if(debug){
         printf("\x1b[36mfinalize: %d ", ctx->next_is_branch);
@@ -61,47 +109,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         while(ctx->next_is_into){
             if(ctx->accent == GKA_PARSE_QUOTE){
 
-                struct cell *stack_cell = new_cell(NULL);
-                struct cell *blank = new_cell(NULL);
 
-                struct cell *container = new_cell_value_obj(stack_cell);
-                struct cell *quoted_new = new_cell(container);
-
-                if(debug){
-                    printf("quote_cell\n");
-                    print_cell(quoted_new);
-                    printf("\n");
-                }
-
-                ctx->stack = push_parse_stack(ctx->stack, quoted_new, NULL);
-                ctx->cell->next = quoted_new;
-                set_previous(ctx);
-
-                if(ctx->next_is_into == 1){
-                    /* make the branch cell the previous cell
-                    stack_cell->branch = previous;
-                    ctx->cell = previous;
-                    /* now append the new cell */
-                    ctx->cell->next = new;
-                    ctx->previous = ctx->cell;
-                    ctx->cell = new;
-                    set_previous(ctx);
-                }else{
-                    stack_cell->branch = blank;
-                    ctx->cell = blank; 
-                }
-
-                if(debug){
-                    printf("new\n");
-                    print_cell(new);
-                    printf("\n");
-                }
-
-                if(!ctx->root){
-                    ctx->root = ctx->cell;
-                }
-
-                ctx->accent = GKA_PARSE_NO_ACCENT;
+              setup_quote_cell(ctx, value, quoted_new, ctx->cell); 
 
             }else{
                 printf("in into\n");
