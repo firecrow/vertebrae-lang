@@ -85,6 +85,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                     ctx->cell->next = new;
                     ctx->previous = ctx->cell;
                     ctx->cell = new;
+                    set_previous(ctx);
                 }else{
                     stack_cell->branch = blank;
                     ctx->cell = blank; 
@@ -103,6 +104,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 ctx->accent = GKA_PARSE_NO_ACCENT;
 
             }else{
+                printf("in into\n");
                 struct cell *stack_cell = new_cell(NULL);
                 if(ctx->next_is_into == 1){
                     if(!ctx->grand_previous){
