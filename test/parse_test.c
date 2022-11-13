@@ -19,7 +19,6 @@ void test_parse(){
     test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
     test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, root->branch->next->value->slot.integer == 127, "1 is 127");
-    return;
 
     script = "(let .hi \"there\")";
 

@@ -24,9 +24,6 @@ void set_previous(struct parse_ctx *ctx){
   if(ctx->previous){
     ctx->grand_previous = ctx->previous;
   }
-  printf("------------- prev in set prev\n");
-  print_cell(ctx->cell);
-  printf("\n");
   ctx->previous = ctx->cell;
 }
 
@@ -47,8 +44,6 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    printf("%p\n", ctx);
-
     if(debug){
         printf("\x1b[36mfinalize: %d ", ctx->next_is_branch);
         print_value(value);
@@ -64,7 +59,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *stack_cell = new_cell(value);
     if(ctx->next_is_into){
         while(ctx->next_is_into){
-            printf("<- in into\n");
             if(ctx->accent == GKA_PARSE_QUOTE){
 
                 struct cell *stack_cell = new_cell(NULL);
@@ -116,20 +110,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                       ctx->root = ctx->cell = ctx->grand_previous = stack_cell;
                     }
                     if(ctx->previous){
-                        printf("making the magic happen\n");
-                        print_cell(ctx->previous);
-                        printf("\n");
-                        print_cell(new);
-                        printf("\n");
                         /* set the previous cell as a stack cell */
                         ctx->grand_previous->branch = ctx->previous;
                         ctx->cell = ctx->previous;
                         set_previous(ctx);
                         /* now append the new cell */
-                        printf("------- cell/new is:");
-                        print_cell(ctx->cell);
-                        print_cell(new);
-                        printf("\n");
                         ctx->cell->next = new;
                         ctx->previous = ctx->cell;
                         ctx->cell = new;
@@ -228,12 +213,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
 
     }else{
-        printf("\x1b[33m-----------> extending: ");
-        print_cell(ctx->cell);
-        printf("-----> ");
-        print_cell(new);
-        printf("\x1b[0m\n");
-
         if(!ctx->root){
             struct cell *stack_cell = new_cell(NULL);
             ctx->cell = ctx->root = stack_cell;
