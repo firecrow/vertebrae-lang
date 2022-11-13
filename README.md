@@ -20,10 +20,10 @@ Functions are run by being the first element of a list indicated by parenthesis.
 
 This is the flow of how functions (represented by the head of the segment) are follow by cells which make up the control flow of the language.
 
-![gekkota-cell-flow.png]
+![Gekkota cell flow](docs/gekkota-cell-flow.png)
 
 ## Head/Operator flow 
 
 As each segment head is encourtered it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
-![gekkota-head-value-flow.png]
+![Gekkota Head Flow](docs/gekkota-head-value-flow.png)
