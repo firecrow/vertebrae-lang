@@ -24,6 +24,9 @@ The `operator` objects are the way behavior is excecuted, they behave much like 
 ### Head
 `head` objects are records that join a series of cells to an operator.
 
+### Closure 
+`closure` objects manage the lexical lookup state of all value, symbols are unwrapped using `swap_for_symbol` in several places throughout the code. The operator in `def_values_op.c` handles instantiating and updating values.
+
 ### Context
 The `context` object is designed to handle execution iteratively to allow for asynchonous functionality (coming in  latter version). The context object holds everything about the current state of the runtime.
 
@@ -65,7 +68,7 @@ struct crw_state {
 ```
 
 ### core
-This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associated an `operator` whith that `head`. 
+This directory handles all central actions like instantiating `head` objects for when a new list of cells is being sent to a `head` object, and associated an `operator` whith that `head`. And managing `closure` objects.
 
 ### operator
 The operator directory contains all the operators that can be assigned to heads for the to handle the cells sent to them. These are broken out into individual operations using a struct convention.
