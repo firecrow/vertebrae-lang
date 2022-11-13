@@ -45,14 +45,25 @@ shana has 0 ducks
 
 it has a syntax somewhere in the common lisp universe but is adjusted to focus on more direct access for less formal consistency.
 
-Where possible patterns are expected to stay continous, e.e. there are no positional arguments, there are binary counds like if/else but never cases where the first argument does something different than all the rest. all paradigms are indended to be consistent.
+Where possible patterns are expected to stay continous, e.e. there are no positional arguments, there are binary rounds like if/else but never cases where the first argument does something different than all the rest. all paradigms are indended to be consistent.
 
 The system is modular and intended to be extended from the C source code level.
 
 ## Usablility ideas
 The main goal is to have something that can be cooperative multiprocessing so the language is implemented engirely without recursion, the whole runtime is processed with a stack based structure, so that it can be paused and resumed in line with the needs of any other part of an application or library.
 
-Functions are run by being the first element of a list indicated by parenthesis. For example `(print (+ 1 2 ))` will call the function `print` with the value of `3`. The balance between direct arguments or list arguments is balanced by setting values directly wihth the `.name <value>` notation, or set with `set .name <value>` or as a list such as `(print "hi" "there" "buddy")`. These paradigms are radically different and both necessary. In the above example `i` is set directly and then for the `count` function `value` is set as the funciton is run for each element in the list.
+Functions are run by being the first cell on the left hand side of an arrow. and functons are closed with a ',' or ';' character (implemented identically in the runtime).
+
+The lanagauge maps onto a more lisp-like structure underneith, and the natural syntax is still supported by the parser, and runtime.
+
+so this:
+```
+(print 1 2 3)
+```
+is still supported as is this: 
+```
+print <- 1 2 3
+```
 
 # Most influential objects
 
@@ -178,3 +189,15 @@ And it would output `It's 14 Degrees Outside"`
 As each segment head is encountered, it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
 ![Gekkota Head Flow](docs/gekkota-head-value-flow.png)
+
+
+# Roadmap 
+
+### Memory management
+There is a design for a reference countin memeory manager that bakes into the `value_obj` system, but it has not yet been implemented.
+
+### Full arrow syntax support
+Presently some functionality is still only supported on the navite '(' based syntax not the new '<-' based one.
+
+### Full arrow syntax support
+System utils, execvp and io are two main areas of development
