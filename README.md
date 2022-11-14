@@ -215,6 +215,6 @@ struct value_obj {
 These are areas where the work done so far is not sustainable for the upcoming features.
 
 * The run/state.c has some complexity that could be simpler, the pattern of where branches are started is spread out. _Benefit: implementing system features and async behavior will need this_
-* Parse file structure is inconsistent, run_parser initiates the flow but parse_utils has most of the parsing functions in it. _Benefit, new syntax will be better with this._
-* Parse src/parse/parse_utils:finalize is not well factored. _Benefit: function pointers in the new syntax will need this._
-* Types are mixed with archetecture behavior and data type models. _Benefit: structuring this will help the system features as the types for that are significantly more complex_
+* Parse folder structure could use improvement, run_parser initiates the flow but parse_utils has most of the parsing functions in it. _Benefit, new syntax will be better with this._
+* Parse src/parse/parse_utils:finalize could be broken down more. _Benefit: function pointers in the new syntax will need this._
+* The difference between models and behavior in the types library can be improved. _Benefit: structuring this will help the system features as the types for that are significantly more complex_
