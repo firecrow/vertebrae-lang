@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
 int parse_stack_count = 0;
 
 #include "parse_utils.c"
@@ -62,7 +62,6 @@ void setup_parse_ctx(struct parse_ctx *ctx){
 
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
     parse_stack_count++;
-    printf("PARSE STACK COUNT %d\n", parse_stack_count);
     struct stack_item *item = new_stack_item(existing, cell, head);
     return item;
 }

@@ -37,16 +37,18 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 }
 
 static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, struct cell *new, struct cell *previous){
-    printf("\x1b[31mappend_branch_cell\x1b[0m\n");
-    printf("\x1b[31mprevious: ");
-    print_cell(previous);
-    printf("\n");
-    printf("\x1b[31mstack_cell: ");
-    print_cell(stack_cell);
-    printf("\n");
-    printf("\x1b[31mnew: ");
-    print_cell(new);
-    printf("\x1b[0m\n");
+    if(debug){
+        printf("\x1b[31mappend_branch_cell\x1b[0m\n");
+        printf("\x1b[31mprevious: ");
+        print_cell(previous);
+        printf("\n");
+        printf("\x1b[31mstack_cell: ");
+        print_cell(stack_cell);
+        printf("\n");
+        printf("\x1b[31mnew: ");
+        print_cell(new);
+        printf("\x1b[0m\n");
+    }
 
     /* set the previous cell as a stack cell */
     stack_cell->branch = previous;
@@ -64,7 +66,9 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
  * used as a function pointer 
  */
 void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
-    printf("\x1b[31msetup cell\x1b[0m\n");
+    if(debug){
+        printf("\x1b[31msetup cell\x1b[0m\n");
+    }
 
     struct cell *stack_cell = new_cell(NULL);
     if(ctx->next_func_into == 1){
@@ -80,18 +84,20 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         current->next = container;
         ctx->cell = func_cell; 
 
-        printf("\x1b[36mcurrent\n");
-        print_cell(current);
-        printf("\nstack\n");
-        print_cell(stack_cell);
-        printf("\ncontaiener\n");
-        print_cell(container);
-        print_value(container->value);
-        printf("\ncctx->cell\n");
-        print_cell(ctx->cell);
-        printf("\ncctx->cell->prev\n");
-        print_cell(ctx->cell->prev);
-        printf("\x1b[0m\n");
+        if(debug){
+            printf("\x1b[36mcurrent\n");
+            print_cell(current);
+            printf("\nstack\n");
+            print_cell(stack_cell);
+            printf("\ncontaiener\n");
+            print_cell(container);
+            print_value(container->value);
+            printf("\ncctx->cell\n");
+            print_cell(ctx->cell);
+            printf("\ncctx->cell->prev\n");
+            print_cell(ctx->cell->prev);
+            printf("\x1b[0m\n");
+        }
 
         ctx->next_is_into--;
 
@@ -106,7 +112,7 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         ctx->cell = blank; 
     }
 
-    if(1 || debug){
+    if(debug){
         printf("new cell\n");
         print_cell(new);
         printf("\n");
@@ -115,7 +121,6 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
     ctx->accent = GKA_PARSE_NO_ACCENT;
 }
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
-    printf("\x1b[35msetting up branch\n\x1b[0m");
     struct cell *stack_cell = new_cell(NULL);
     if(ctx->next_is_into == 1){
         if(ctx->cell->prev){
@@ -153,30 +158,26 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
     struct cell *new = new_cell(value);
     if(ctx->next_is_into || ctx->next_func_into){
-        printf("before the storm\n");
         while(ctx->next_func_into > 0){
-            printf("yyyyyyyy\n");
-            if(1 || debug){
+            if(debug){
                 printf("\x1b[35mbefore: ");
                 print_cell(ctx->cell);
                 printf("\x1b[0m\n");
             }
             setup_quote_cell(ctx, new); 
             ctx->next_func_into--;
-            if(1 || debug){
+            if(debug){
                 printf("\x1b[35mafter: ");
                 print_cell(ctx->cell);
                 printf("\x1b[0m\n");
             }
         }
         while(ctx->next_is_into > 0){
-            printf("xxxxxxxx\n");
             setup_branch(ctx, new);
             ctx->next_is_into--;
         }
     }else{
         if(!ctx->root){
-            printf("CRAETING ROOT-n");
             struct cell *previous = new_cell(NULL);
             struct cell *stack_cell = new_cell(NULL);
             struct cell *new = new_cell(NULL);
@@ -193,7 +194,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             printf("\x1b[0m\n");
         }
 
-        printf("the storm\n");
         fflush(stdout);
 
         ctx->cell->next = new;
