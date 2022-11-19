@@ -1,5 +1,5 @@
 #include "../gekkota.h"
-static int debug = 0;
+static int debug = 1;
 
 int head_id = 0;
 struct head *new_head(){
@@ -19,8 +19,14 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         print_cell(cell);
     }
     struct value_obj *value = swap_for_symbol(closure, cell->value);
+    if(debug){
+        printf("\n");
+        print_cell(cell);
+        printf("\n");
+        print_value(value);
+        printf("\n");
+    }
     if(value && value->type == SL_TYPE_FUNCTION){
-
         head->operator = value->slot.operator->new(value->slot.operator->type);
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){
