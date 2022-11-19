@@ -23,28 +23,6 @@ static void def_value(struct crw_state *ctx, struct value_obj *key, struct value
     tree_add(closure->symbols, key->slot.string, value);
 }
 
-static void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
-    if(debug){
-        printf("setting value: ");
-        print_value(value);
-        printf("\n");
-    }
-
-    struct closure *closure = ctx->head->closure;
-    struct closure *previous = closure;
-    struct value_obj *result = NULL;
-
-    while(closure && !result){
-        previous = closure;
-        result = tree_get(closure->symbols, key->slot.string);
-        closure = closure->parent;
-    }
-
-    if(result){
-        tree_add(previous->symbols, key->slot.string, value);
-    }
-}
-
 static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct def_operator *op = (struct def_operator *) _op;
 

@@ -62,3 +62,21 @@ void closure_add_function(struct closure *closure, struct string *key, struct op
     tree_add(closure->symbols, key, value);
     return;
 }
+
+void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
+
+    struct closure *closure = ctx->head->closure;
+    struct closure *previous = closure;
+    struct value_obj *result = NULL;
+
+    while(closure && !result){
+        previous = closure;
+        result = tree_get(closure->symbols, key->slot.string);
+        closure = closure->parent;
+    }
+
+    if(result){
+        tree_add(previous->symbols, key->slot.string, value);
+    }
+}
+
