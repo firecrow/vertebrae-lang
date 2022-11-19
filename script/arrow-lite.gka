@@ -1,0 +1,1 @@
+print << "lets do math ", + << 1 2 3, "\n";

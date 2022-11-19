@@ -1,1 +1,5 @@
-print <- "lets do math ", + <- 1 2 3
+print << "lets do math ", + << 1 2 3, "\n";
+
+hello >> print << "hi there, " value;
+
+hello << "sam" "ashley" "dudley" "kashir"

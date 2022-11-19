@@ -28,6 +28,7 @@ struct parse_ctx {
     struct cell *grand_previous;
     bool next_is_branch;
     bool next_is_into;
+    bool next_func_into;
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;
