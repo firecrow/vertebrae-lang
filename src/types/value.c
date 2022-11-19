@@ -183,6 +183,7 @@ struct value_obj *new_cell_value_obj(struct cell *cell){
     value->type = SL_TYPE_CELL;
     value->slot.cell = cell;
     value->to_string = cell_to_string;
+    print_value(value);
     return value;
 }
 

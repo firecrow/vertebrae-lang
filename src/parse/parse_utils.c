@@ -39,7 +39,7 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, struct cell *new, struct cell *previous){
     printf("\x1b[31mappend_branch_cell\x1b[0m\n");
     printf("\x1b[31mprevious: ");
-    print_cell(ctx->cell->prev);
+    print_cell(previous);
     printf("\n");
     printf("\x1b[31mstack_cell: ");
     print_cell(stack_cell);
@@ -68,23 +68,32 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
 
     struct cell *stack_cell = new_cell(NULL);
     if(ctx->next_func_into == 1){
+        struct cell *current = ctx->cell->prev;
 
-        struct cell *stack_cell2 = new_cell(NULL);
-        stack_cell2->branch = new;
-        struct cell *container = new_cell_value_obj(stack_cell2);
-        struct cell *previous = new_cell(NULL);
+        struct cell *func_cell = ctx->cell;
 
-        if(debug){
-            printf("in qetup_quote_cell assign\n");
-            printf("quote_cell\n");
-            print_cell(previous);
-            printf("\n");
-        }
+        stack_cell->branch = func_cell;
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
 
-        printf("!!!!!!!!!!!!!!!!!!!!!!!!!previous: ");
+        struct cell *container =  new_cell(new_cell_value_obj(stack_cell));
+        container->prev = current;
+        current->next = container;
+        ctx->cell = func_cell; 
+
+        printf("\x1b[36mcurrent\n");
+        print_cell(current);
+        printf("\nstack\n");
+        print_cell(stack_cell);
+        printf("\ncontaiener\n");
+        print_cell(container);
+        print_value(container->value);
+        printf("\ncctx->cell\n");
+        print_cell(ctx->cell);
+        printf("\ncctx->cell->prev\n");
         print_cell(ctx->cell->prev);
-        printf("\n");
-        append_branch_cell(ctx, stack_cell2, stack_cell, previous);
+        printf("\x1b[0m\n");
+
+        ctx->next_is_into--;
 
     }else{
         struct cell *blank = new_cell(NULL);
@@ -145,7 +154,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     if(ctx->next_is_into || ctx->next_func_into){
         printf("before the storm\n");
-        while(ctx->next_func_into){
+        while(ctx->next_func_into > 0){
             printf("yyyyyyyy\n");
             if(1 || debug){
                 printf("\x1b[35mbefore: ");
@@ -160,7 +169,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 printf("\x1b[0m\n");
             }
         }
-        while(ctx->next_is_into){
+        while(ctx->next_is_into > 0){
             printf("xxxxxxxx\n");
             setup_branch(ctx, new);
             ctx->next_is_into--;
