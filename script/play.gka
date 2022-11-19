@@ -1,5 +1,6 @@
 (
     (print "one " "two " "three")
+
     (def func '(
         print (+ 1 3 4)))
     (func)
@@ -35,6 +36,4 @@
             (set 'count (+ count 1))
             (print count)))
     (incr 1 2 3 4 5)
-)
-
 

@@ -18,7 +18,7 @@ static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return 0;
     }
     if(value->type != SL_TYPE_INT){
-        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d ", value->type);
+        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d\n", value->type);
         print_value(value);
         printf("\n");
         return 0;

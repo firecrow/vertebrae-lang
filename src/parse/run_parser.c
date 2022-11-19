@@ -1,6 +1,7 @@
 #include "../gekkota.h"
 
-static int debug = 0;
+static int debug = 1;
+int parse_stack_count = 0;
 
 #include "parse_utils.c"
 
@@ -14,6 +15,8 @@ static int debug = 0;
 #include "string_incr.c"
 #include "super_incr.c"
 #include "symbol_incr.c"
+#include "into_incr.c"
+#include "into_func_incr.c"
 
 
 struct parse_ctx *new_parse_ctx(){
@@ -34,12 +37,18 @@ static struct match_pattern *setup_pattern(pattern_incr_func func){
     return pattern;
 }
 
+struct match_pattern *close_pattern;
+
 void setup_parse_ctx(struct parse_ctx *ctx){
+  close_pattern = setup_pattern(close_cell_incr);
+
   int i = 0;
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
   ctx->patterns[i++] = setup_pattern(open_cell_incr);
-  ctx->patterns[i++] = setup_pattern(close_cell_incr);
+  ctx->patterns[i++] = setup_pattern(into_incr);
+  ctx->patterns[i++] = setup_pattern(into_func_incr);
+  ctx->patterns[i++] = close_pattern;
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
   ctx->patterns[i++] = setup_pattern(super_incr);
@@ -52,6 +61,8 @@ void setup_parse_ctx(struct parse_ctx *ctx){
 }
 
 static struct stack_item *push_parse_stack(struct stack_item *existing, struct cell *cell, struct head *head){
+    parse_stack_count++;
+    printf("PARSE STACK COUNT %d\n", parse_stack_count);
     struct stack_item *item = new_stack_item(existing, cell, head);
     return item;
 }
@@ -71,6 +82,7 @@ struct cell *parse_all(char *script){
     while(*p != '\0'){
        parse_char(ctx, *p++);
     }
+    finalize_parse(ctx);
 
     return ctx->root; 
 }

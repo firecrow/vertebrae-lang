@@ -104,6 +104,7 @@ struct cell {
     int id;
     struct value_obj *value;
     struct cell *next;
+    struct cell *prev;
     struct cell *branch;
 };
 
