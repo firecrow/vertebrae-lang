@@ -44,7 +44,9 @@ enum parse_accent {
   GKA_PARSE_QUOTE,
   GKA_PARSE_SUPER,
   GKA_PARSE_DOT,
-  GKA_PARSE_NOT
+  GKA_PARSE_NOT,
+  GKA_PARSE_DEF,
+  GKA_PARSE_SET
 };
 
 #define bool char

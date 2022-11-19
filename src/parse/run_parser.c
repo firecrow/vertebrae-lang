@@ -1,6 +1,7 @@
 #include "../gekkota.h"
 
-static int debug = 0;
+static int debug = 1;
+
 int parse_stack_count = 0;
 
 #include "parse_utils.c"

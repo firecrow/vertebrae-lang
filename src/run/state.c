@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 0;
+int debug = 1;
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;
@@ -71,42 +71,26 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 
 static void next_step(struct crw_state *ctx){
     if(ctx->cell == NULL){
-        printf("done...\n");
         ctx->status = CRW_DONE;
         return;
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-
-    if(debug){
-        printf("\x1b[34mswap ");
-        print_value(ctx->cell->value);
-        printf("mto: \x1b[34m");
-        print_value(ctx->value);
-        printf("\n\x1b[0m");
-    }
+    
+    print_value(ctx->cell->value);
+    printf(" -> ");
+    print_value(ctx->value);
+    printf("\n");
 
     bool skip_incr = 0;
     if(ctx->cell->value){
-        if(debug){
-            printf("calling handle...................\n");
-            print_head(ctx->head);
-            printf("\n");
-        }
         skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
-        if(debug){
-            printf("skip incr: %d\n", skip_incr);
-        }
     }
     if(!skip_incr){
         cell_incr(ctx);
     }
     
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
-
-    /*
-    printf("status %s\n", ctx->status == CRW_CONTINUE ? "CONTINUE" : "DONE");
-    */
 }
 
 void cell_next(struct crw_state *ctx){
@@ -119,18 +103,20 @@ void cell_incr(struct crw_state *ctx){
     }
 
     if(debug){
-        printf("\x1b[35mentering incr: ");
+        printf("\x1b[36m>>> entering incr: ");
         print_cell(ctx->cell);
         printf("\n\x1b[0m");
     }
 
     int is_moved = 0;
     while(ctx->cell && ctx->cell->branch){
+        /*
         if(debug){
             printf("branching: ");
             print_cell(ctx->cell->branch);
             printf("\n");
         }
+        */
 
         is_moved = 1;
         start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
@@ -138,32 +124,38 @@ void cell_incr(struct crw_state *ctx){
 
     if(!is_moved && ctx->cell){
         ctx->cell = ctx->cell->next;
+        /*
         if(debug){
             printf("nexting--->");
             print_cell(ctx->cell);
             printf("\n");
         }
+        */
     }
 
     if(ctx->cell == NULL){
+        /*
         if(debug){
             printf("close branch\n");
         }
+        */
 
         close_branch(ctx);
         while(ctx->cell == NULL && ctx->stack){
+            /*
             if(debug){
                 printf("popping\n");
                 print_cell(ctx->cell);
             }
+            */
             pop_stack(ctx);
         }
     }
 
     if(debug){
-        printf("\x1b[36mleaving incr(%d): ", ctx->handle_state);
+        printf("\x1b[36m<<< leaving incr(%d): ", ctx->handle_state);
         print_cell(ctx->cell);
-        printf("\n\x1b[0m");
+        printf("\n\n\x1b[0m");
     }
 }
 

@@ -74,14 +74,18 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
     if(ctx->next_func_into == 1){
         struct cell *current = ctx->cell->prev;
 
-        struct cell *func_cell = ctx->cell;
+        struct cell *func_name = ctx->cell;
+        struct cell *func_cell = new;
+        func_name->value->accent = GKA_PARSE_DEF;
 
-        stack_cell->branch = func_cell;
-        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+        struct cell *container =  new_cell(new_cell_value_obj(new));
+        ctx->stack = push_parse_stack(ctx->stack, container, NULL);
 
-        struct cell *container =  new_cell(new_cell_value_obj(stack_cell));
         container->prev = current;
         current->next = container;
+        current->next = func_name;
+        func_name->prev = current;
+        func_name->next = container;
         ctx->cell = func_cell; 
 
         if(debug){
@@ -96,6 +100,11 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
             print_cell(ctx->cell);
             printf("\ncctx->cell->prev\n");
             print_cell(ctx->cell->prev);
+
+            printf("\nfunc_name\n");
+            print_cell(func_name);
+            printf("\nfunc_cell\n");
+            print_cell(func_cell);
             printf("\x1b[0m\n");
         }
 
@@ -145,11 +154,6 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    if(debug){
-        printf("\x1b[36mfinalize: %d %d", ctx->next_is_into, ctx->next_func_into);
-        print_value(value);
-        printf("\x1b[0m\n");
-    }
     fflush(stdout);
 
     if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
@@ -157,6 +161,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     }
 
     struct cell *new = new_cell(value);
+    if(debug){
+        printf("\x1b[36mfinalize: %d %d", ctx->next_is_into, ctx->next_func_into);
+        print_cell(new);
+        printf("\x1b[0m\n");
+    }
     if(ctx->next_is_into || ctx->next_func_into){
         while(ctx->next_func_into > 0){
             if(debug){
@@ -180,12 +189,12 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         if(!ctx->root){
             struct cell *previous = new_cell(NULL);
             struct cell *stack_cell = new_cell(NULL);
-            struct cell *new = new_cell(NULL);
             ctx->root = ctx->cell->prev = ctx->cell = previous;
             ctx->cell->next = stack_cell;
             stack_cell->prev = ctx->cell;
             ctx->cell = stack_cell;
-            append_branch_cell(ctx, stack_cell, new, ctx->cell->prev);
+            struct cell *next = new_cell(NULL);
+            append_branch_cell(ctx, stack_cell, next, ctx->cell->prev);
         }
 
         if(debug){
