@@ -1,4 +1,4 @@
-int into_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
+int into_func_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   if(pattern->state == GKA_PARSE_NOT_STARTED && c == '>'){
       pattern->state = GKA_PARSE_IN_MATCH;
       return complete_previous(pattern, ctx);

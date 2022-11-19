@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 1;
+int debug = 0;
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;

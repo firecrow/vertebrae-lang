@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
 
 #include "parse_utils.c"
 
@@ -15,6 +15,7 @@ static int debug = 1;
 #include "super_incr.c"
 #include "symbol_incr.c"
 #include "into_incr.c"
+#include "into_func_incr.c"
 
 
 struct parse_ctx *new_parse_ctx(){
@@ -45,6 +46,7 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
   ctx->patterns[i++] = setup_pattern(open_cell_incr);
   ctx->patterns[i++] = setup_pattern(into_incr);
+  ctx->patterns[i++] = setup_pattern(into_func_incr);
   ctx->patterns[i++] = close_pattern;
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
