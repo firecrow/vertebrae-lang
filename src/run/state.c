@@ -27,7 +27,7 @@ void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *
     ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
     /* this can happen if the app is just starting up */
-    if(ctx->head && ctx->head->operator->type != DEFAULT    ){
+    if(ctx->head && ctx->head->operator->type != DEFAULT){
         ctx->cell = cell->next;
     }else{
         ctx->cell = cell;
