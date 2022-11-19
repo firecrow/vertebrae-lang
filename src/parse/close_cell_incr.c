@@ -5,7 +5,10 @@ int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
     if(ctx->stack){
         ctx->cell = ctx->stack->cell;
         ctx->stack = ctx->stack->previous;
+        parse_stack_count--;
+        printf("PARSE STACK COUNT %d\n", parse_stack_count);
     }else{
+        printf("SETTING IT TO NULL!\n");
         ctx->cell = NULL;
     }
 

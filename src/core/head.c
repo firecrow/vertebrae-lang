@@ -50,12 +50,12 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
     head->closure = new_closure(closure);
     head->source = value;
 
-    /*
-    printf("\x1b[33m");
-    print_head(head);
-    print_cell(head->cell->next);
-    printf("\x1b[0m\n");
-    */
+    if(debug){
+      printf("\x1b[33m");
+      print_head(head);
+      print_cell(head->cell->next);
+      printf("\x1b[0m\n");
+    }
 
     return head;
 }
