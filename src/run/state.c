@@ -154,6 +154,7 @@ void cell_incr(struct crw_state *ctx){
         while(ctx->cell == NULL && ctx->stack){
             if(debug){
                 printf("popping\n");
+                print_cell(ctx->cell);
             }
             pop_stack(ctx);
         }

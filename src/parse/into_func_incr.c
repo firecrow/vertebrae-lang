@@ -7,10 +7,11 @@ int into_func_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c)
       if(c == '>'){
           ctx->next_func_into++;
           pattern->state = GKA_PARSE_DONE;
+          return complete_previous(pattern, ctx);
       }else{
           pattern->state = GKA_PARSE_NOT_STARTED;
+          return 1;
       }
-      return 1;
   }
   pattern->state = GKA_PARSE_NOT_STARTED;
   return 0;
