@@ -14,10 +14,11 @@ int parse_stack_count = 0;
 #include "open_cell_incr.c"
 #include "quote_incr.c"
 #include "string_incr.c"
-#include "super_incr.c"
 #include "symbol_incr.c"
 #include "into_incr.c"
 #include "into_func_incr.c"
+#include "def_incr.c"
+#include "set_incr.c"
 
 
 struct parse_ctx *new_parse_ctx(){
@@ -52,8 +53,9 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   ctx->patterns[i++] = close_pattern;
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(key_incr);
-  ctx->patterns[i++] = setup_pattern(super_incr);
   ctx->patterns[i++] = setup_pattern(quote_incr);
+  ctx->patterns[i++] = setup_pattern(def_incr);
+  ctx->patterns[i++] = setup_pattern(set_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   /*
   ctx->patterns[i++] = setup_pattern(not_incr);

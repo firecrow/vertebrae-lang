@@ -154,10 +154,12 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    fflush(stdout);
 
     if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
         value->accent = GKA_PARSE_QUOTE;
+    }else{
+        printf("setting accent %d\n", ctx->accent); 
+        value->accent = ctx->accent;
     }
 
     struct cell *new = new_cell(value);

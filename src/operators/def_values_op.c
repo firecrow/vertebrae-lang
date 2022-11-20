@@ -1,18 +1,9 @@
 #include "../gekkota.h"
 
-static int debug = 0;
-
-struct def_operator {
-    int type;
-    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
-    operator_handle_func *handle;
-    operator_handle_func *close;
-    enum gka_op_lifecycle lifecycle;
-    void (*handle_value)(struct crw_state *ctx, struct value_obj *value, struct value_obj *key);
-    struct value_obj *key;
-};
+static int debug = 1;
  
 static void def_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
+    printf("def handle called\n");
     if(debug){
         printf("defining value: ");
         print_value(value);

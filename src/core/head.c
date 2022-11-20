@@ -26,7 +26,19 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         print_value(value);
         printf("\n");
     }
-    if(value && value->type == SL_TYPE_FUNCTION){
+    if(value && value->accent == GKA_PARSE_DEF){
+        printf("DEF in head\n");
+        struct def_operator *op = new_def_operator(DEFINE);
+        op->key = value;
+        head->operator = (struct operator_ifc *)op;
+        head->cell = cell;
+    }else if(value && value->accent == GKA_PARSE_SET){
+        printf("SET in head\n");
+        struct def_operator *op = new_def_operator(SET);
+        op->key = value;
+        head->operator = (struct operator_ifc *)op;
+        head->cell = cell;
+    }else if(value && value->type == SL_TYPE_FUNCTION){
         head->operator = value->slot.operator->new(value->slot.operator->type);
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){
