@@ -1,0 +1,15 @@
+:base 3
+
+:higher >> 
+    print << value " is higher than " base "\n.".
+
+:lower >> 
+    print << value " is lower than " base "\n.".
+
+:compare >>
+    higher ? gt << value,
+    lower ? lt << value.
+
+compare << 10
+compare << 1
+

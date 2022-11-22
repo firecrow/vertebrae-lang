@@ -23,16 +23,16 @@ void init_basic_library(struct closure *closure){
 
     /** ---------- arithemtic --------= */
     /* + */
-    closure_add_function(closure, str("+"), new_arithmetic_operator(ADD));
+    closure_add_function(closure, str("add"), new_arithmetic_operator(ADD));
     /* - */
-    closure_add_function(closure, str("-"), new_arithmetic_operator(SUBTRACT));
+    closure_add_function(closure, str("sub"), new_arithmetic_operator(SUBTRACT));
     /* / */
-    closure_add_function(closure, str("/"), new_arithmetic_operator(DIVIDE));
+    closure_add_function(closure, str("div"), new_arithmetic_operator(DIVIDE));
     /* * */
-    closure_add_function(closure, str("*"), new_arithmetic_operator(MULTIPLY));
+    closure_add_function(closure, str("mul"), new_arithmetic_operator(MULTIPLY));
 
-    closure_add_function(closure, str("<"), new_arithmetic_operator(LESS_THAN));
-    closure_add_function(closure, str(">"), new_arithmetic_operator(GREATER_THAN));
+    closure_add_function(closure, str("lt"), new_arithmetic_operator(LESS_THAN));
+    closure_add_function(closure, str("gt"), new_arithmetic_operator(GREATER_THAN));
 
     /* ---------- io ---------- */
     /* print */
