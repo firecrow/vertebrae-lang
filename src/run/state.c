@@ -26,7 +26,7 @@ void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *
     if(debug){
         printf("\x1b[36m^^^ starting branch from ");
         print_cell(cell);
-        printf("\x1b[0m");
+        printf("\n\x1b[0m");
     }
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->previous = ctx->head;

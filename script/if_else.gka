@@ -1,17 +1,26 @@
-:base 3
+print < "hello",
 
-:higher > 
+:base < 3
+
+higher -> 
     print < value " is higher than " base "\n.".
 
-:lower > 
+lower -> 
     print < value " is lower than " base "\n.".
 
-?
-    gt < value base,
-        higher < value,
-    lt < value,
+compare -> 
+    print < "compare called" value,
+    print < "compare called2" value,
+    if << 
+        gt < base value,
+            higher < value,
         lower < value.
+    .
 
-compare < 10
-compare < 1
+compare < 10,
+compare < 13,
+compare < 1,
+
+
+
 

@@ -82,6 +82,7 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         nest->branch = func_cell;
         struct cell *container =  new_cell(new_cell_value_obj(nest));
         ctx->stack = push_parse_stack(ctx->stack, container, NULL);
+        ctx->stack = push_parse_stack(ctx->stack, nest, NULL);
 
         container->prev = current;
         current->next = container;
@@ -212,6 +213,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         new->prev = ctx->cell;
         ctx->cell = new;
         ctx->accent = GKA_PARSE_NO_ACCENT;
+    }
+    if(debug){
+        printf("parse stack is %d\n",  parse_stack_count);
     }
 }
 
