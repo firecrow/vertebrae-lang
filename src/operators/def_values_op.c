@@ -1,9 +1,8 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
  
 static void def_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
-    printf("def handle called\n");
     if(debug){
         printf("defining value: ");
         print_value(value);
@@ -12,6 +11,22 @@ static void def_value(struct crw_state *ctx, struct value_obj *key, struct value
 
     struct closure *closure = ctx->head->closure->parent;
     tree_add(closure->symbols, key->slot.string, value);
+}
+
+static void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
+    struct closure *closure = ctx->head->closure;
+    struct closure *previous = closure;
+    struct value_obj *result = NULL;
+
+    while(closure && !result){
+        previous = closure;
+        result = tree_get(closure->symbols, key->slot.string);
+        closure = closure->parent;
+    }
+
+    if(result){
+        tree_add(previous->symbols, key->slot.string, value);
+    }
 }
 
 static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){

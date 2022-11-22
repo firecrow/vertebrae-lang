@@ -26,16 +26,14 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         print_value(value);
         printf("\n");
     }
-    if(value && value->accent == GKA_PARSE_DEF){
-        printf("DEF in head\n");
+    if(cell->value && cell->value->accent == GKA_PARSE_DEF){
         struct def_operator *op = new_def_operator(DEFINE);
-        op->key = value;
+        op->key = cell->value;
         head->operator = (struct operator_ifc *)op;
         head->cell = cell;
-    }else if(value && value->accent == GKA_PARSE_SET){
-        printf("SET in head\n");
-        struct def_operator *op = new_def_operator(SET);
-        op->key = value;
+    }else if(cell->value && cell->value->accent == GKA_PARSE_SET){
+        struct def_operator *op = new_set_operator(SET);
+        op->key = cell->value;
         head->operator = (struct operator_ifc *)op;
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_FUNCTION){

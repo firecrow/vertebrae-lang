@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 1;
+int debug = 0;
 
 static void passthrough(struct crw_state *ctx, struct head *previous){
     ctx->value = previous->value;
@@ -23,6 +23,11 @@ void close_branch(struct crw_state *ctx){
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
+    if(debug){
+        printf("\x1b[36m^^^ starting branch from ");
+        print_cell(cell);
+        printf("\x1b[0m");
+    }
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
@@ -76,11 +81,6 @@ static void next_step(struct crw_state *ctx){
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
-    
-    print_value(ctx->cell->value);
-    printf(" -> ");
-    print_value(ctx->value);
-    printf("\n");
 
     bool skip_incr = 0;
     if(ctx->cell->value){

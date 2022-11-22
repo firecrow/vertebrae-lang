@@ -11,8 +11,6 @@ void closure_add_value(struct closure *closure, struct string *key, struct value
 void closure_add_function(struct closure *closure, struct string *key, struct operator_ifc *op);
 struct value_obj *closure_lookup(struct closure *closure, struct value_obj *value);
 
-void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value);
-
 /* debug.c */
 void print_value(struct value_obj *value);
 void print_cell(struct cell *cell);
