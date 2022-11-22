@@ -78,7 +78,9 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         struct cell *func_cell = new;
         func_name->value->accent = GKA_PARSE_DEF;
 
-        struct cell *container =  new_cell(new_cell_value_obj(new));
+        struct cell *nest =  new_cell(NULL);
+        nest->branch = func_cell;
+        struct cell *container =  new_cell(new_cell_value_obj(nest));
         ctx->stack = push_parse_stack(ctx->stack, container, NULL);
 
         container->prev = current;

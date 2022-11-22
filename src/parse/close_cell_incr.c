@@ -6,6 +6,9 @@ int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         ctx->cell = ctx->stack->cell;
         ctx->stack = ctx->stack->previous;
         parse_stack_count--;
+        if(c == '.'){
+            parse_stack_count--;
+        }
     }else{
         ctx->cell = NULL;
     }

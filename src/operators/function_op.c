@@ -58,8 +58,12 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     */
 
     ctx->stack = push_stack(ctx, op->next);
-    ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
-    ctx->cell = func->next;
+    /* make an extra nested barnch so that statements can be grouped, closing
+     * period is equal to two '))'
+     */
+    setup_new_head(new_head(), func, ctx->head->closure);
+    ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
+    ctx->cell = func->branch->next;
 
     return 1;
 }
