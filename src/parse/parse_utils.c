@@ -67,7 +67,7 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
  */
 void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
     if(debug){
-        printf("\x1b[31msetup cell\x1b[0m\n");
+        printf("\x1b[31msetup quote cell\x1b[0m\n");
     }
 
     struct cell *stack_cell = new_cell(NULL);
