@@ -33,7 +33,7 @@ static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct def_operator *op = (struct def_operator *) _op;
 
     if(op->key == NULL){
-        if(ctx->value->type == SL_TYPE_SYMBOL){
+        if(ctx->value && (ctx->value->type == SL_TYPE_SYMBOL)){
             op->key = ctx->value;
         }
     }else if(!value_is_nil(ctx->value)){
