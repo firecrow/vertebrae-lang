@@ -1,6 +1,8 @@
-print << "lets do math " + << 1 2 3, ".\n";
+print < "lets do math " + < 1 2 3, ".\n".
 
-hello >> print << "hi there, " value;
+:greeting < "hello there, "
 
-hello << "sam" "ashley" "kazu" "deshawn"
+hello -> print < greeting value.
+
+hello < "sam" "ashley" "kazu" "deshawn"
 

@@ -12,8 +12,6 @@ void init_basic_library(struct closure *closure){
     closure_add_function(closure, str("save-count"), new_save_count_operator(SAVE_COUNT));
 
     /*----- logic -----*/
-    closure_add_function(closure, str("def"), new_def_operator(DEFINE));
-    closure_add_function(closure, str("set"), new_set_operator(SET));
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
     closure_add_function(closure, str("="), new_equal_operator(EQUAL));
     /*
@@ -25,16 +23,16 @@ void init_basic_library(struct closure *closure){
 
     /** ---------- arithemtic --------= */
     /* + */
-    closure_add_function(closure, str("+"), new_arithmetic_operator(ADD));
+    closure_add_function(closure, str("add"), new_arithmetic_operator(ADD));
     /* - */
-    closure_add_function(closure, str("-"), new_arithmetic_operator(SUBTRACT));
+    closure_add_function(closure, str("sub"), new_arithmetic_operator(SUBTRACT));
     /* / */
-    closure_add_function(closure, str("/"), new_arithmetic_operator(DIVIDE));
+    closure_add_function(closure, str("div"), new_arithmetic_operator(DIVIDE));
     /* * */
-    closure_add_function(closure, str("*"), new_arithmetic_operator(MULTIPLY));
+    closure_add_function(closure, str("mul"), new_arithmetic_operator(MULTIPLY));
 
-    closure_add_function(closure, str("<"), new_arithmetic_operator(LESS_THAN));
-    closure_add_function(closure, str(">"), new_arithmetic_operator(GREATER_THAN));
+    closure_add_function(closure, str("lt"), new_arithmetic_operator(LESS_THAN));
+    closure_add_function(closure, str("gt"), new_arithmetic_operator(GREATER_THAN));
 
     /* ---------- io ---------- */
     /* print */

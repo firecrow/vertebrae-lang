@@ -26,40 +26,11 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("\n");
     }
 
-    tree_add(ctx->head->closure->symbols, str("value"), ctx->cell->value);
+    tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
+
     struct cell *func = ctx->head->cell;
-
-    if(!op->next){
-        op->next = ctx->cell;
-    }else if(op->next != NULL){
-        op->next = op->next->next;
-    }
-
-    if(op->next == NULL){
-        return 1;
-    }
-
-    if(debug){
-        printf(">>>>>>> op->next: ");
-        print_cell(op->next);
-        printf("\n");
-
-        printf("in func thing............\n");
-        print_cell(func);
-        printf(" ->\n    ");
-        print_cell(func->branch);
-        printf("\n");
-    }
-
-    /*
-    printf("\x1b[36mvalue befor branch: ");
-    print_value(ctx->cell->value);
-    printf("\n\x1b[0m");
-    */
-
-    ctx->stack = push_stack(ctx, op->next);
-    ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
-    ctx->cell = func->branch->next;
+    ctx->stack = push_stack(ctx, ctx->cell);
+    start_new_branch(ctx, func, ctx->head->closure);
 
     return 1;
 }

@@ -1,0 +1,4 @@
+:hi << "there".
+print << hi.
+^hi << "hello".
+print << hi.

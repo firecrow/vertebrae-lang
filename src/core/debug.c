@@ -54,7 +54,7 @@ void print_value(struct value_obj *value){
         printf("%s", value->to_string(value)->content);
     }
 
-    printf(" %s %d", debug_SL_TYPE[value->type], value->id);
+    printf(" %s %d %d", debug_SL_TYPE[value->type], value->id, value->accent);
 }
 
 void print_cell(struct cell *cell){

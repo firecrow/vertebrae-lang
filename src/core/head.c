@@ -17,6 +17,12 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         printf("setup new head called\n");
         print_head(head);
         print_cell(cell);
+
+        print_cell(cell->next);
+        print_cell(cell->branch);
+        if(cell->next){
+            print_cell(cell->next->branch);
+        }
     }
     struct value_obj *value = swap_for_symbol(closure, cell->value);
     if(debug){
@@ -26,7 +32,17 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         print_value(value);
         printf("\n");
     }
-    if(value && value->type == SL_TYPE_FUNCTION){
+    if(cell->value && cell->value->accent == GKA_PARSE_DEF){
+        struct def_operator *op = new_def_operator(DEFINE);
+        op->key = cell->value;
+        head->operator = (struct operator_ifc *)op;
+        head->cell = cell;
+    }else if(cell->value && cell->value->accent == GKA_PARSE_SET){
+        struct def_operator *op = new_set_operator(SET);
+        op->key = cell->value;
+        head->operator = (struct operator_ifc *)op;
+        head->cell = cell;
+    }else if(value && value->type == SL_TYPE_FUNCTION){
         head->operator = value->slot.operator->new(value->slot.operator->type);
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){
