@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1; 
+static int debug = 0;
 
 enum phases {
     NOT_STARTEd = 0,

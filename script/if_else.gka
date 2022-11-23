@@ -17,5 +17,7 @@ compare ->
     .
 
 
-compare < 4
+compare < 4,
+compare < 1,
+compare < 2,
 
