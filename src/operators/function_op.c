@@ -26,7 +26,8 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("\n");
     }
 
-    tree_add(ctx->head->closure->symbols, str("value"), ctx->cell->value);
+    tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
+
     struct cell *func = ctx->head->cell;
     ctx->stack = push_stack(ctx, ctx->cell);
     start_new_branch(ctx, func, ctx->head->closure);

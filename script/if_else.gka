@@ -3,24 +3,19 @@ print < "hello",
 :base < 3
 
 higher -> 
-    print < value " is higher than " base "\n.".
+    print < value " is higher than " base ".\n".
 
 lower -> 
-    print < value " is lower than " base "\n.".
+    print < value " is lower than " base ".\n".
 
 compare -> 
-    print < "compare called" value,
-    print < "compare called2" value,
-    if << 
+    print < value,
+    if <<
         gt < base value,
             higher < value,
         lower < value.
     .
 
-compare < 10,
-compare < 13,
-compare < 1,
 
-
-
+compare < 16
 

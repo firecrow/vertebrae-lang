@@ -50,6 +50,7 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
         printf("\x1b[0m\n");
     }
 
+    ctx->cell->prev->next = stack_cell;
     /* set the previous cell as a stack cell */
     stack_cell->branch = previous;
     ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
@@ -132,28 +133,19 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
 
     ctx->accent = GKA_PARSE_NO_ACCENT;
 }
-static void setup_branch(struct parse_ctx *ctx, struct cell *new){
+static void setup_branch(struct parse_ctx *ctx, struct cell *new, struct cell *previous){
     struct cell *stack_cell = new_cell(NULL);
-    if(ctx->next_is_into == 1){
-        if(ctx->cell->prev){
-            ctx->cell->prev->next = stack_cell;
-            append_branch_cell(ctx, stack_cell, new, ctx->cell);
-        }
-        new->prev = ctx->cell;
-        ctx->cell = new;
-    }else{
-        struct cell *blank = new_cell(NULL);
-        stack_cell->branch = blank;
-        if(!ctx->cell){
-            struct cell *_new = new_cell(NULL);
-            _new->prev = ctx->cell;
-            ctx->cell = _new;
-        }
-        ctx->cell->next = stack_cell;
-        stack_cell->prev = ctx->cell;
-        blank->prev = ctx->cell;
-        ctx->cell = blank;
+    if(ctx->next_is_into > 1){
+        new = new_cell(NULL);
     }
+    if(ctx->cell->prev->next == ctx->cell){
+        ctx->cell->prev->next = stack_cell;
+    }else{
+        ctx->cell->prev->branch = stack_cell;
+    }
+    append_branch_cell(ctx, stack_cell, new, previous);
+    new->prev = ctx->cell;
+    ctx->cell = new;
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
@@ -185,8 +177,16 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 printf("\x1b[0m\n");
             }
         }
+        struct cell *previous = ctx->cell;
         while(ctx->next_is_into > 0){
-            setup_branch(ctx, new);
+            if(debug){
+                printf("-------------- next into is happening--------- %d\n",ctx->next_is_into);
+                print_cell(ctx->cell);
+                print_cell(previous);
+                printf("\n");
+            }
+
+            setup_branch(ctx, new, previous);
             ctx->next_is_into--;
         }
     }else{

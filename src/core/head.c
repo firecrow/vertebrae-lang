@@ -17,6 +17,12 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         printf("setup new head called\n");
         print_head(head);
         print_cell(cell);
+
+        print_cell(cell->next);
+        print_cell(cell->branch);
+        if(cell->next){
+            print_cell(cell->next->branch);
+        }
     }
     struct value_obj *value = swap_for_symbol(closure, cell->value);
     if(debug){
