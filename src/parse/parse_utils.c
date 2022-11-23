@@ -59,12 +59,12 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         ctx->stack = push_parse_stack(ctx->stack, container, NULL);
         ctx->stack = push_parse_stack(ctx->stack, nest, NULL);
 
-        container->prev = current;
-        current->next = container;
+
         current->next = func_name;
         func_name->prev = current;
+        container->prev = func_name;
         func_name->next = container;
-        ctx->cell = func_cell; 
+        ctx->cell = new; 
 
         if(debug){
             printf("\x1b[36mcurrent\n");
@@ -173,11 +173,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
         struct cell *previous = ctx->cell;
         while(ctx->next_is_into > 0){
-            printf("-------------- next into is happening--------- %d\n",ctx->next_is_into);
-            print_cell(ctx->cell);
-            print_cell(previous);
-            printf("\n");
-
             setup_branch(ctx, new, previous);
             ctx->next_is_into--;
         }

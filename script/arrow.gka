@@ -1,8 +1,7 @@
-print < "lets do math " + < 1 2 3, ".\n".
+print < "lets do math " + < 1 2 3, ".\n",
 
 :greeting < "hello there, "
 
 hello -> print < greeting value.
 
 hello < "sam" "ashley" "kazu" "deshawn"
-

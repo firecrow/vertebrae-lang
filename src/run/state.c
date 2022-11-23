@@ -5,7 +5,7 @@ int indent = 0;
 
 static void print_space(){
     int in = indent*4;
-    while(in--){
+    while(in-- > 0){
         printf(" ");
     }
 }
