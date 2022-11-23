@@ -59,12 +59,12 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         ctx->stack = push_parse_stack(ctx->stack, container, NULL);
         ctx->stack = push_parse_stack(ctx->stack, nest, NULL);
 
-        container->prev = current;
-        current->next = container;
+
         current->next = func_name;
         func_name->prev = current;
+        container->prev = func_name;
         func_name->next = container;
-        ctx->cell = func_cell; 
+        ctx->cell = new; 
 
         if(debug){
             printf("\x1b[36mcurrent\n");
