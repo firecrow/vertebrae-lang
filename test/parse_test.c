@@ -1,24 +1,27 @@
 void test_parse(){
+    struct cell *start;
+
     suite = new_suite("Parse tests");
-    char *script = "+ <- 127";
+    char *script = "+ < 127";
+
+    root = parse_all(script);
+    start = root->next->next;
+
+    test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
+    test(suite, string_cmp(start->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
+    test(suite, start->branch->next->value->type == SL_TYPE_INT, "1 is an int");
+    test(suite, start->branch->next->value->slot.integer == 127, "1 is 127");
+
+    script = ":hi < \"there\"";
 
     root = parse_all(script);
 
-    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
-    test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
-    test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
-    test(suite, root->branch->next->value->slot.integer == 127, "1 is 127");
+    start = root->next->next;
+    test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
+    test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
+    test(suite, string_cmp(start->branch->next->value->slot.string, str("there")) == 0, "string is the approprate value");
 
-    script = "let <- .hi \"there\"";
-
-    root = parse_all(script);
-
-    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "let is symbol");
-    test(suite, string_cmp(root->branch->value->slot.string, str("let")) == 0, "let is the content of the symbol");
-    test(suite, root->branch->next->value->type == SL_TYPE_KEY, ".hi is a key");
-    test(suite, string_cmp(root->branch->next->value->slot.string, str("hi")) == 0, "key name is accurate");
-
-    script = "print <- \"the sum is: \", + <- 1 2; \" units\")";
+    script = "print < \"the sum is: \", + < 1 2; \" units\")";
 
     root = parse_all(script);
 

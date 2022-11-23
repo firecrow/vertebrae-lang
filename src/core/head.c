@@ -28,7 +28,7 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
     if(debug){
         printf("\n");
         print_cell(cell);
-        printf("\n");
+        printf("\nswaped value: ");
         print_value(value);
         printf("\n");
     }
@@ -47,7 +47,7 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         head->cell = cell;
     }else if(value && value->type == SL_TYPE_CELL){
 
-        if(debug){
+        if(1 || debug){
             printf("\x1b[35min th magic: ");
             print_cell(value->slot.cell);
             print_cell(value->slot.cell->next);

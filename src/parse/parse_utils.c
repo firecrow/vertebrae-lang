@@ -173,11 +173,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
         struct cell *previous = ctx->cell;
         while(ctx->next_is_into > 0){
-            printf("-------------- next into is happening--------- %d\n",ctx->next_is_into);
-            print_cell(ctx->cell);
-            print_cell(previous);
-            printf("\n");
-
             setup_branch(ctx, new, previous);
             ctx->next_is_into--;
         }
