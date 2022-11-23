@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 0; 
+static int debug = 1; 
 
 enum phases {
     NOT_STARTEd = 0,
@@ -34,6 +34,8 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("\x1b[36min condition using value:");
         print_value(value);
         print_cell(ctx->cell);
+        print_cell(ctx->head->cell);
+        print_cell(ctx->head->cell->next);
         printf("\n\x1b[0m");
     
         printf("in test %d\n", op->in_test);

@@ -36,32 +36,6 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
     return 0;
 }
 
-static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, struct cell *new, struct cell *previous){
-    if(debug){
-        printf("\x1b[31mappend_branch_cell\x1b[0m\n");
-        printf("\x1b[31mprevious: ");
-        print_cell(previous);
-        printf("\n");
-        printf("\x1b[31mstack_cell: ");
-        print_cell(stack_cell);
-        printf("\n");
-        printf("\x1b[31mnew: ");
-        print_cell(new);
-        printf("\x1b[0m\n");
-    }
-
-    ctx->cell->prev->next = stack_cell;
-    /* set the previous cell as a stack cell */
-    stack_cell->branch = previous;
-    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-    ctx->cell = previous;
-
-    /* now append the new cell */
-    ctx->cell->next = new;
-    new->prev = ctx->cell;
-    ctx->cell = new;
-}
-
 /**
  * create a cell that contains a value _containing_ a  cell so that it can be
  * used as a function pointer 
@@ -133,19 +107,39 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
 
     ctx->accent = GKA_PARSE_NO_ACCENT;
 }
+
+static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, struct cell *new, struct cell *previous){
+    if(debug){
+        printf("\x1b[31mappend_branch_cell\x1b[0m\n");
+        printf("\x1b[31mprevious: ");
+        print_cell(previous);
+        printf("\n");
+        printf("\x1b[31mstack_cell: ");
+        print_cell(stack_cell);
+        printf("\n");
+        printf("\x1b[31mnew: ");
+        print_cell(new);
+        printf("\x1b[0m\n");
+    }
+
+    /* set the previous cell as a stack cell */
+    stack_cell->branch = previous;
+    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+    ctx->cell = previous;
+
+    /* now append the new cell */
+    ctx->cell->next = new;
+    new->prev = ctx->cell;
+    ctx->cell = new;
+}
+
 static void setup_branch(struct parse_ctx *ctx, struct cell *new, struct cell *previous){
     struct cell *stack_cell = new_cell(NULL);
     if(ctx->next_is_into > 1){
-        new = new_cell(NULL);
+        previous = new_cell(NULL);
     }
-    if(ctx->cell->prev->next == ctx->cell){
-        ctx->cell->prev->next = stack_cell;
-    }else{
-        ctx->cell->prev->branch = stack_cell;
-    }
+    ctx->cell->prev->next = stack_cell;
     append_branch_cell(ctx, stack_cell, new, previous);
-    new->prev = ctx->cell;
-    ctx->cell = new;
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
@@ -179,12 +173,10 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
         struct cell *previous = ctx->cell;
         while(ctx->next_is_into > 0){
-            if(debug){
-                printf("-------------- next into is happening--------- %d\n",ctx->next_is_into);
-                print_cell(ctx->cell);
-                print_cell(previous);
-                printf("\n");
-            }
+            printf("-------------- next into is happening--------- %d\n",ctx->next_is_into);
+            print_cell(ctx->cell);
+            print_cell(previous);
+            printf("\n");
 
             setup_branch(ctx, new, previous);
             ctx->next_is_into--;
