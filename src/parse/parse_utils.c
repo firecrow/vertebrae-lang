@@ -211,9 +211,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     }
     if(debug){
         printf("parse stack is %d\n",  parse_stack_count);
+        print_space(indent);
+        printf("P\n");
     }
-    print_space(indent);
-    printf("P\n");
 }
 
 void finalize_parse(struct parse_ctx *ctx){

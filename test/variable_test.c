@@ -32,7 +32,7 @@ void test_variables(){
     sixth->next = seventh;
     
     /* 
-     * (.one 1 (+ 2 one))
+     * :one < 1, + < 2 one,
      */
 
     state = crw_new_state_context();
@@ -48,7 +48,7 @@ void test_variables(){
     /* set lext test */
     global = new_closure(NULL);
     init_basic_library(global); 
-    char script[] = ":greeting \"hello\",\n^greeting \"hi\"\nsave-value < greeting.";
+    char script[] = ":greeting \"hello\",\n^greeting \"hi\",\nsave-value < greeting.";
 
     printf("%s\n", script);
 
