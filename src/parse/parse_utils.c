@@ -150,6 +150,12 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         value->accent = ctx->accent;
     }
 
+    /*
+    if(value->accent == GKA_PARSE_SET || value->accent == GKA_PARSE_DEF){
+        ctx->next_is_into++;
+    }
+    */
+
     struct cell *new = new_cell(value);
     if(debug){
         printf("\x1b[36mfinalize: %d %d", ctx->next_is_into, ctx->next_func_into);
@@ -158,6 +164,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     }
     if(ctx->next_is_into || ctx->next_func_into){
         while(ctx->next_func_into > 0){
+            indent++;
             if(debug){
                 printf("\x1b[35mbefore: ");
                 print_cell(ctx->cell);
@@ -173,6 +180,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
         struct cell *previous = ctx->cell;
         while(ctx->next_is_into > 0){
+            indent++;
             setup_branch(ctx, new, previous);
             ctx->next_is_into--;
         }
@@ -204,6 +212,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     if(debug){
         printf("parse stack is %d\n",  parse_stack_count);
     }
+    print_space(indent);
+    printf("P\n");
 }
 
 void finalize_parse(struct parse_ctx *ctx){

@@ -8,7 +8,7 @@ void test_arithmetic(){
     root->value = new_result_value_obj(NIL);
 
     branch = new_cell(NULL);
-    branch->value = new_symbol_value_obj(str("+"));
+    branch->value = new_symbol_value_obj(str("add"));
 
     second = new_cell(NULL);
     second->value = new_int_value_obj(1);

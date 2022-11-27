@@ -3,17 +3,17 @@ void test_parse(){
     struct cell *func;
 
     suite = new_suite("Parse tests");
-    char *script = "+ < 127";
+    char *script = "add < 127,";
 
     root = parse_all(script);
     start = root->next->next;
 
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
-    test(suite, string_cmp(start->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
+    test(suite, string_cmp(start->branch->value->slot.string, str("add")) == 0, "+ is the content of the symbol");
     test(suite, start->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, start->branch->next->value->slot.integer == 127, "1 is 127");
 
-    script = ":hi < \"there\"";
+    script = ":hi < \"there\",";
 
     root = parse_all(script);
 
