@@ -116,7 +116,7 @@ void cell_incr(struct crw_state *ctx){
     }
 
     if(debug){
-        printf("\x1b[36m>>> entering incr: ");
+        printf("\x1b[36m>>> ");
         print_cell(ctx->cell);
         printf("\n\x1b[0m");
     }
@@ -168,7 +168,10 @@ void cell_incr(struct crw_state *ctx){
     }
 
     if(debug){
-        printf("\x1b[36m<<< leaving incr(%d): ", ctx->handle_state);
+        printf("\x1b[36m");
+        printf("=== ");
+        print_head(ctx->head);
+        printf("\n<<< ");
         print_cell(ctx->cell);
         printf("\n\n\x1b[0m");
     }

@@ -6,11 +6,9 @@ void test_variables(){
 
     init_basic_library(global); 
 
-    root = new_cell(NULL);
-    root->value = new_symbol_value_obj(str("let"));
-
     second = new_cell(NULL);
     second->value = new_key_value_obj(str("one"));
+    second->value->accent = GKA_PARSE_DEF;
 
     third = new_cell(NULL);
     third->value = new_int_value_obj(1);
@@ -18,7 +16,7 @@ void test_variables(){
     fourth = new_cell(NULL);
 
     fifth = new_cell(NULL);
-    fifth->value = new_symbol_value_obj(str("+"));
+    fifth->value = new_symbol_value_obj(str("add"));
 
     sixth = new_cell(NULL);
     sixth->value = new_int_value_obj(2);
@@ -26,15 +24,15 @@ void test_variables(){
     seventh = new_cell(NULL);
     seventh->value = new_symbol_value_obj(str("one"));
 
-    root->next = second;
+    root->branch = second;
     second->next = third;
-    third->next = fourth;
+    root->next = fourth;
     fourth->branch = fifth;
     fifth->next = sixth;
     sixth->next = seventh;
     
     /* 
-     * (.one 1 (+ 2 one))
+     * :one < 1, + < 2 one,
      */
 
     state = crw_new_state_context();
@@ -50,14 +48,20 @@ void test_variables(){
     /* set lext test */
     global = new_closure(NULL);
     init_basic_library(global); 
-    char script[] = "(.greeting \"hello\" ^greeting \"hi\" (save-value greeting))";
+    char script[] = ":greeting \"hello\",\n^greeting \"hi\",\nsave-value < greeting.";
 
     printf("%s\n", script);
 
     root = parse_all(script);
+    printf("parsed.\n");
 
     state = crw_new_state_context();
     run_root(state, root);
+
+    printf("ran.\n");
+
+    print_value(state->data->slot.value);
+    printf("\n");
 
     test(suite, !string_cmp(state->data->slot.value->slot.string, str("hi")), "Variable was updated");
 
