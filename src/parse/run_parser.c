@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
 
 static int indent = 0;
 static void print_space(){
@@ -55,6 +55,8 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   int i = 0;
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(number_incr);
+  ctx->patterns[i++] = setup_pattern(def_incr);
+  ctx->patterns[i++] = setup_pattern(set_incr);
   ctx->patterns[i++] = setup_pattern(symbol_incr);
   ctx->patterns[i++] = setup_pattern(into_incr);
   ctx->patterns[i++] = setup_pattern(into_func_incr);
