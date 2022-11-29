@@ -64,10 +64,10 @@ int main(){
     test_arithmetic();
     test_variables();
     test_run_functions();
-    /*
     test_namespaces();
     test_passthrough();
     test_nested_function();
+    /*
     test_if_else();
     test_function_pointers();
     test_function_value_variable();
