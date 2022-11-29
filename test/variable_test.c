@@ -48,20 +48,14 @@ void test_variables(){
     /* set lext test */
     global = new_closure(NULL);
     init_basic_library(global); 
-    char script[] = ":greeting \"hello\",\n^greeting \"hi\",\nsave-value < greeting.";
+    char script[] = ":greeting < \"hello\",\n^greeting < \"hi\",\nsave-value < greeting.";
 
     printf("%s\n", script);
 
     root = parse_all(script);
-    printf("parsed.\n");
 
     state = crw_new_state_context();
     run_root(state, root);
-
-    printf("ran.\n");
-
-    print_value(state->data->slot.value);
-    printf("\n");
 
     test(suite, !string_cmp(state->data->slot.value->slot.string, str("hi")), "Variable was updated");
 

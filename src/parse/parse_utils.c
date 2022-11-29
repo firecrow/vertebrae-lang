@@ -150,12 +150,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         value->accent = ctx->accent;
     }
 
-    /*
-    if(value->accent == GKA_PARSE_SET || value->accent == GKA_PARSE_DEF){
-        ctx->next_is_into++;
-    }
-    */
-
     struct cell *new = new_cell(value);
     if(debug){
         printf("\x1b[36mfinalize: %d %d", ctx->next_is_into, ctx->next_func_into);
