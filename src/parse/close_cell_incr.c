@@ -7,6 +7,10 @@ int close_cell_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c
         ctx->stack = ctx->stack->previous;
         parse_stack_count--;
         if(c == '.'){
+            if(!ctx->stack){
+                fprintf(stderr, "parse below stack error\n");
+                exit(1);
+            }
             ctx->cell = ctx->stack->cell;
             ctx->stack = ctx->stack->previous;
             parse_stack_count--;
