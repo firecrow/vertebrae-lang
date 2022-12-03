@@ -50,7 +50,7 @@ int read_chunk(FILE *stream, char buff[], int *idxp){
  * loop through the status of hte child and if any content is available from
  * the output streams
  */
-int exec(char *cmd_path, char *args[]){
+int gka_exec(char *cmd_path, char *args[]){
     char err_buff[4096];
     char out_buff[4096];
 
