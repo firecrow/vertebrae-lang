@@ -8,15 +8,18 @@ void test_function_pointers(){
     suite = new_suite("Function pointer run tests");
 
     /* test basic function does not run */
-    script = "(\n  .func '(save-head (+ 1 2 3)))";
+    script = "func -> save-head <\n    add <\n        1 2 3,,.";
     printf("%s\n", script);
 
     root = parse_all(script);
+
+    print_branches(root, 0);
 
     state = crw_new_state_context();
     run_root(state, root);
 
     test(suite, state->data == NULL, "test basic function does not run: save-head is null");
+    return;
 
     /* test basic function runs */
     script = "(\n  .func '(save-head (+ 1 2 3)) (func))";
