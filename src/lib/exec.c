@@ -3,7 +3,7 @@
 /* TODO: add stdin support, not sure how to implement not blocking */
 
 void handle_out_line(char *line){
-    printf("\x1b[36mwe got content '%s'\n\x1b[0m", line);
+    printf("\x1b[0m>'\x1b[36m%s\x1b[0m'\n", line);
 }
 
 void handle_err_line(char *line){
@@ -98,9 +98,12 @@ int gka_exec(char *cmd_path, char *args[]){
             if (w != -1) {
                 r = read_chunk(fout, out_buff, &out_idx);
                 if(r > 0){
+                    out_buff[out_idx] = '\0';
+                    out_idx = 0;
                     handle_out_line(out_buff);
                 }
                 if(r != -1){
+                    nanosleep(&interval, &time_remaining);
                     continue;
                 }
             }

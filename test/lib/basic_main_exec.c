@@ -1,8 +1,8 @@
 #include "../../src/gekkota.h"
 
 int main(){
-    char *args[] = {"ls", ".", NULL};
+    char *args[] = {"tail", "-f", "/var/log/mpd/mpd.log", NULL};
     printf("hello world\n");
-    gka_exec("ls", args);
+    gka_exec("tail", args);
     return 0;
 }
