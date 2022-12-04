@@ -6,10 +6,6 @@ void handle_out_line(char *line){
     printf("\x1b[0m>'\x1b[36m%s\x1b[0m'\n", line);
 }
 
-void handle_err_line(char *line){
-    printf("\x1b[31mstderr: we got an error line '%s'\n\x1b[0m", line);
-}
-
 void handle_exit(int exit_code){
     printf("\x1b[33mwe got an exit code '%d'\n\x1b[0m", exit_code);
 }
@@ -22,9 +18,7 @@ void handle_exit(int exit_code){
  */
 int read_chunk(FILE *stream, char buff[], int *idxp){
     char c;
-    int r;
-    char *line;
-    int found = 0;
+    int r, found = 0;
     while(1){
         r = fread(&c, 1, 1, stream);
         if(r > 0){
@@ -47,13 +41,10 @@ int read_chunk(FILE *stream, char buff[], int *idxp){
  */
 int gka_exec(char *cmd_path, char *args[]){
     char out_buff[4096];
-    char err_buff[4096];
     int r;
 
     int out[2];
-    int err[2];
     pipe(out);
-    pipe(err);
 
     int pid = fork();
     int status;
@@ -71,27 +62,18 @@ int gka_exec(char *cmd_path, char *args[]){
         fprintf(stderr, "Error forking");
         exit(1);
     }else if(pid == 0){
-        printf("im the child");
-
         dup2(out[1], 1);
-        dup2(err[1], 2);
-        write(out[0], "hi\n", 3);
 
         execvp(cmd_path, args);
     }else{
-        printf("I'm the parent %d\n", pid);
-
         fcntl(out[0], F_SETFL, O_NONBLOCK);
-        fcntl(err[0], F_SETFL, O_NONBLOCK);
 
         FILE *fout= fdopen(out[0], "r");
-        FILE *ferr= fdopen(err[0], "r");
 
         /* indexes used to keep track of where in the buffers the different
          * streams are 
          */
         int out_idx = 0;
-        int err_idx = 0;
 
         while(1){
             w = waitpid(pid, &status, WNOHANG);
