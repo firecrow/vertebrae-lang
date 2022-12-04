@@ -13,11 +13,14 @@ OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/save_value_op.o build/save_count_op.o \
 	build/def_values_op.o
 
+COBJ := build/exec.o
+
 PARSEOBJ := build/run_parser.o
 
 LIBRARYOBJ := build/default_library.o
 
-OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ) 
+OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) \
+    $(LIBRARYOBJ)  $(COBJ)
 
 all: gekkota
 
@@ -40,6 +43,9 @@ build/%.o: src/operators/%.c
 	$(CC) -g -c $<  -o $@
 
 build/%.o: src/library/%.c
+	$(CC) -g -c $<  -o $@
+
+build/%.o: src/lib/%.c
 	$(CC) -g -c $<  -o $@
 
 dir:

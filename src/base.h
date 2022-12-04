@@ -129,4 +129,4 @@ struct head {
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);
-
+int gka_exec(char *cmd_path, char *args[]);
