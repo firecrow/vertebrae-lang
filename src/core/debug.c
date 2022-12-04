@@ -66,7 +66,9 @@ void print_cell(struct cell *cell){
     if(cell->value){
         print_value(cell->value);
     }
-    printf("C(n%d/b%d", cell->next != NULL, cell->branch != NULL);
+    printf("C(n%d/b%d", 
+        cell->next != NULL ? cell->next->id : 0, 
+        cell->branch != NULL ? cell->branch->id : 0);
     printf(")>");
     fflush(stdout);
 }
@@ -121,5 +123,25 @@ void print_tree(struct tree *tree){
             printf("\n");
         }
         oentry = oentry->next;
+    }
+}
+
+
+void print_branches(struct cell *cell, int indent){
+    while(cell){
+        int show = indent;
+        while(show-- > 0){
+            printf("    ");
+        }
+        print_cell(cell);
+        printf("\n");
+        if(cell->branch){
+            print_branches(cell->branch, indent+1);
+        }
+        if(cell->value && cell->value->type == SL_TYPE_CELL){
+            printf(" ->\n");
+            print_branches(cell->value->slot.cell, indent);
+        }
+        cell = cell->next;
     }
 }

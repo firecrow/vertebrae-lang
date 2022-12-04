@@ -67,9 +67,9 @@ int main(){
     test_namespaces();
     test_passthrough();
     test_nested_function();
+    test_function_pointers();
     /*
     test_if_else();
-    test_function_pointers();
     test_function_value_variable();
     test_siblings();
     */
