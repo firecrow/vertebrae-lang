@@ -3,15 +3,15 @@
 /* TODO: add stdin support, not sure how to implement not blocking */
 
 void handle_out_line(char *line){
-    printf("we got a line '%s'\n", line);
+    printf("\x1b[36mwe got content '%s'\n\x1b[0m", line);
 }
 
 void handle_err_line(char *line){
-    printf("we got an error line '%s'\n", line);
+    printf("\x1b[31mstderr: we got an error line '%s'\n\x1b[0m", line);
 }
 
 void handle_exit(int exit_code){
-    printf("we got an exit code '%d'\n", exit_code);
+    printf("\x1b[33mwe got an exit code '%d'\n\x1b[0m", exit_code);
 }
 
 /* loop through the bytes of the file until a new lihne is found, or it
@@ -22,23 +22,18 @@ void handle_exit(int exit_code){
  */
 int read_chunk(FILE *stream, char buff[], int *idxp){
     char c;
-    int length;
+    int r;
     char *line;
-    while((length = fread(&c, 1, 1, stream)) != -1){
-        /* no length indicates a non-blocking empty return */
-        if(length){
-            buff[*idxp++] = c;
-            if(c == '\n'){
-                buff[*idxp] = 0;
-                *idxp = 0;
-                return 1;
-            }
-            if(*idxp >= BUFF_SIZE-1){
-                buff[*idxp] = 0;
-                return 0;
-            }
+    int found = 0;
+    while(1){
+        r = fread(&c, 1, 1, stream);
+        if(r > 0){
+            found = 1;
+            buff[(*idxp)++] = c;
+        }else if(r == -1){
+            return r;
         }else{
-            return 0;
+            return found;
         }
     }
 }
@@ -51,8 +46,9 @@ int read_chunk(FILE *stream, char buff[], int *idxp){
  * the output streams
  */
 int gka_exec(char *cmd_path, char *args[]){
-    char err_buff[4096];
     char out_buff[4096];
+    char err_buff[4096];
+    int r;
 
     int out[2];
     int err[2];
@@ -77,18 +73,19 @@ int gka_exec(char *cmd_path, char *args[]){
     }else if(pid == 0){
         printf("im the child");
 
-        dup2(1, out[0]);
-        dup2(2, err[0]);
+        dup2(out[1], 1);
+        dup2(err[1], 2);
+        write(out[0], "hi\n", 3);
 
         execvp(cmd_path, args);
     }else{
-        printf("I'm the parent %d", pid);
+        printf("I'm the parent %d\n", pid);
 
-        fcntl(out[1], F_SETFL, O_NONBLOCK);
-        fcntl(err[1], F_SETFL, O_NONBLOCK);
+        fcntl(out[0], F_SETFL, O_NONBLOCK);
+        fcntl(err[0], F_SETFL, O_NONBLOCK);
 
-        FILE *fout= fdopen(out[1], "r");
-        FILE *ferr= fdopen(err[1], "r");
+        FILE *fout= fdopen(out[0], "r");
+        FILE *ferr= fdopen(err[0], "r");
 
         /* indexes used to keep track of where in the buffers the different
          * streams are 
@@ -96,41 +93,28 @@ int gka_exec(char *cmd_path, char *args[]){
         int out_idx = 0;
         int err_idx = 0;
 
-        do {
-            w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
-            if (w == -1) {
-               fprintf(stderr, "Error listening for process status");
-               exit(1);
-            }
-
-            /* check for a stdout line */
-            if(read_chunk(fout, out_buff, &out_idx)){
-                handle_out_line(out_buff);
-            }
-            /* check for a stderr line */
-            if(read_chunk(ferr, err_buff, &err_idx)){
-                handle_out_line(err_buff);
-            }
-            /* check if the process has returned */
-            int status_int = waitpid(pid, &status, WNOHANG);
-            if(status_int != -1){
-                if(WIFEXITED(status)){
-                    WEXITSTATUS(status);
-                }else{
-                    break;        
+        while(1){
+            w = waitpid(pid, &status, WNOHANG);
+            if (w != -1) {
+                r = read_chunk(fout, out_buff, &out_idx);
+                if(r > 0){
+                    handle_out_line(out_buff);
                 }
-           }
-           if(WIFEXITED(status)){
+                if(r != -1){
+                    continue;
+                }
+            }
+            if(WIFEXITED(status)){
                handle_exit(WEXITSTATUS(status));
                break; 
-           }else if(WIFSIGNALED(status)){
+            }else if(WIFSIGNALED(status)){
                handle_exit(WTERMSIG(status));
                break;
-           }else if(WIFSTOPPED(status)){
+            }else if(WIFSTOPPED(status)){
                handle_exit(WSTOPSIG(status));
                break;
-           }
-           nanosleep(&interval, &time_remaining);
-        }while(!WIFEXITED(status) && !WIFSIGNALED(status));
+            }
+            nanosleep(&interval, &time_remaining);
+        }
     }
 }
