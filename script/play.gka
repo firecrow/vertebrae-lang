@@ -1,3 +1,7 @@
-count -> print < "hi".
+:idx < 0
 
-count < 10 
+count -> 
+    ^idx < add < idx 1,,
+    print < idx.
+
+count < _ _ _ _ _ _ _

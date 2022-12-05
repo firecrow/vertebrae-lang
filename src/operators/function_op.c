@@ -19,7 +19,9 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
 
     if(debug){
-        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> funcion called\n");
+        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> function called\n");
+        print_value(ctx->value);
+        printf("\n");
         print_cell(ctx->cell);
         printf("\n");
         print_head(ctx->head);
@@ -27,10 +29,14 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     }
 
     tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
+    if(ctx->cell->branch){
+        ctx->stack = push_stack(ctx, ctx->cell);
+        start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
+    }else{
+        struct cell *func = ctx->head->cell;
+        start_new_branch(ctx, func, ctx->head->closure);
+    }
 
-    struct cell *func = ctx->head->cell;
-    ctx->stack = push_stack(ctx, ctx->cell);
-    start_new_branch(ctx, func, ctx->head->closure);
 
     return 1;
 }
@@ -40,7 +46,6 @@ static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
 
     if(!op->next){
         struct cell *func = ctx->head->cell;
-        ctx->stack = push_stack(ctx, NULL);
         ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
         ctx->cell = func;
         return 1;

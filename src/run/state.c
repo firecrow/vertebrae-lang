@@ -154,14 +154,8 @@ void cell_incr(struct crw_state *ctx){
         }
         */
 
-        close_branch(ctx);
+        struct head *previous = ctx->head;
         while(ctx->cell == NULL && ctx->stack){
-            /*
-            if(debug){
-                printf("popping\n");
-                print_cell(ctx->cell);
-            }
-            */
             pop_stack(ctx);
             indent--;
         }

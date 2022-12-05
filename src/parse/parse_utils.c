@@ -181,14 +181,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
     }else{
         if(!ctx->root){
-            struct cell *previous = new_cell(NULL);
-            struct cell *stack_cell = new_cell(NULL);
-            ctx->root = ctx->cell->prev = ctx->cell = previous;
-            ctx->cell->next = stack_cell;
-            stack_cell->prev = ctx->cell;
-            ctx->cell = stack_cell;
-            struct cell *next = new_cell(NULL);
-            append_branch_cell(ctx, stack_cell, next, ctx->cell->prev);
+            struct cell *root = new_cell(NULL); 
+            ctx->cell = ctx->root = root; 
+            new->prev = root;
+            ctx->cell->branch = new;
+            ctx->cell = new;
         }
 
         if(debug){
