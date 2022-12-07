@@ -21,7 +21,7 @@ static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){
-        printf(" returning no value ");
+        printf("returning no value \n");
         return 0;
     }
     if(value->type != SL_TYPE_INT){

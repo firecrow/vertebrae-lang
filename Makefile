@@ -1,4 +1,5 @@
-CC := gcc -Wall
+CC := clang
+#CC := gcc -Wall
 INSTALL_DIR := /usr/local/bin
 COREOBJ := build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \

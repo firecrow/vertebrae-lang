@@ -39,21 +39,7 @@ void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
-    /* this can happen if the app is just starting up */
-    if(ctx->head && ctx->head->operator->type != DEFAULT){
-        ctx->cell = cell->next;
-    }else{
-        ctx->cell = cell;
-    }
-}
-
-void pop_stack(struct crw_state *ctx){
-    struct head *previous = ctx->head;
-    ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
-    ctx->head = ctx->stack->head;
-    ctx->stack = ctx->stack->previous;
-    passthrough(ctx, previous);
-    ctx->nesting--;
+    ctx->cell = cell;
 }
 
 static void next_step(struct crw_state *ctx);
@@ -83,92 +69,48 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 }
 
 static void next_step(struct crw_state *ctx){
-    if(ctx->cell == NULL){
-        ctx->status = CRW_DONE;
+    if(!ctx->cell){
         return;
     }
 
-    ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+    if(ctx->cell){
+        int is_moved = 0;
+        while(ctx->cell && ctx->cell->branch){
+            is_moved = 1;
+            start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
+            indent++;
+            return;
+        }
 
-    bool skip_incr = 0;
-    if(ctx->cell->value){
-        skip_incr = ctx->head->operator->handle(ctx->head->operator, ctx);
+        if(!is_moved && ctx->cell){
+            ctx->cell = ctx->cell->next;
+            if(ctx->cell){
+                ctx->value = ctx->cell->value;
+            }else{
+                ctx->value = NULL;  
+            }
+        }
     }
-    if(!skip_incr){
-        cell_incr(ctx);
+
+    if(ctx->cell == NULL && ctx->stack){
+        struct head *previous = ctx->head;
+        ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
+        ctx->head = ctx->stack->head;
+        ctx->stack = ctx->stack->previous;
+        ctx->value = previous->value;
+        ctx->nesting--;
+        indent--;
     }
+
+    ctx->value = swap_for_symbol(ctx->head->closure, ctx->value);
+
+    ctx->head->operator->handle(ctx->head->operator, ctx);
     
     ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
 }
 
 void cell_next(struct crw_state *ctx){
     ctx->cell = ctx->cell->next;
-}
-
-void cell_incr(struct crw_state *ctx){
-    if(debug){
-        printf("\n");
-        print_space();
-        printf("X\n");
-    }
-    if(!ctx->cell){
-        return;
-    }
-
-    if(debug){
-        printf("\x1b[36m>>> ");
-        print_cell(ctx->cell);
-        printf("\n\x1b[0m");
-    }
-
-    int is_moved = 0;
-    while(ctx->cell && ctx->cell->branch){
-        /*
-        if(debug){
-            printf("branching: ");
-            print_cell(ctx->cell->branch);
-            printf("\n");
-        }
-        */
-
-        is_moved = 1;
-        start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
-        indent++;
-    }
-
-    if(!is_moved && ctx->cell){
-        ctx->cell = ctx->cell->next;
-        /*
-        if(debug){
-            printf("nexting--->");
-            print_cell(ctx->cell);
-            printf("\n");
-        }
-        */
-    }
-
-    if(ctx->cell == NULL){
-        /*
-        if(debug){
-            printf("close branch\n");
-        }
-        */
-
-        struct head *previous = ctx->head;
-        while(ctx->cell == NULL && ctx->stack){
-            pop_stack(ctx);
-            indent--;
-        }
-    }
-
-    if(debug){
-        printf("\x1b[36m");
-        printf("=== ");
-        print_head(ctx->head);
-        printf("\n<<< ");
-        print_cell(ctx->cell);
-        printf("\n\n\x1b[0m");
-    }
 }
 
 void run_root(struct crw_state *ctx, struct cell *root){
