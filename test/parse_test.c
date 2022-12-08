@@ -102,7 +102,8 @@ void test_parse(){
     test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
     test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");
 
-    struct cell *call = part2;;
+    struct cell *call = start->next->next->branch;
+    print_cell(call);
     test(suite, string_cmp(call->value->slot.string, str("func")) == 0, "call starts with print");
     test(suite, string_cmp(call->next->value->slot.string, str("_")) == 0, "call first arg is hello");
 
