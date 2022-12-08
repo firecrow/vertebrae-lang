@@ -6,18 +6,20 @@ void test_parse(){
     char *script = "add < 127,";
 
     root = parse_all(script);
-    start = root->next->next;
+    print_branches(root, 0);
+    start = root;
 
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(start->branch->value->slot.string, str("add")) == 0, "add is the content of the symbol");
     test(suite, start->branch->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, start->branch->next->value->slot.integer == 127, "1 is 127");
+    printf("after..........\n");
 
     script = ":hi < \"there\",";
 
     root = parse_all(script);
 
-    start = root->next->next;
+    start = root;
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
     test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
     test(suite, string_cmp(start->branch->next->value->slot.string, str("there")) == 0, "string is the approprate value");
@@ -27,33 +29,30 @@ void test_parse(){
     root = parse_all(script);
     printf("%s\n", script);
 
-    cell = root->next->next->branch;
+    cell = root->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the content of the symbol");
 
-    print_cell(root->next->next->branch->next);
-    cell = root->next->next->branch->next;
+    cell = root->branch->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
 
-
-
-    cell = root->next->next->branch->next->next->branch;
+    cell = root->branch->next->next->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("add")) == 0, "add is the content of the symbol");
 
-    cell = root->next->next->branch->next->next->branch->next;
+    cell = root->branch->next->next->branch->next;
     test(suite, cell->value->type == SL_TYPE_INT, "1 is an integer");
     test(suite, cell->value->slot.integer == 1, "1 is 1");
 
-    cell = root->next->next->branch->next->next->branch->next->next;
+    cell = root->branch->next->next->branch->next->next;
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");
 
-    cell = root->next->next->branch->next->next->branch->next->next;
+    cell = root->branch->next->next->branch->next->next;
     test(suite, cell->next == NULL, "next cell next is null");
 
-    cell = root->next->next->branch->next->next->next;
+    cell = root->branch->next->next->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
 
@@ -62,7 +61,7 @@ void test_parse(){
 
     root = parse_all(script);
 
-    start = root->next->next;
+    start = root;
 
     func = start->branch->next->branch;
 
@@ -74,9 +73,9 @@ void test_parse(){
 
     root = parse_all(script);
 
-    start = root->next->next;
+    start = root;
 
-    func = start->branch->next->branch->next->branch;
+    func = start->branch->next->branch;
 
     test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
     test(suite, func->next->value->slot.integer == 1, "next is the first value");
@@ -87,7 +86,7 @@ void test_parse(){
 
     root = parse_all(script);
 
-    start = root->next->next;
+    start = root->branch;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "starts with the function symbol");
     test(suite, string_cmp(start->value->slot.string, str("func")) == 0, "first cell is func name");
@@ -103,8 +102,7 @@ void test_parse(){
     test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
     test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");
 
-    printf("\n");
-    struct cell *call = start->next->next->branch;
+    struct cell *call = part2;;
     test(suite, string_cmp(call->value->slot.string, str("func")) == 0, "call starts with print");
     test(suite, string_cmp(call->next->value->slot.string, str("_")) == 0, "call first arg is hello");
 
