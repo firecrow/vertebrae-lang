@@ -5,6 +5,7 @@ void test_parse(){
     suite = new_suite("Parse tests");
     char *script = "add < 127,";
 
+    /*
     root = parse_all(script);
     print_branches(root, 0);
     start = root;
@@ -23,13 +24,15 @@ void test_parse(){
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
     test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
     test(suite, string_cmp(start->branch->next->value->slot.string, str("there")) == 0, "string is the approprate value");
+    */
 
-    script = "print < \"the sum is: \" add < 1 2, \" units\",";
+    script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
 
     root = parse_all(script);
     printf("%s\n", script);
+    print_branches(root, 0);
 
-    cell = root->branch;
+    cell = root->branch->next;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the content of the symbol");
 
@@ -45,6 +48,7 @@ void test_parse(){
     test(suite, cell->value->type == SL_TYPE_INT, "1 is an integer");
     test(suite, cell->value->slot.integer == 1, "1 is 1");
 
+    print_branches(root, 0);
     cell = root->branch->next->next->branch->next->next;
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");

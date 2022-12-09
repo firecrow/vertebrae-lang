@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 0;
+int debug = 1;
 int indent = 0;
 
 static void print_space(){
@@ -31,15 +31,17 @@ void close_branch(struct crw_state *ctx){
 }
 
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
-    if(debug){
-        printf("\x1b[31m^^^ starting branch from ");
-        print_cell(cell);
-        printf("\n\x1b[0m");
-    }
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->previous = ctx->head;
     ctx->head = setup_new_head(new_head(), cell, closure);
     ctx->cell = cell;
+    if(debug){
+        printf("starting branch from...");
+        print_cell(cell);
+        printf("\nstarting branch head...");
+        print_head(cell);
+        printf("\n");
+    }
 }
 
 static void next_step(struct crw_state *ctx);
@@ -69,11 +71,17 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 }
 
 static void next_step(struct crw_state *ctx){
+    printf("-----\n");
     if(!ctx->cell){
         return;
     }
 
     if(ctx->cell){
+        if(debug){
+            printf("moving from...");
+            print_cell(ctx->cell);
+            printf("\n");
+        }
         int is_moved = 0;
         while(ctx->cell && ctx->cell->branch){
             is_moved = 1;
@@ -84,6 +92,11 @@ static void next_step(struct crw_state *ctx){
 
         if(!is_moved && ctx->cell){
             ctx->cell = ctx->cell->next;
+            if(debug){
+                printf("next to...");
+                print_cell(ctx->cell);
+                printf("\n");
+            }
             if(ctx->cell){
                 ctx->value = ctx->cell->value;
             }else{
@@ -92,7 +105,7 @@ static void next_step(struct crw_state *ctx){
         }
     }
 
-    if(ctx->cell == NULL && ctx->stack){
+    if(!ctx->cell && ctx->stack){
         struct head *previous = ctx->head;
         ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
         ctx->head = ctx->stack->head;
@@ -100,13 +113,23 @@ static void next_step(struct crw_state *ctx){
         ctx->value = previous->value;
         ctx->nesting--;
         indent--;
+        printf("pop to..");
+        print_cell(ctx->cell);
+        printf("\n");
     }
 
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->value);
 
+    if(debug){
+        printf("value...");
+        print_value(ctx->value);
+        printf("\n");
+    }
+
     ctx->head->operator->handle(ctx->head->operator, ctx);
     
-    ctx->status = ctx->cell ? CRW_CONTINUE : CRW_DONE;
+    ctx->status = CRW_CONTINUE;
+    if(!ctx->cell && !ctx->stack) ctx->status = CRW_DONE;
 }
 
 void cell_next(struct crw_state *ctx){

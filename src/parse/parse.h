@@ -23,6 +23,7 @@ struct match_pattern {
 
 struct parse_ctx {
     struct cell *cell;
+    struct cell *next;
     struct cell *root;
     struct cell *previous;
     struct cell *grand_previous;
