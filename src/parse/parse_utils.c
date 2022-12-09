@@ -42,9 +42,11 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
  */
 void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(NULL);
-    printf("setup func cells: stack");
-    print_cell(stack_cell);
-    printf("\n");
+    if(debug){
+        printf("setup func cells: stack");
+        print_cell(stack_cell);
+        printf("\n");
+    }
     if(ctx->next_func_into == 1){
         struct cell *current = ctx->cell->prev;
 
@@ -90,17 +92,18 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         next = new_cell(NULL);
     }
 
-    printf("setup branch: cell/new/next/stack");
-    printf("\n");
-    print_cell(ctx->cell);
-    printf("\n");
-    print_cell(new);
-    printf("\n");
-    print_cell(next);
-    printf("\n");
-    print_cell(stack_cell);
-    printf("\n");
-
+    if(debug){
+        printf("setup branch: cell/new/next/stack");
+        printf("\n");
+        print_cell(ctx->cell);
+        printf("\n");
+        print_cell(new);
+        printf("\n");
+        print_cell(next);
+        printf("\n");
+        print_cell(stack_cell);
+        printf("\n");
+    }
     struct cell *base = ctx->cell;
 
     ctx->cell->next = stack_cell;
@@ -124,7 +127,6 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
-        printf(">>>>>>>>>>\n");
         while(ctx->next_is_outof){
             if(ctx->stack){
                 ctx->cell->next = ctx->next;
@@ -159,11 +161,13 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->cell->next = ctx->next;
             ctx->cell = ctx->next;
         }
-        printf("normal: next/new ");
-        print_cell(ctx->next);
-        print_cell(new);
-        printf("\n");
-        ctx->next = new;
+        if(debug){
+            printf("normal: next/new ");
+            print_cell(ctx->next);
+            print_cell(new);
+            printf("\n");
+            ctx->next = new;
+        }
 
         ctx->accent = GKA_PARSE_NO_ACCENT;
     }
