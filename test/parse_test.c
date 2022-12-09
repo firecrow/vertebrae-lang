@@ -26,10 +26,9 @@ void test_parse(){
     test(suite, string_cmp(start->branch->next->value->slot.string, str("there")) == 0, "string is the approprate value");
     */
 
-    script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
-
-    root = parse_all(script);
+    script = "print < \"the sum is: \" add < 1 2 3, \" units\" \"and\" \"fun\",";
     printf("%s\n", script);
+    root = parse_all(script);
     print_branches(root, 0);
 
     cell = root->branch->next;

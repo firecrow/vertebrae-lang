@@ -101,6 +101,8 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     print_cell(stack_cell);
     printf("\n");
 
+    struct cell *base = ctx->cell;
+
     ctx->cell->next = stack_cell;
     stack_cell->branch = next;
     ctx->cell = next;
@@ -112,14 +114,31 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
-    if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
-        value->accent = GKA_PARSE_QUOTE;
-    }else{
-        value->accent = ctx->accent;
+    if(value){
+        if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
+            value->accent = GKA_PARSE_QUOTE;
+        }else{
+            value->accent = ctx->accent;
+        }
     }
-
+    
     struct cell *new = new_cell(value);
-    if(ctx->next_is_into || ctx->next_func_into){
+    if(ctx->next_is_outof){
+        printf(">>>>>>>>>>\n");
+        while(ctx->next_is_outof){
+            if(ctx->stack){
+                ctx->cell->next = ctx->next;
+                ctx->cell = ctx->stack->cell;
+                ctx->stack = ctx->stack->previous;
+                ctx->next = new;
+                parse_stack_count--;
+            }else{
+                fprintf(stderr, "parse below stack error\n");
+                exit(1);
+            }
+            ctx->next_is_outof--;
+        }
+    }else if(ctx->next_is_into || ctx->next_func_into){
         while(ctx->next_func_into > 0){
             indent++;
             setup_quote_cell(ctx, new); 
@@ -157,4 +176,5 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 
 void finalize_parse(struct parse_ctx *ctx){
     ctx->current->incr(ctx->current, ctx, '\0');
+    finalize(ctx, (struct value_obj *)NULL);
 }
