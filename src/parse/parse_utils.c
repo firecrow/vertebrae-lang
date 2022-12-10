@@ -88,9 +88,11 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(NULL);
     struct cell *next = ctx->next;
+    /*
     if(ctx->next_is_into > 1){
         next = new_cell(NULL);
     }
+    */
 
     if(debug){
         printf("setup branch: cell/new/next/stack");
@@ -116,6 +118,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
+    printf("finalize\n");
 
     if(value){
         if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
@@ -127,6 +130,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
+        printf("outof\n");
         while(ctx->next_is_outof){
             if(ctx->stack){
                 ctx->cell->next = ctx->next;
@@ -141,6 +145,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->next_is_outof--;
         }
     }else if(ctx->next_is_into || ctx->next_func_into){
+        printf("into\n");
         while(ctx->next_func_into > 0){
             indent++;
             setup_quote_cell(ctx, new); 
@@ -153,19 +158,25 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
     }else{
         if(!ctx->root){
+            if(debug){
+                printf("setup root: next\n");
+                print_cell(new);
+                printf("\n");
+            }
             struct cell *root = new_cell(NULL); 
             ctx->cell = ctx->root = root; 
             ctx->cell->branch = new_cell(NULL);
             ctx->cell = ctx->cell->branch;
+            ctx->next = new;
         }else{
+            if(debug){
+                printf("normal: next/new ");
+                print_cell(ctx->next);
+                print_cell(new);
+                printf("\n");
+            }
             ctx->cell->next = ctx->next;
             ctx->cell = ctx->next;
-        }
-        if(debug){
-            printf("normal: next/new ");
-            print_cell(ctx->next);
-            print_cell(new);
-            printf("\n");
             ctx->next = new;
         }
 
