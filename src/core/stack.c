@@ -1,7 +1,7 @@
 #include "../gekkota.h"
 
 struct stack_item *new_stack_item(struct stack_item *existing, struct cell *cell, struct head *head){
-    struct stack_item *stack_item = malloc(sizeof stack_item);
+    struct stack_item *stack_item = malloc(sizeof(struct stack_item));
     if(stack_item == NULL){
         fprintf(stderr, "Error allocating stack item");
         exit(1);

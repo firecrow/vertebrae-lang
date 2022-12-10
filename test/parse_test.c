@@ -13,7 +13,6 @@ void test_parse(){
     test(suite, string_cmp(start->value->slot.string, str("add")) == 0, "add is the content of the symbol");
     test(suite, start->next->value->type == SL_TYPE_INT, "1 is an int");
     test(suite, start->next->value->slot.integer == 127, "1 is 127");
-    printf("after..........\n");
 
     script = ":hi < \"there\",";
 
@@ -28,6 +27,7 @@ void test_parse(){
     script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
     printf("%s\n", script);
     root = parse_all(script);
+    print_branches(root, 0);
 
     cell = root->branch->next->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");

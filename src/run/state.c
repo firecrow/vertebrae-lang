@@ -48,6 +48,7 @@ static void next_step(struct crw_state *ctx);
 
 struct crw_state *crw_new_state_context(){
    struct crw_state *state = malloc(sizeof(struct crw_state)); 
+   memset(state, 0, sizeof(struct crw_state));
 
    if(state == NULL){
       return NULL;

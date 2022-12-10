@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1;
+static int debug = 0;
 
 static int indent = 0;
 static void print_space(){
@@ -115,7 +115,7 @@ void parse_char(struct parse_ctx *ctx, char c){
     struct match_pattern *pattern = NULL;
     int idx = 0;
     while((pattern = ctx->patterns[idx++])){
-       if(debug){
+       if(0 && debug){
            printf("idx:%c:%d\n",c, idx-1);
        }
        

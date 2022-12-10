@@ -158,6 +158,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
     }else{
         if(!ctx->root){
+	    ctx->stack = NULL;
             if(debug){
                 printf("setup root: next\n");
                 print_cell(new);
