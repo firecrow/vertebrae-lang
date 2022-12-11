@@ -100,6 +100,7 @@ void test_parse(){
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
 
     start = root->branch;
 

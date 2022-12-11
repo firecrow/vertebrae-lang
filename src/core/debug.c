@@ -135,12 +135,13 @@ void print_branches(struct cell *cell, int indent){
         }
         print_cell(cell);
         printf("\n");
-        if(cell->branch){
-            print_branches(cell->branch, indent+1);
-        }
         if(cell->value && cell->value->type == SL_TYPE_CELL){
             printf(" ->\n");
             print_branches(cell->value->slot.cell, indent);
+            printf("\n");
+        }
+        if(cell->branch){
+            print_branches(cell->branch, indent+1);
         }
         cell = cell->next;
     }

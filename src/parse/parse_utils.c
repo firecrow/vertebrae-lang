@@ -20,6 +20,16 @@ bool is_whitespace(char c){
     return c == ' ' || c == '\t' || c == '\n';
 }
 
+void resolve_next(struct parse_ctx *ctx){
+    if(ctx->next && ctx->next->value && (ctx->next->value->accent == GKA_PARSE_HEAD)){
+        printf("\x1b[36mbranch thing for resolve\x1b[0m\n");
+        ctx->cell->branch = ctx->next;
+    }else{
+        printf("\x1b[36mnext thing for resolve\x1b[0m\n");
+        ctx->cell->next = ctx->next;
+    }
+}
+
 static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx){
     if(pattern->state != GKA_PARSE_NOT_STARTED){
         /* close the current pattern if exists */
@@ -43,36 +53,35 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
 void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(NULL);
     if(debug){
-        printf("setup func cells: stack");
+        printf("setup func cells: stack/next/new\n");
         print_cell(stack_cell);
+        printf("\n");
+        print_cell(ctx->next);
+        printf("\n");
+        print_cell(new);
         printf("\n");
     }
     if(ctx->next_func_into == 1){
-        struct cell *current = ctx->cell->prev;
-
-        struct cell *func_name = ctx->cell;
-        struct cell *func_cell = new;
+        struct cell *func_name = ctx->next;
         func_name->value->accent = GKA_PARSE_DEF;
+        struct cell *func_cell = new_cell(new_cell_value_obj(stack_cell));
+        new->value->accent = GKA_PARSE_HEAD;
+        ctx->stack = push_parse_stack(ctx->stack, func_cell, NULL);
+        
 
-        struct cell *nest =  new_cell(NULL);
-        nest->branch = func_cell;
-        struct cell *container =  new_cell(new_cell_value_obj(nest));
-        ctx->stack = push_parse_stack(ctx->stack, container, NULL);
-        ctx->stack = push_parse_stack(ctx->stack, nest, NULL);
+        func_name->next = func_cell;
 
-
-        current->next = func_name;
-        func_name->prev = current;
-        container->prev = func_name;
-        func_name->next = container;
-
-        ctx->next_is_into--;
+        ctx->cell->next = func_name;
+        ctx->cell = stack_cell;
+        
+        ctx->next = new;
 
     }else{
         struct cell *blank = new_cell(NULL);
         stack_cell->branch = blank;
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-        blank->prev = ctx->cell;
+        ctx->cell->next = stack_cell;
+        ctx->cell = blank;
     }
 
     ctx->accent = GKA_PARSE_NO_ACCENT;
@@ -108,7 +117,11 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     }
     struct cell *base = ctx->cell;
 
-    ctx->cell->next = stack_cell;
+    if(ctx->next && ctx->next->value && ctx->next->value->accent == GKA_PARSE_HEAD){
+        ctx->cell->branch = stack_cell;
+    }else{
+        ctx->cell->next = stack_cell;
+    }
     stack_cell->branch = next;
     ctx->cell = next;
     ctx->next = new;
@@ -118,7 +131,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    printf("finalize\n");
+    printf("finalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
 
     if(value){
         if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
@@ -131,9 +144,13 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
         printf("outof\n");
+        int resolved = 0;
         while(ctx->next_is_outof){
             if(ctx->stack){
-                ctx->cell->next = ctx->next;
+                if(!resolved){
+                    resolve_next(ctx);
+                    resolved = 1;
+                }
                 ctx->cell = ctx->stack->cell;
                 ctx->stack = ctx->stack->previous;
                 ctx->next = new;
@@ -176,7 +193,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 print_cell(new);
                 printf("\n");
             }
-            ctx->cell->next = ctx->next;
+            resolve_next(ctx);
             ctx->cell = ctx->next;
             ctx->next = new;
         }
