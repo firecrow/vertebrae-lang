@@ -27,7 +27,6 @@ void test_parse(){
     script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
     printf("%s\n", script);
     root = parse_all(script);
-    print_branches(root, 0);
 
     cell = root->branch->next->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
@@ -82,7 +81,6 @@ void test_parse(){
     printf("%s\n", script);
 
     root = parse_all(script);
-    print_branches(root, 0);
 
     start = root;
     cell = start->branch->next->branch;
@@ -100,26 +98,27 @@ void test_parse(){
     printf("%s\n", script);
 
     root = parse_all(script);
-    print_branches(root, 0);
 
-    start = root->branch;
+    start = root->branch->next;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "starts with the function symbol");
     test(suite, string_cmp(start->value->slot.string, str("func")) == 0, "first cell is func name");
     test(suite, start->value->accent = GKA_PARSE_DEF, "first cell has set accent");
 
-    func = start->next->value->slot.cell;
+    func = start->next;
+    test(suite, func->value->type == SL_TYPE_CELL, "func is cell");
 
-    struct cell *part1 = func->branch;
+    struct cell *body = func->value->slot.cell;
+    struct cell *part1 = body->branch->branch;
+
     test(suite, string_cmp(part1->value->slot.string, str("print")) == 0, "part1 starts with print");
     test(suite, string_cmp(part1->next->value->slot.string, str("hi")) == 0, "part1 first arg is hi");
 
-    struct cell *part2 = func->next->branch;
+    struct cell *part2 = body->branch->next->branch;
     test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
     test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");
 
     struct cell *call = start->next->next->branch;
-    print_cell(call);
     test(suite, string_cmp(call->value->slot.string, str("func")) == 0, "call starts with print");
     test(suite, string_cmp(call->next->value->slot.string, str("_")) == 0, "call first arg is hello");
 
