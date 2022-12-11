@@ -117,6 +117,7 @@ static void next_step(struct crw_state *ctx){
     if(debug){
         printf("value...");
         print_value(ctx->value);
+        print_head(ctx->head);
         printf("\n");
     }
 

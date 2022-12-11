@@ -48,8 +48,7 @@ void test_variables(){
     /* set lext test */
     global = new_closure(NULL);
     init_basic_library(global); 
-    /*char script[] = ":greeting < \"hello\",\n^greeting < \"hi\",\nsave-value < greeting,";*/
-    char script[] = ":greeting < \"hello\"";
+    char script[] = ":greeting < \"hello\",\n^greeting < \"hi\",\nsave-value < greeting,";
 
     printf("%s\n", script);
 
@@ -58,6 +57,7 @@ void test_variables(){
 
     state = crw_new_state_context();
     run_root(state, root);
+    /*print_value(state->data->slot.value);*/
     test(suite, !string_cmp(state->data->slot.value->slot.string, str("hi")), "Variable was updated");
 
     summerize(suite);

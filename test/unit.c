@@ -60,7 +60,6 @@ int main(){
     test_parse();
     test_swap_symbol();
     test_basic_run();
-    /*
     test_arithmetic();
     test_variables();
     test_run_functions();
@@ -71,7 +70,6 @@ int main(){
     test_if_else();
     test_function_value_variable();
     test_siblings();
-    */
 
     show_global_success();
 
