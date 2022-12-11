@@ -113,7 +113,7 @@ void test_parse(){
     struct cell *part1 = func->branch;
     test(suite, string_cmp(part1->value->slot.string, str("print")) == 0, "part1 starts with print");
     test(suite, string_cmp(part1->next->value->slot.string, str("hi")) == 0, "part1 first arg is hi");
-    printf("\n");
+
     struct cell *part2 = func->next->branch;
     test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
     test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");

@@ -22,10 +22,14 @@ bool is_whitespace(char c){
 
 void resolve_next(struct parse_ctx *ctx){
     if(ctx->next && ctx->next->value && (ctx->next->value->accent == GKA_PARSE_HEAD)){
-        printf("\x1b[36mbranch thing for resolve\x1b[0m\n");
+        if(debug){
+            printf("\x1b[36mbranch thing for resolve\x1b[0m\n");
+        }
         ctx->cell->branch = ctx->next;
     }else{
-        printf("\x1b[36mnext thing for resolve\x1b[0m\n");
+        if(debug){
+            printf("\x1b[36mnext thing for resolve\x1b[0m\n");
+        }
         ctx->cell->next = ctx->next;
     }
 }
@@ -131,7 +135,9 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    printf("finalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
+    if(debug){
+        printf("finalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
+    }
 
     if(value){
         if(ctx->accent == GKA_PARSE_QUOTE && !ctx->next_is_branch){
@@ -143,7 +149,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
-        printf("outof\n");
+        if(debug){
+            printf("outof\n");
+        }
         int resolved = 0;
         while(ctx->next_is_outof){
             if(ctx->stack){
@@ -162,7 +170,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->next_is_outof--;
         }
     }else if(ctx->next_is_into || ctx->next_func_into){
-        printf("into\n");
+        if(debug){
+            printf("into\n");
+        }
         while(ctx->next_func_into > 0){
             indent++;
             setup_quote_cell(ctx, new); 
