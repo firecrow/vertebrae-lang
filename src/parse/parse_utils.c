@@ -20,18 +20,21 @@ bool is_whitespace(char c){
     return c == ' ' || c == '\t' || c == '\n';
 }
 
-void resolve_next(struct parse_ctx *ctx){
-    if(ctx->next && ctx->next->value && (ctx->next->value->accent == GKA_PARSE_HEAD)){
-        if(debug){
-            printf("\x1b[36mbranch thing for resolve\x1b[0m\n");
-        }
-        ctx->cell->branch = ctx->next;
+void resolve_next(struct parse_ctx *ctx, struct cell *next){
+    printf("\x1b[36m");
+    print_cell(next);
+    if(next && next->value && (
+                next->value->accent == GKA_PARSE_HEAD ||
+                next->value->accent == GKA_PARSE_DEF ||
+                next->value->accent == GKA_PARSE_SET
+            )){
+        printf(" B");
+        ctx->cell->branch = next;
     }else{
-        if(debug){
-            printf("\x1b[36mnext thing for resolve\x1b[0m\n");
-        }
-        ctx->cell->next = ctx->next;
+        printf(" N");
+        ctx->cell->next = next;
     }
+    printf("\x1b[0m\n");
 }
 
 static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx){
@@ -75,7 +78,7 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
 
         func_name->next = func_cell;
 
-        ctx->cell->next = func_name;
+        resolve_next(ctx, func_name);
         ctx->cell = stack_cell;
         
         ctx->next = new;
@@ -116,11 +119,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     }
     struct cell *base = ctx->cell;
 
-    if(ctx->next && ctx->next->value && ctx->next->value->accent == GKA_PARSE_HEAD){
-        ctx->cell->branch = stack_cell;
-    }else{
-        ctx->cell->next = stack_cell;
-    }
+    resolve_next(ctx, stack_cell);
     stack_cell->branch = next;
     ctx->cell = next;
     ctx->next = new;
@@ -130,11 +129,8 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
-    printf("finalize: ");
-    print_value(value);
-    printf("\n");
-    if(debug){
-        printf("finalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
+    if(1 || debug){
+        printf("\nfinalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
         print_value(value);
         printf("\n");
     }
@@ -156,7 +152,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         while(ctx->next_is_outof){
             if(ctx->stack){
                 if(!resolved){
-                    resolve_next(ctx);
+                    resolve_next(ctx, ctx->next);
                     resolved = 1;
                 }
                 ctx->cell = ctx->stack->cell;
@@ -196,9 +192,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             }
             struct cell *root = new_cell(NULL); 
             ctx->cell = ctx->root = root; 
-            ctx->cell->branch = new_cell(NULL);
-            ctx->cell = ctx->cell->branch;
             ctx->next = new;
+
+            print_cell(new);
         }else{
             if(1 || debug){
                 printf("normal: next/new ");
@@ -206,7 +202,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 print_cell(new);
                 printf("\n");
             }
-            resolve_next(ctx);
+            resolve_next(ctx, ctx->next);
             ctx->cell = ctx->next;
             ctx->next = new;
         }

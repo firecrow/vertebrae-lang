@@ -1,6 +1,5 @@
 int end_incr(struct match_pattern *pattern, struct parse_ctx *ctx, char c){
   if(c == '\0'){
-    printf("complete...\n");
     pattern->state = GKA_PARSE_DONE;
     complete_previous(pattern, ctx);
     finalize(ctx, new_value());
