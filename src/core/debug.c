@@ -25,10 +25,6 @@ void print_value(struct value_obj *value){
         printf("NULL");
         return;
     }
-    if(!value->type){
-        printf("NONE");
-        return;
-    }
     if(value->accent == GKA_PARSE_QUOTE){
         printf("'");
     }

@@ -57,9 +57,11 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
  * create a cell that contains a value _containing_ a  cell so that it can be
  * used as a function pointer 
  */
-void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
-    struct cell *stack_cell = new_cell(NULL);
-    if(debug){
+void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
+    struct value_obj *stack_value = new_value();
+    stack_value->accent = GKA_PARSE_HEAD;
+    struct cell *stack_cell = new_cell(stack_value);
+    if(1 || debug){
         printf("setup func cells: stack/next/new\n");
         print_cell(stack_cell);
         printf("\n");
@@ -87,7 +89,7 @@ void setup_quote_cell(struct parse_ctx *ctx, struct cell *new){
         struct cell *blank = new_cell(NULL);
         stack_cell->branch = blank;
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-        ctx->cell->next = stack_cell;
+        resolve_next(ctx, stack_cell);
         ctx->cell = blank;
     }
 
@@ -102,10 +104,12 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 }
 
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
-    struct cell *stack_cell = new_cell(NULL);
     struct cell *next = ctx->next;
+    struct value_obj *stack_value = new_value();
+    stack_value->accent = next->value->accent;
+    struct cell *stack_cell = new_cell(stack_value);
 
-    if(debug){
+    if(1 || debug){
         printf("setup branch: cell/new/next/stack");
         printf("\n");
         print_cell(ctx->cell);
@@ -170,11 +174,17 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             printf("into\n");
         }
         while(ctx->next_func_into > 0){
+            if(1 || debug){
+                printf("func\n");
+            }
             indent++;
-            setup_quote_cell(ctx, new); 
+            setup_func_cell(ctx, new); 
             ctx->next_func_into--;
         }
         while(ctx->next_is_into > 0){
+            if(1 || debug){
+                printf("branch\n");
+            }
             indent++;
             setup_branch(ctx, new);
             ctx->next_is_into--;

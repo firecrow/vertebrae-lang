@@ -18,20 +18,30 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         return 0;
     }
 
+    if(!op->next){
+        op->next = ctx->cell;
+    }else{
+        op->next = op->next->next;
+    }
+
+
+    tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
+
+
+    struct cell *func = ctx->head->cell;
+    ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
+    ctx->stack = push_stack(ctx, op->next);
+    ctx->cell = func;
+
     if(debug){
         printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> function called\n");
         print_value(ctx->value);
         printf("\n");
-        print_cell(ctx->cell);
+        print_cell(func);
         printf("\n");
         print_head(ctx->head);
         printf("\n");
     }
-
-    tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
-    struct cell *func = ctx->head->cell;
-    ctx->stack = new_stack_item(ctx->stack, ctx->cell, ctx->head);
-    ctx->cell = func;
 
     return 0;
 }
