@@ -101,11 +101,6 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(NULL);
     struct cell *next = ctx->next;
-    /*
-    if(ctx->next_is_into > 1){
-        next = new_cell(NULL);
-    }
-    */
 
     if(debug){
         printf("setup branch: cell/new/next/stack");
@@ -135,8 +130,13 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
+    printf("finalize: ");
+    print_value(value);
+    printf("\n");
     if(debug){
         printf("finalize outof %d into %d func %d\n", ctx->next_is_outof, ctx->next_is_into, ctx->next_func_into);
+        print_value(value);
+        printf("\n");
     }
 
     if(value){
@@ -149,7 +149,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
     
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
-        if(debug){
+        if(1 || debug){
             printf("outof\n");
         }
         int resolved = 0;
@@ -170,7 +170,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->next_is_outof--;
         }
     }else if(ctx->next_is_into || ctx->next_func_into){
-        if(debug){
+        if(1 || debug){
             printf("into\n");
         }
         while(ctx->next_func_into > 0){
@@ -184,8 +184,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->next_is_into--;
         }
     }else{
+        if(1 || debug){
+            printf("normal...\n");
+        }
         if(!ctx->root){
-	    ctx->stack = NULL;
+            ctx->stack = NULL;
             if(debug){
                 printf("setup root: next\n");
                 print_cell(new);
@@ -197,7 +200,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             ctx->cell = ctx->cell->branch;
             ctx->next = new;
         }else{
-            if(debug){
+            if(1 || debug){
                 printf("normal: next/new ");
                 print_cell(ctx->next);
                 print_cell(new);
@@ -218,6 +221,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
 }
 
 void finalize_parse(struct parse_ctx *ctx){
+    printf("finalize...\n");
     ctx->current->incr(ctx->current, ctx, '\0');
     finalize(ctx, (struct value_obj *)NULL);
 }

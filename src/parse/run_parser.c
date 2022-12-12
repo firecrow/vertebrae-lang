@@ -27,6 +27,7 @@ int parse_stack_count = 0;
 #include "into_func_incr.c"
 #include "def_incr.c"
 #include "set_incr.c"
+#include "end_incr.c"
 
 
 struct parse_ctx *new_parse_ctx(){
@@ -53,6 +54,7 @@ struct match_pattern *close_pattern;
 void setup_parse_ctx(struct parse_ctx *ctx){
 
   int i = 0;
+  ctx->patterns[i++] = setup_pattern(end_incr);
   ctx->patterns[i++] = setup_pattern(string_incr);
   ctx->patterns[i++] = setup_pattern(number_incr);
   ctx->patterns[i++] = setup_pattern(def_incr);
@@ -62,9 +64,6 @@ void setup_parse_ctx(struct parse_ctx *ctx){
   ctx->patterns[i++] = setup_pattern(into_func_incr);
   ctx->patterns[i++] = setup_pattern(whitespace_incr);
   ctx->patterns[i++] = setup_pattern(close_cell_incr);
-  /*
-  ctx->patterns[i++] = setup_pattern(not_incr);
-  */
   ctx->patterns[i++] = NULL;
 }
 
@@ -75,6 +74,7 @@ static struct stack_item *push_parse_stack(struct stack_item *existing, struct c
 }
 
 struct cell *parse_all(char *script){
+    printf("parse all...\n");
     struct parse_ctx *ctx = new_parse_ctx();
 
     if(ctx == NULL){
@@ -89,7 +89,7 @@ struct cell *parse_all(char *script){
     while(*p != '\0'){
        parse_char(ctx, *p++);
     }
-    finalize_parse(ctx);
+    parse_char(ctx, '\0');
 
     return ctx->root; 
 }
@@ -108,7 +108,11 @@ struct cell *parse_file(int fd){
     
     while(read(fd, buffer, 1) > 0){
        parse_char(ctx, buffer[0]);
-    } return ctx->root; 
+    } 
+
+    parse_char(ctx, '\0');
+
+    return ctx->root; 
 }
 
 void parse_char(struct parse_ctx *ctx, char c){
@@ -118,13 +122,9 @@ void parse_char(struct parse_ctx *ctx, char c){
        if(0 && debug){
            printf("idx:%c:%d\n",c, idx-1);
        }
-       
-       fflush(stdout);
 
        if(pattern->incr(pattern, ctx, c)){
-            fflush(stdout);
             break;
        }
-       fflush(stdout);
     }
 }
