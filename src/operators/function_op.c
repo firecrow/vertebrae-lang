@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 1; 
+static int debug = 0; 
 
 struct function_operator {
     enum OPERATOR_TYPE type;
@@ -24,9 +24,7 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         op->next = op->next->next;
     }
 
-
     tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
-
 
     struct cell *func = ctx->head->cell;
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
@@ -40,7 +38,8 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         print_cell(func);
         printf("\n");
         print_head(ctx->head);
-        printf("\n");
+        printf("\n---");
+        print_branches(ctx->cell, 0);
     }
 
     return 0;

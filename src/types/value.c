@@ -72,10 +72,8 @@ struct value_obj *new_string_value_obj(struct string *string){
     struct value_obj *value = new_value();
     value->type = SL_TYPE_STRING;
     value->slot.string = string;
-    /*
     value->to_string = string_to_string;
     value->equals = string_eq;
-    */
     return value;
 }
 

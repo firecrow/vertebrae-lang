@@ -115,7 +115,8 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->value);
 
     if(debug){
-        printf("value...");
+        printf("value...cell/head/value");
+        print_cell(ctx->cell);
         print_value(ctx->value);
         print_head(ctx->head);
         printf("\n");
