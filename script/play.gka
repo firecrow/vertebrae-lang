@@ -1,3 +1,6 @@
-hi -> print < "there".
+:item < "apples"
 
-hi < _,
+
+hi -> print < "hi, we have " value  " " item "\n".
+
+hi < 1 3 4 add < 30 1, 3,

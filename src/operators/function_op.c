@@ -14,6 +14,14 @@ struct function_operator {
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
 
+    if(debug){
+        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> function called value/next\n");
+        print_value(ctx->value);
+        printf("\n");
+        print_cell(op->next);
+        printf("\n---\n");
+    }
+
     if(!ctx->cell){
         return 0;
     }
@@ -26,21 +34,22 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
 
     tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
 
+    ctx->stack = push_stack(ctx, op->next);
     struct cell *func = ctx->head->cell;
     ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
-    ctx->stack = push_stack(ctx, op->next);
+    ctx->head = setup_new_head(new_head(), op->next, ctx->head->closure);
     ctx->cell = func;
 
     if(debug){
-        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> function called\n");
-        print_value(ctx->value);
-        printf("\n");
+        printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< function called func/next/branches\n");
         print_cell(func);
         printf("\n");
-        print_head(ctx->head);
-        printf("\n---");
+        print_cell(op->next);
+        printf("\n---\n");
         print_branches(ctx->cell, 0);
+        printf("---\n");
     }
+
 
     return 0;
 }

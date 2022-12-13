@@ -36,7 +36,7 @@ void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *
     ctx->head = setup_new_head(new_head(), cell, closure);
     ctx->cell = cell;
     if(debug){
-        printf("starting branch from...");
+        printf("\x1b[35mstarting branch from...\x1b[0m");
         print_cell(cell);
         printf("\nstarting branch head...");
         print_head(cell);
@@ -90,7 +90,7 @@ static void next_step(struct crw_state *ctx){
         if(!is_moved && ctx->cell){
             ctx->cell = ctx->cell->next;
             if(debug){
-                printf("next to...");
+                printf("\x1b[35mnext to...\x1b[0m");
                 print_cell(ctx->cell);
                 printf("\n");
             }
@@ -108,6 +108,11 @@ static void next_step(struct crw_state *ctx){
         ctx->head = ctx->stack->head;
         ctx->stack = ctx->stack->previous;
         ctx->value = previous->value;
+        if(debug){
+            printf("\x1b[35mpopiong to..");
+            print_cell(ctx->cell);
+            printf("\n");
+        }
         ctx->nesting--;
         indent--;
     }
@@ -115,10 +120,12 @@ static void next_step(struct crw_state *ctx){
     ctx->value = swap_for_symbol(ctx->head->closure, ctx->value);
 
     if(debug){
-        printf("value...cell/head/value");
+        printf("\x1b[34mabout to call handle...cell/head/value\n\x1b[0m");
         print_cell(ctx->cell);
-        print_value(ctx->value);
         print_head(ctx->head);
+        printf("\'");
+        print_value(ctx->value);
+        printf("\'");
         printf("\n");
     }
 
