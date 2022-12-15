@@ -84,11 +84,11 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
         ctx->head = ctx->stack->head;
         ctx->stack = ctx->stack->previous;
+        ctx->value = swap_for_symbol(ctx->head->closure, previous->value);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
         if(ctx->cell && ctx->cell->branch){
             return;
         }
-        ctx->value = swap_for_symbol(ctx->head->closure, previous->value);
-        ctx->head->operator->handle(ctx->head->operator, ctx);
         ctx->nesting--;
         indent--;
     }
