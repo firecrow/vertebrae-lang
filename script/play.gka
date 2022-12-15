@@ -1,2 +1,1 @@
-:hi < "hello",
-print < hi,
+print < 234
