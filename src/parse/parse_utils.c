@@ -26,10 +26,11 @@ void resolve_next(struct parse_ctx *ctx, struct cell *next){
                 next->value->accent == GKA_PARSE_DEF ||
                 next->value->accent == GKA_PARSE_SET
             )){
-        ctx->cell->branch = next;
-    }else{
-        ctx->cell->next = next;
+        struct cell *stack_cell = new_cell(new_value());
+        stack_cell->branch = next;
+        next = stack_cell;
     }
+    ctx->cell->next = next;
 }
 
 static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx){
@@ -105,6 +106,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         stack_value->accent = GKA_PARSE_HEAD;
     }
     struct cell *stack_cell = new_cell(stack_value);
+    struct cell *second_stack_cell = new_cell(new_value());
 
     if(debug){
         printf("setup branch: cell/new/next/stack");
@@ -121,7 +123,8 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *base = ctx->cell;
 
     resolve_next(ctx, stack_cell);
-    stack_cell->branch = next;
+    stack_cell->next = second_stack_cell;
+    second_stack_cell->branch = next;
     ctx->cell = next;
     ctx->next = new;
 
@@ -199,6 +202,9 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             }
             struct cell *root = new_cell(new_value()); 
             ctx->cell = ctx->root = root; 
+            struct cell *stack_cell = new_cell(new_value()); 
+            ctx->cell->branch = stack_cell;
+            ctx->cell = stack_cell;
             if(!new->value->accent){
                 new->value->accent = GKA_PARSE_HEAD;
             }

@@ -6,7 +6,7 @@ void test_parse(){
     char *script = "add < 127,";
 
     root = parse_all(script);
-    print_branches(root, 0);
+    print_branches(root,0);
     start = root->branch->next->branch;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "add is symbol");
