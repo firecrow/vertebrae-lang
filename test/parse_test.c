@@ -37,7 +37,8 @@ void test_parse(){
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
 
-    cell = cell->next;
+    cell = cell->next->branch;
+    print_cell(cell);
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("add")) == 0, "add is the content of the symbol");
 
