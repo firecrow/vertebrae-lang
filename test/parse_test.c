@@ -6,8 +6,7 @@ void test_parse(){
     char *script = "add < 127,";
 
     root = parse_all(script);
-    print_branches(root,0);
-    start = root->branch->next->branch;
+    start = root->branch->next->branch->next->branch;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(start->value->slot.string, str("add")) == 0, "add is the content of the symbol");
@@ -18,7 +17,7 @@ void test_parse(){
 
     root = parse_all(script);
 
-    start = root->branch->next;
+    start = root->branch->next->branch->next;
 
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
     test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
@@ -28,7 +27,8 @@ void test_parse(){
     printf("%s\n", script);
     root = parse_all(script);
 
-    cell = root->branch->next->branch;
+    cell = root->branch->next->branch->next->branch;
+    print_branches(root,0);
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the content of the symbol");
 
@@ -37,7 +37,7 @@ void test_parse(){
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
 
-    cell = cell->next->branch;
+    cell = cell->next;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("add")) == 0, "add is the content of the symbol");
 

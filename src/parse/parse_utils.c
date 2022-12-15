@@ -120,16 +120,18 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         print_cell(stack_cell);
         printf("\n");
     }
-    struct cell *base = ctx->cell;
 
     resolve_next(ctx, stack_cell);
-    stack_cell->next = second_stack_cell;
-    second_stack_cell->branch = next;
+    if(ctx->next->value->accent){
+        stack_cell->next = second_stack_cell;
+        second_stack_cell->branch = next;
+        ctx->stack = push_parse_stack(ctx->stack, second_stack_cell, NULL);
+    }else{
+        stack_cell->branch = next;
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+    }
     ctx->cell = next;
     ctx->next = new;
-
-
-    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
