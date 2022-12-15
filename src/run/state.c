@@ -69,11 +69,6 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 static void next_step(struct crw_state *ctx){
 
     if(ctx->cell){
-        if(debug){
-            printf("moving from...");
-            print_cell(ctx->cell);
-            printf("\n");
-        }
         int is_moved = 0;
         while(ctx->cell && ctx->cell->branch){
             is_moved = 1;
@@ -84,11 +79,6 @@ static void next_step(struct crw_state *ctx){
 
         if(!is_moved && ctx->cell){
             ctx->cell = ctx->cell->next;
-            if(debug){
-                printf("\x1b[35mnext to...\x1b[0m");
-                print_cell(ctx->cell);
-                printf("\n");
-            }
         }
     }
 
@@ -98,41 +88,16 @@ static void next_step(struct crw_state *ctx){
         ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
         ctx->head = ctx->stack->head;
         ctx->stack = ctx->stack->previous;
-        if(debug){
-            printf("in stack back to.....");
-            print_cell(ctx->cell);
-            printf("\n");
-        }
-        
         if(ctx->cell){
-            struct value_obj *value = ctx->cell->value;
-            if(debug){
-                printf("cell in pop........");
-                print_cell(ctx->cell);
-                printf("\n");
-            }
             if(ctx->cell->branch){
-                printf("resetting to previous \n");
-                value = previous->value;
+                return;
             }
-            if(1 || debug){
-                printf("previous/head\n");
-                print_head(previous);
-                printf("\n");
-                print_head(ctx->head);
-                printf("\n");
-            }
-            ctx->value = swap_for_symbol(ctx->head->closure, value);
+            ctx->value = swap_for_symbol(ctx->head->closure, previous->value);
             ctx->head->operator->handle(ctx->head->operator, ctx);
         }
         ctx->nesting--;
         indent--;
     }else{
-        if(debug){
-            printf("normal forward.....");
-            print_cell(ctx->cell);
-            printf("\n");
-        }
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
