@@ -197,6 +197,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             }
             struct cell *root = new_cell(NULL); 
             ctx->cell = ctx->root = root; 
+            ctx->cell->branch = new_cell(NULL);
+            ctx->cell = ctx->cell->branch;
             ctx->next = new;
 
             print_cell(new);
