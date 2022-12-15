@@ -71,33 +71,28 @@ static void next_step(struct crw_state *ctx){
     if(ctx->cell){
         int is_moved = 0;
         while(ctx->cell && ctx->cell->branch){
-            is_moved = 1;
             start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
             indent++;
             return;
         }
 
-        if(!is_moved && ctx->cell){
-            ctx->cell = ctx->cell->next;
-        }
+        ctx->cell = ctx->cell->next;
     }
 
     if(!ctx->cell && ctx->stack){
-
         struct head *previous = ctx->head;
         ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
         ctx->head = ctx->stack->head;
         ctx->stack = ctx->stack->previous;
-        if(ctx->cell){
-            if(ctx->cell->branch){
-                return;
-            }
-            ctx->value = swap_for_symbol(ctx->head->closure, previous->value);
-            ctx->head->operator->handle(ctx->head->operator, ctx);
+        if(ctx->cell && ctx->cell->branch){
+            return;
         }
+        ctx->value = swap_for_symbol(ctx->head->closure, previous->value);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
         ctx->nesting--;
         indent--;
-    }else{
+    }
+    if(ctx->cell){
         ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
         ctx->head->operator->handle(ctx->head->operator, ctx);
     }
