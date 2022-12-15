@@ -40,6 +40,7 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     ctx->head = setup_new_head(new_head(), op->next, ctx->head->closure);
     ctx->cell = func;
 
+
     if(debug){
         printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< function called func/next/branches\n");
         print_cell(func);

@@ -10,11 +10,6 @@ static void print_space(){
     }
 }
 
-static void passthrough(struct crw_state *ctx, struct head *previous){
-    ctx->value = previous->value;
-    ctx->head->operator->handle(ctx->head->operator, ctx);
-}
-
 struct stack_item *push_stack(struct crw_state *ctx, struct cell *cell){
     if(!ctx->head){
         return NULL;
@@ -94,42 +89,53 @@ static void next_step(struct crw_state *ctx){
                 print_cell(ctx->cell);
                 printf("\n");
             }
-            if(ctx->cell){
-                ctx->value = ctx->cell->value;
-            }else{
-                ctx->value = NULL;  
-            }
         }
     }
 
     if(!ctx->cell && ctx->stack){
+
         struct head *previous = ctx->head;
         ctx->cell = ctx->stack->cell ? ctx->stack->cell->next : NULL;
         ctx->head = ctx->stack->head;
         ctx->stack = ctx->stack->previous;
-        ctx->value = previous->value;
         if(debug){
-            printf("\x1b[35mpopiong to..");
+            printf("in stack back to.....");
             print_cell(ctx->cell);
             printf("\n");
         }
+        
+        if(ctx->cell){
+            struct value_obj *value = ctx->cell->value;
+            if(debug){
+                printf("cell in pop........");
+                print_cell(ctx->cell);
+                printf("\n");
+            }
+            if(ctx->cell->branch){
+                printf("resetting to previous \n");
+                value = previous->value;
+            }
+            if(1 || debug){
+                printf("previous/head\n");
+                print_head(previous);
+                printf("\n");
+                print_head(ctx->head);
+                printf("\n");
+            }
+            ctx->value = swap_for_symbol(ctx->head->closure, value);
+            ctx->head->operator->handle(ctx->head->operator, ctx);
+        }
         ctx->nesting--;
         indent--;
+    }else{
+        if(debug){
+            printf("normal forward.....");
+            print_cell(ctx->cell);
+            printf("\n");
+        }
+        ctx->value = swap_for_symbol(ctx->head->closure, ctx->cell->value);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
     }
-
-    ctx->value = swap_for_symbol(ctx->head->closure, ctx->value);
-
-    if(debug){
-        printf("\x1b[34mabout to call handle...cell/head/value\n\x1b[0m");
-        print_cell(ctx->cell);
-        print_head(ctx->head);
-        printf("\'");
-        print_value(ctx->value);
-        printf("\'");
-        printf("\n");
-    }
-
-    ctx->head->operator->handle(ctx->head->operator, ctx);
     
     ctx->status = CRW_CONTINUE;
     if(!ctx->cell && !ctx->stack) ctx->status = CRW_DONE;
