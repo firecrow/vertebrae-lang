@@ -74,7 +74,6 @@ static struct stack_item *push_parse_stack(struct stack_item *existing, struct c
 }
 
 struct cell *parse_all(char *script){
-    printf("parse all...\n");
     struct parse_ctx *ctx = new_parse_ctx();
 
     if(ctx == NULL){

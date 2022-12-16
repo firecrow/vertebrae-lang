@@ -127,7 +127,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
                 next->value->accent == GKA_PARSE_SET
             )){
         resolve_next(ctx, next);
-        ctx->stack = push_parse_stack(ctx->stack, next, NULL);
+        ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
     }else{
         resolve_next(ctx, stack_cell);
         stack_cell->branch = next;
