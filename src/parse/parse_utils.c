@@ -21,9 +21,8 @@ bool is_whitespace(char c){
 }
 
 void resolve_next(struct parse_ctx *ctx, struct cell *next){
-    if(next->is_head){
+    if(ctx->next->is_head){
         ctx->cell->branch = next;
-        next->is_head = 1;
     }else{
         ctx->cell->next = next;
     }
@@ -106,7 +105,7 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *next = ctx->next;
 
     if(1 || debug){
-        printf("setup branch: cell/new/next/stack %d", ctx->next_is_into);
+        printf("setup branch: cell/new/next/stack %d", ctx->next->is_head);
         printf("\n");
         print_cell(ctx->cell);
         printf("\n");
@@ -115,14 +114,16 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         print_cell(next);
         printf("\n");
         print_cell(stack_cell);
-        printf("\n");
+        printf("\n----\n");
     }
 
-    stack_cell->branch = next;
-    next->is_head = 1;
+    stack_cell->is_head = 1;
     resolve_next(ctx, stack_cell);
-    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+    ctx->cell = stack_cell;
+    next->is_head = 1;
+    resolve_next(ctx, next);
     ctx->cell = next;
+    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
     ctx->next = new;
 }
 
@@ -156,6 +157,7 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
                 ctx->cell = ctx->stack->cell;
                 ctx->stack = ctx->stack->previous;
                 ctx->next = new;
+                new->is_head = 0;
                 parse_stack_count--;
             }else{
                 fprintf(stderr, "parse below stack error\n");
@@ -200,8 +202,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             struct cell *root = new_cell(new_value()); 
             struct cell *stack_cell = new_cell(new_value());
             ctx->cell = ctx->root = root; 
+            /*
             ctx->cell->branch = stack_cell;
             ctx->cell = stack_cell;
+            */
+            stack_cell->is_head = 1;
             ctx->next = new;
             new->is_head = 1;
         }else{
