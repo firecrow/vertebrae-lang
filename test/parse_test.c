@@ -98,7 +98,7 @@ void test_parse(){
     root = parse_all(script);
     print_branches(root, 0);
 
-    start = root->branch->branch;
+    start = root->branch;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "starts with the function symbol");
     test(suite, string_cmp(start->value->slot.string, str("func")) == 0, "first cell is func name");
@@ -108,16 +108,21 @@ void test_parse(){
     test(suite, func->value->type == SL_TYPE_CELL, "func is cell");
 
     struct cell *body = func->value->slot.cell;
-    struct cell *part1 = body->branch;
+    struct cell *part1 = body->branch->branch;
 
     test(suite, string_cmp(part1->value->slot.string, str("print")) == 0, "part1 starts with print");
     test(suite, string_cmp(part1->next->value->slot.string, str("hi")) == 0, "part1 first arg is hi");
 
-    struct cell *part2 = body->next->branch;
+    printf("1\n");
+    struct cell *part2 = body->branch->next->branch;
+    printf("2\n");
     test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
+    printf("3\n");
     test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");
+    printf("4\n");
 
-    struct cell *call = start->next->next->branch;
+    print_cell(root->branch->next->next->branch);
+    struct cell *call = root->branch->next->next->branch;
     test(suite, string_cmp(call->value->slot.string, str("func")) == 0, "call starts with print");
     test(suite, string_cmp(call->next->value->slot.string, str("_")) == 0, "call first arg is hello");
 
