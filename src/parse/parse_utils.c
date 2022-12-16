@@ -64,7 +64,7 @@ void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
     if(ctx->next_func_into == 1){
         struct cell *func_name = ctx->next;
         func_name->value->accent = GKA_PARSE_DEF;
-        struct cell *func_cell = new_cell(new_cell_value_obj(func_cell));
+        struct cell *func_cell = new_cell(new_cell_value_obj(stack_cell));
         new->is_head = 1;
         ctx->stack = push_parse_stack(ctx->stack, func_cell, NULL);
         
