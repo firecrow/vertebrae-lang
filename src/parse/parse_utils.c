@@ -26,11 +26,10 @@ void resolve_next(struct parse_ctx *ctx, struct cell *next){
                 next->value->accent == GKA_PARSE_DEF ||
                 next->value->accent == GKA_PARSE_SET
             )){
-        struct cell *stack_cell = new_cell(new_value());
-        stack_cell->branch = next;
-        next = stack_cell;
+        ctx->cell->branch = next;
+    }else{
+        ctx->cell->next = next;
     }
-    ctx->cell->next = next;
 }
 
 static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ctx){
@@ -122,14 +121,8 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     }
 
     resolve_next(ctx, stack_cell);
-    if(ctx->next->value->accent){
-        stack_cell->next = second_stack_cell;
-        second_stack_cell->branch = next;
-        ctx->stack = push_parse_stack(ctx->stack, second_stack_cell, NULL);
-    }else{
-        stack_cell->branch = next;
-        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-    }
+    stack_cell->branch = next;
+    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
     ctx->cell = next;
     ctx->next = new;
 }
