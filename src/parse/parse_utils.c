@@ -49,23 +49,23 @@ static int complete_previous(struct match_pattern *pattern, struct parse_ctx *ct
  * used as a function pointer 
  */
 void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
-    struct value_obj *stack_value = new_value();
-    stack_value->accent = GKA_PARSE_HEAD;
-    struct cell *stack_cell = new_cell(stack_value);
-    if(debug){
+    struct cell *stack_cell = new_cell(new_value());
+    stack_cell->is_head = 1;
+
+    if(1 || debug){
         printf("setup func cells: stack/next/new\n");
         print_cell(stack_cell);
         printf("\n");
         print_cell(ctx->next);
         printf("\n");
         print_cell(new);
-        printf("\n");
+        printf("\n---------\n");
     }
     if(ctx->next_func_into == 1){
         struct cell *func_name = ctx->next;
         func_name->value->accent = GKA_PARSE_DEF;
         struct cell *func_cell = new_cell(new_cell_value_obj(func_cell));
-        new->value->accent = GKA_PARSE_HEAD;
+        new->is_head = 1;
         ctx->stack = push_parse_stack(ctx->stack, func_cell, NULL);
         
 
@@ -76,9 +76,13 @@ void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
         
         ctx->next = new;
 
+        printf("\x1b[36m");
+        print_cell(stack_cell);
+        printf("\x1b[0m\n");
+
     }else{
         ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
-        struct cell *blank = new_cell;
+        struct cell *blank = new_cell(new_value());
         resolve_next(ctx, ctx->next);
         ctx->cell = ctx->next;
         ctx->next = blank;
@@ -96,11 +100,6 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 }
 
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
-    /*
-    if(next->value->accent || ctx->cell->value->accent){
-        stack_value->accent = GKA_PARSE_HEAD;
-    }
-    */
     struct cell *stack_cell = new_cell(new_value());
     struct cell *next = ctx->next;
 
