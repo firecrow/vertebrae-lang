@@ -109,6 +109,7 @@ struct cell {
     struct cell *next;
     struct cell *prev;
     struct cell *branch;
+    bool is_head;
 };
 
 struct stack_item {

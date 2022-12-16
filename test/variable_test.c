@@ -57,7 +57,7 @@ void test_variables(){
 
     state = crw_new_state_context();
     run_root(state, root);
-    /*print_value(state->data->slot.value);*/
+    print_value(state->data->slot.value);
     test(suite, !string_cmp(state->data->slot.value->slot.string, str("hi")), "Variable was updated");
 
     summerize(suite);

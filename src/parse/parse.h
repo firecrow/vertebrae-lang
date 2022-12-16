@@ -31,6 +31,7 @@ struct parse_ctx {
     bool next_is_into;
     bool next_is_outof;
     bool next_func_into;
+    bool in_branching;
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;
