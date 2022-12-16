@@ -6,7 +6,7 @@ void test_parse(){
     char *script = "add < 127,";
 
     root = parse_all(script);
-    start = root->branch->next->branch->next->branch;
+    start = root->branch->branch;
 
     test(suite, start->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(start->value->slot.string, str("add")) == 0, "add is the content of the symbol");
@@ -17,7 +17,7 @@ void test_parse(){
 
     root = parse_all(script);
 
-    start = root->branch->next->branch->next;
+    start = root->branch;
 
     test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
     test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
@@ -27,8 +27,7 @@ void test_parse(){
     printf("%s\n", script);
     root = parse_all(script);
 
-    cell = root->branch->next->branch->next->branch;
-    print_branches(root,0);
+    cell = root->branch->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the content of the symbol");
 
@@ -38,7 +37,6 @@ void test_parse(){
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
 
     cell = cell->next->branch;
-    print_cell(cell);
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "add is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("add")) == 0, "add is the content of the symbol");
 
@@ -58,7 +56,6 @@ void test_parse(){
     test(suite, cell == NULL, "next cell next is null");
 
     cell = level->next->next;
-    print_cell(level->next);
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
 
@@ -66,15 +63,15 @@ void test_parse(){
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
 
     start = root;
 
-    cell = start->branch->next->branch;
+    cell = start->branch->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");
 
-    func = cell->next->branch;
-    print_cell(func);
+    func = cell->branch;
     test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
     test(suite, func->next->value->slot.integer == 1, "next is the first value");
 
