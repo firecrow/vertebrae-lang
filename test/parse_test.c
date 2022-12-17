@@ -3,6 +3,7 @@ void test_parse(){
     struct cell *func;
 
     suite = new_suite("Parse tests");
+
     char *script = "add < 127,";
 
     root = parse_all(script);
@@ -88,12 +89,11 @@ void test_parse(){
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");
 
-    func = cell->branch->next->branch;
+    func = cell->branch->branch->branch;
 
     test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
     test(suite, func->next->value->slot.integer == 1, "next is the first value");
     
-    /* parse a function pointer */
     script = "func ->\n    print < \"hi\", print < \"there\".\nfunc < _";
     printf("%s\n", script);
 
