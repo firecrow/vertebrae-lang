@@ -27,6 +27,7 @@ void test_parse(){
     script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
     printf("%s\n", script);
     root = parse_all(script);
+    print_branches(root, 0);
 
     cell = root->branch->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
@@ -82,12 +83,12 @@ void test_parse(){
     print_branches(root, 0);
 
     start = root;
-    cell = start->branch;
+    cell = start->branch->branch;
 
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");
 
-    func = cell->next->branch;
+    func = cell->branch->next->branch;
 
     test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
     test(suite, func->next->value->slot.integer == 1, "next is the first value");

@@ -1,5 +1,5 @@
 bool is_allnum(char c){
-  if(c >= '0' && c <= '9'){
+ if(c >= '0' && c <= '9'){
     return 1;
   }
   return 0;
@@ -21,7 +21,7 @@ bool is_whitespace(char c){
 }
 
 void resolve_next(struct parse_ctx *ctx, struct cell *next){
-    if(ctx->next->is_head){
+    if(next->is_head){
         ctx->cell->branch = next;
     }else{
         ctx->cell->next = next;
@@ -101,11 +101,10 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(new_value());
-    struct cell *blank = new_cell(new_value());
     struct cell *next = ctx->next;
 
     if(1 || debug){
-        printf("setup branch: cell/new/next/stack/blank %d", ctx->next->is_head);
+        printf("setup branch: cell/new/next/stack %d ----", ctx->next->is_head);
         printf("\n");
         print_cell(ctx->cell);
         printf("\n");
@@ -114,16 +113,13 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         print_cell(next);
         printf("\n");
         print_cell(stack_cell);
-        printf("\n");
-        print_cell(blank);
-        printf("\n----\n");
     }
 
     if(ctx->in_branching == 0){
         printf("special.........\n");
         ctx->in_branching = 1;
 
-        stack_cell->is_head = 1;
+        stack_cell->is_head = next->is_head;
         resolve_next(ctx, stack_cell);
 
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
@@ -136,16 +132,17 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         ctx->next = new;
     }else{
         printf("not special.........\n");
-
         stack_cell->is_head = 1;
         resolve_next(ctx, stack_cell);
 
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
         ctx->cell = stack_cell;
 
-        blank->is_head = 1;
-        resolve_next(ctx, blank);
+        resolve_next(ctx, next);
+    }
 
+    if(1 || debug){
+        printf("\n----\n");
     }
 }
 
