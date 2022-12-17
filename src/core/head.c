@@ -1,5 +1,5 @@
 #include "../gekkota.h"
-static int debug = 0;
+static int debug = 1;
 
 int head_id = 0;
 struct head *new_head(){
@@ -15,8 +15,11 @@ struct head *new_head(){
 struct head *setup_new_head(struct head *head, struct cell *cell, struct closure *closure){
     if(debug){
         printf("\x1b[36msetup new head called\n");
+        /*
         print_head(head);
+        */
         print_cell(cell);
+        /*
 
         printf("\n");
         print_cell(cell->next);
@@ -26,6 +29,7 @@ struct head *setup_new_head(struct head *head, struct cell *cell, struct closure
         if(cell->next){
             print_cell(cell->next->branch);
         }
+        */
         printf("\x1b[0m\n");
     }
     struct value_obj *value = swap_for_symbol(closure, cell->value);

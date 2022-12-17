@@ -16,6 +16,7 @@ struct condition_operator {
     operator_handle_func *handle;
     operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
+    struct cell *root;
     bool done;
     bool in_test;
 };
@@ -28,11 +29,24 @@ struct condition_operator {
  */
 static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct condition_operator *op = (struct condition_operator *)_op;
+
+    struct cell *root = ctx->head->cell->branch->branch;
+    struct cell *current = root;
+
+    printf("\x1b[34min condition\n");
+    while(current){
+        printf("\x1b[33myes\x1b[34m\n");
+        print_branches(current->branch, 0);
+        current = current->next;
+    }
+    printf("\n\x1b[0m");
+
     return 0;
 }
 
 struct operator_ifc * new_condition_operator(enum OPERATOR_TYPE type) {
     struct condition_operator *op = malloc(sizeof(struct condition_operator));
+    memset(op, 0, sizeof(struct condition_operator));
     op->type = type;
     op->in_test = 1;
     op->done = 0;
