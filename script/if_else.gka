@@ -10,7 +10,7 @@ lower ->
 
 compare -> 
     print < value,
-    if <<
+    if <
         gt < base value,
             higher < value,
         lower < value.

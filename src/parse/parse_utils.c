@@ -52,7 +52,7 @@ void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(new_value());
     stack_cell->is_head = 1;
 
-    if(1 || debug){
+    if(debug){
         printf("setup func cells: stack/next/new\n");
         print_cell(stack_cell);
         printf("\n");
@@ -101,10 +101,11 @@ static void append_branch_cell(struct parse_ctx *ctx, struct cell *stack_cell, s
 
 static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(new_value());
+    struct cell *blank = new_cell(new_value());
     struct cell *next = ctx->next;
 
     if(1 || debug){
-        printf("setup branch: cell/new/next/stack %d", ctx->next->is_head);
+        printf("setup branch: cell/new/next/stack/blank %d", ctx->next->is_head);
         printf("\n");
         print_cell(ctx->cell);
         printf("\n");
@@ -113,17 +114,39 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         print_cell(next);
         printf("\n");
         print_cell(stack_cell);
+        printf("\n");
+        print_cell(blank);
         printf("\n----\n");
     }
 
-    stack_cell->is_head = 1;
-    resolve_next(ctx, stack_cell);
-    ctx->cell = stack_cell;
-    next->is_head = 1;
-    resolve_next(ctx, next);
-    ctx->cell = next;
-    ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-    ctx->next = new;
+    if(ctx->in_branching == 0){
+        printf("special.........\n");
+        ctx->in_branching = 1;
+
+        stack_cell->is_head = 1;
+        resolve_next(ctx, stack_cell);
+
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+        ctx->cell = stack_cell;
+
+        next->is_head = 1;
+        resolve_next(ctx, next);
+
+        ctx->cell = next;
+        ctx->next = new;
+    }else{
+        printf("not special.........\n");
+
+        stack_cell->is_head = 1;
+        resolve_next(ctx, stack_cell);
+
+        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+        ctx->cell = stack_cell;
+
+        blank->is_head = 1;
+        resolve_next(ctx, blank);
+
+    }
 }
 
 static void finalize(struct parse_ctx *ctx, struct value_obj *value){
@@ -141,6 +164,8 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
         }
     }
     
+    printf("\x1b[36mreseting branching flat\x1b[0m\n");
+    ctx->in_branching = 0;
     struct cell *new = new_cell(value);
     if(ctx->next_is_outof){
         if(debug){
@@ -201,15 +226,11 @@ static void finalize(struct parse_ctx *ctx, struct value_obj *value){
             struct cell *root = new_cell(new_value()); 
             struct cell *stack_cell = new_cell(new_value());
             ctx->cell = ctx->root = root; 
-            /*
-            ctx->cell->branch = stack_cell;
-            ctx->cell = stack_cell;
-            */
             stack_cell->is_head = 1;
             ctx->next = new;
             new->is_head = 1;
         }else{
-            if(debug){
+            if(1 || debug){
                 printf("normal: next/new ");
                 print_cell(ctx->next);
                 print_cell(new);

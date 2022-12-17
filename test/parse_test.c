@@ -79,9 +79,10 @@ void test_parse(){
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
 
     start = root;
-    cell = start->branch->branch;
+    cell = start->branch;
 
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");

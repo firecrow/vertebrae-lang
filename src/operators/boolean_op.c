@@ -1,20 +1,23 @@
 #include "../gekkota.h"
 
 /* =========== boolean ==========*/
-struct boolean_operator {
-    int type;
-    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
-    operator_handle_func *handle;
-    bool condition_met;
-};
-
-static void boolean_handle(struct operator_ifc *op, struct head *head, struct value_obj *value){
-    if(value->truthy && !value->truthy(value)){
-       return SL_BRANCH_SKIP_NEXT;
+static bool boolean_handle(struct operator_ifc *op, struct crw_state *ctx){
+    if(ctx->value->truthy && !ctx->value->truthy(ctx->value)){
+        ctx->head->value = ctx->builtins.true;
+        return 0;
     }
-    return SL_CONTINUE;
+    ctx->head->value = ctx->builtins.false;
 }
 
-struct operator_ifc *new_print_operator(enum OPERATOR_TYPE type) {
-    return (struct operator_ifc *)print_singleton;
+struct operator_ifc *boolean_singleton = NULL;
+
+struct operator_ifc *new_boolean_operator(enum OPERATOR_TYPE type) {
+    if(!boolean_singleton){
+        boolean_singleton = malloc(sizeof(struct operator_ifc));
+        boolean_singleton->type = type;
+        boolean_singleton->handle = boolean_handle;
+        boolean_singleton->close = NULL;
+        boolean_singleton->new = new_boolean_operator;
+    }
+    return boolean_singleton;
 }

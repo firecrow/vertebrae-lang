@@ -6,7 +6,7 @@ void test_if_else(){
     init_basic_library(global); 
 
     /* basic test of truthy runs next */
-    script = "if << true, save-cell < \"yes\n\".";
+    script = "if < t < true, save-cell < \"yes\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -17,13 +17,14 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of truthy runs next");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("yes\n")), "value yes should be assined indicating it ran");
+    test(suite, !string_cmp(value->slot.string, str("yes")), "value yes should be assined indicating it ran");
 
     /* basic test of truthy does not run next */
-    script = "if << false, save-cell < \"yes\n\".";
+    script = "if << t < false, save-cell < \"yes\n\",";
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
 
     state = crw_new_state_context();
     run_root(state, root);
@@ -32,7 +33,7 @@ void test_if_else(){
 
     /* basic test of else */
 
-    script = "if << = < 1 2, save-cell < \"yes\", = < 1 1, save-cell < \"no\".";
+    script = "if < eq < 1 2, save-cell < \"yes\", eq < 1 1, save-cell < \"no\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -41,13 +42,12 @@ void test_if_else(){
     run_root(state, root);
 
     test(suite, state->data->type == SL_TYPE_CELL, "mock 'no' cell is set");
-    return;
 
     printf("1\n");
     value = state->data->slot.cell->value;
     test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else");
 
-    script = "if << false, save-cell < \"yes\", \"no\"";
+    script = "if < false, save-cell < \"yes\", save-cell < \"no\"";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -59,7 +59,7 @@ void test_if_else(){
 
     /* basic test of else if else */
 
-    script = "if <<\n    false,\n        save-cell < \"yes\n\",\n  true, save-cell <\"again\n\") (save-cell \"no\n\"))";
+    script = "if <\n    false, save-cell < \"yes\\n\",\n    true, save-cell < \"again\\n\",\n    save-cell < \"no\\n\"";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -104,7 +104,7 @@ void test_if_else(){
 
     /* basic test of else if else with two false and a true*/
 
-    script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") true (save-cell \"no\n\"))";
+    script = "if <\n    false, save-cell < \"yes\n\",\n    false, save-cell < \"again\n\",\n    true, save-cell < \"no\n\".";
     printf("%s\n", script);
 
     root = parse_all(script);

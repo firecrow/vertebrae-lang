@@ -19,7 +19,8 @@ enum OPERATOR_TYPE {
     SAVE_VALUE,
     SAVE_COUNT,
     GREATER_THAN,
-    LESS_THAN
+    LESS_THAN,
+    TRUTHY 
 };
 
 enum gka_op_lifecycle {
@@ -60,6 +61,7 @@ struct operator_ifc * new_context_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_cell_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_value_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_boolean_operator(enum OPERATOR_TYPE type);
 
 struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type);
 

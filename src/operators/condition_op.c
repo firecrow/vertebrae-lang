@@ -42,6 +42,7 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         printf("done %d\n", op->done);
         printf("\x1b[0m\n");
     }
+    return 0;
 
     if(op->done){
         if(debug){

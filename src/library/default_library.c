@@ -13,12 +13,13 @@ void init_basic_library(struct closure *closure){
 
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
-    closure_add_function(closure, str("="), new_equal_operator(EQUAL));
+    closure_add_function(closure, str("eq"), new_equal_operator(EQUAL));
+    closure_add_function(closure, str("t"), new_boolean_operator(TRUTHY));
     /*
     closure_add_function(closure, str("and"), new_and_operator(CONDITION));
     closure_add_function(closure, str("or"), new_or_operator(CONDITION));
-    closure_add_function(closure, str("!"), new_not_operator(CONDITION));
-    closure_add_function(closure, str("?"), new_nil_operator(CONDITION));
+    closure_add_function(closure, str("not"), new_not_operator(CONDITION));
+    closure_add_function(closure, str("isnil"), new_nil_operator(CONDITION));
     */
 
     /** ---------- arithemtic --------= */
