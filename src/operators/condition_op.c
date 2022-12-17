@@ -34,25 +34,41 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     if(op->lifecycle == GKA_OP_NOT_STARTED){
         op->root = ctx->head->cell;
         op->stack_cell = op->root->branch;
-        ctx->cell = op->stack_cell->branch;
+        ctx->cell = op->stack_cell;
 
         printf("\x1b[33mstarting from: ");
         print_cell(ctx->cell);
         printf("\x1b[0m\n");
-        op->done = 1;
+
+        op->done = 0;
         return 0;
     }
     printf("\x1b[34mvalue: ");
     print_cell(ctx->cell);
     print_value(ctx->value);
     printf("\x1b[0m\n");
-    if(op->done){
+
+    if(op->done || !op->stack_cell){
+        ctx->cell = op->root->next;
+    }else{
         ctx->cell = op->stack_cell->next;
         op->stack_cell = op->stack_cell->next;
-        printf("\x1b[33mending on: ");
-        print_cell(ctx->cell);
-        printf("\x1b[0m\n");
+        if(!op->stack_cell){
+            ctx->cell = op->root->next;
+        }
     }
+
+    if(ctx->value && ctx->value->truthy && ctx->value->truthy(ctx->value)){
+        printf("we are done.............\n");
+        op->done = 1;
+    }else{
+        /*skip one*/
+
+    }
+
+    printf("\x1b[33mending on: ");
+    print_cell(ctx->cell);
+    printf("\x1b[0m\n");
     return 0;
 }
 
