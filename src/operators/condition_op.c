@@ -17,6 +17,7 @@ struct condition_operator {
     operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
     struct cell *root;
+    struct cell *stack_cell;
     bool done;
     bool in_test;
 };
@@ -28,33 +29,30 @@ struct condition_operator {
  * such that each successful branch will run it's next cell on the op->next level
  */
 static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
+    printf("\x1b[35mcondition>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\x1b[0m\n");
     struct condition_operator *op = (struct condition_operator *)_op;
-    if(op->lifecycle != GKA_OP_STARTED){
+    if(op->lifecycle == GKA_OP_NOT_STARTED){
+        op->root = ctx->head->cell;
+        op->stack_cell = op->root->branch;
+        ctx->cell = op->stack_cell->branch;
+
+        printf("\x1b[33mstarting from: ");
+        print_cell(ctx->cell);
+        printf("\x1b[0m\n");
+        op->done = 1;
         return 0;
     }
-
-    struct cell *root = ctx->head->cell->branch->branch;
-    struct cell *current = root;
-
-    printf("\x1b[34min condition\n");
-    if(!op->done){
-        if(op->in_test){
-            ctx->cell = root->branch;
-        }
-        op->done = 1;
-    }else{
-        ctx->cell = ctx->head->cell->next;
+    printf("\x1b[34mvalue: ");
+    print_cell(ctx->cell);
+    print_value(ctx->value);
+    printf("\x1b[0m\n");
+    if(op->done){
+        ctx->cell = op->stack_cell->next;
+        op->stack_cell = op->stack_cell->next;
+        printf("\x1b[33mending on: ");
+        print_cell(ctx->cell);
+        printf("\x1b[0m\n");
     }
-
-    /*
-        while(current){
-            printf("\x1b[33myes\x1b[34m\n");
-            print_branches(current->branch, 0);
-            current = current->next;
-        }
-        printf("\n\x1b[0m");
-    */
-
     return 0;
 }
 

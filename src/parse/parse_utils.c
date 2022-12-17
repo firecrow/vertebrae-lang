@@ -130,11 +130,13 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         ctx->cell = next;
         ctx->next = new;
     }else{
+        /*
         stack_cell->is_head = 1;
         resolve_next(ctx, stack_cell);
 
         ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
         ctx->cell = stack_cell;
+        */
 
         ctx->next->is_head = 1;
         resolve_next(ctx, next);

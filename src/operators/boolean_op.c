@@ -5,7 +5,9 @@ static bool boolean_handle(struct operator_ifc *op, struct crw_state *ctx){
     if(op->lifecycle != GKA_OP_STARTED){
         return 0;
     }
+    printf("truthy...\n");
     if(ctx->value->truthy && !ctx->value->truthy(ctx->value)){
+        printf("it's true...\n");
         ctx->head->value = ctx->builtins.true;
         return 0;
     }

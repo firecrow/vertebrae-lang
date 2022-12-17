@@ -69,12 +69,13 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 }
 
 static void next_step(struct crw_state *ctx){
+    printf("next :");
     print_cell(ctx->cell);
     printf("\n");
-
     if(ctx->cell){
         int is_moved = 0;
         while(ctx->cell && ctx->cell->branch){
+            printf("starting branch......\n");
             start_new_branch(ctx, ctx->cell->branch, ctx->head->closure);
             indent++;
             return;
