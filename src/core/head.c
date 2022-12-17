@@ -1,5 +1,5 @@
 #include "../gekkota.h"
-static int debug = 1;
+static int debug = 0;
 
 int head_id = 0;
 struct head *new_head(){

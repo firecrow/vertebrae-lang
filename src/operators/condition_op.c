@@ -29,17 +29,31 @@ struct condition_operator {
  */
 static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct condition_operator *op = (struct condition_operator *)_op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
 
     struct cell *root = ctx->head->cell->branch->branch;
     struct cell *current = root;
 
     printf("\x1b[34min condition\n");
-    while(current){
-        printf("\x1b[33myes\x1b[34m\n");
-        print_branches(current->branch, 0);
-        current = current->next;
+    if(!op->done){
+        if(op->in_test){
+            ctx->cell = root->branch;
+        }
+        op->done = 1;
+    }else{
+        ctx->cell = ctx->head->cell->next;
     }
-    printf("\n\x1b[0m");
+
+    /*
+        while(current){
+            printf("\x1b[33myes\x1b[34m\n");
+            print_branches(current->branch, 0);
+            current = current->next;
+        }
+        printf("\n\x1b[0m");
+    */
 
     return 0;
 }

@@ -14,6 +14,9 @@ struct function_operator {
 
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     ctx->head->value = ctx->value;
 
     if(!ctx->cell){
@@ -34,7 +37,11 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
         ctx->stack = push_stack(ctx, op->next);
 
         struct cell *func = ctx->head->cell;
+
         ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
+        ctx->head->operator->lifecycle = GKA_OP_STARTED;
+
         ctx->cell = func;
     }
 

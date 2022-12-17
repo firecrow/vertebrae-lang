@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 0;
+int debug = 1;
 int indent = 0;
 
 static void print_space(){
@@ -28,13 +28,15 @@ void close_branch(struct crw_state *ctx){
 void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure){
     ctx->stack = push_stack(ctx, ctx->cell);
     ctx->previous = ctx->head;
+
     ctx->head = setup_new_head(new_head(), cell, closure);
+    ctx->head->operator->handle(ctx->head->operator, ctx);
+    ctx->head->operator->lifecycle = GKA_OP_STARTED;
+
     ctx->cell = cell;
     if(debug){
         printf("\x1b[35mstarting branch from...\x1b[0m");
         print_cell(cell);
-        printf("\nstarting branch head...");
-        print_head(cell);
         printf("\n");
     }
 }
@@ -67,6 +69,8 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 }
 
 static void next_step(struct crw_state *ctx){
+    print_cell(ctx->cell);
+    printf("\n");
 
     if(ctx->cell){
         int is_moved = 0;

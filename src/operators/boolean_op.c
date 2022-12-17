@@ -2,6 +2,9 @@
 
 /* =========== boolean ==========*/
 static bool boolean_handle(struct operator_ifc *op, struct crw_state *ctx){
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     if(ctx->value->truthy && !ctx->value->truthy(ctx->value)){
         ctx->head->value = ctx->builtins.true;
         return 0;
