@@ -28,7 +28,6 @@ void test_parse(){
     script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
     printf("%s\n", script);
     root = parse_all(script);
-    print_branches(root, 0);
 
     cell = root->branch->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
