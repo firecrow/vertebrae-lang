@@ -62,16 +62,14 @@ int main(){
     test_basic_run();
     test_arithmetic();
     test_variables();
-    /*
     test_run_functions();
     test_namespaces();
     test_passthrough();
     test_nested_function();
     test_function_pointers();
-    test_if_else();
     test_function_value_variable();
     test_siblings();
-    */
+    test_if_else();
 
     show_global_success();
 

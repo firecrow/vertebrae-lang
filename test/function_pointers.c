@@ -8,7 +8,7 @@ void test_function_pointers(){
     suite = new_suite("Function pointer run tests");
 
     /* test basic function does not run */
-    script = "func -> save-head <\n    add <\n        1 2 3,,.";
+    script = "func -> save-head <\n    add <\n        1 2 3,.";
     printf("%s\n", script);
 
     root = parse_all(script);
