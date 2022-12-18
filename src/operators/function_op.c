@@ -32,7 +32,7 @@ static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
             op->next = op->next->next;
         }
 
-        tree_add(ctx->head->closure->symbols, str("value"), ctx->value);
+        tree_add(ctx->head->closure->symbols, str("value"), swap_for_symbol(ctx->head->closure, ctx->value));
 
         ctx->stack = push_stack(ctx, op->next);
 

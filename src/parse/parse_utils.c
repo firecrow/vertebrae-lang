@@ -22,8 +22,20 @@ bool is_whitespace(char c){
 
 void resolve_next(struct parse_ctx *ctx, struct cell *next){
     if(next->is_head){
+        if(ctx->cell->branch){
+            fprintf(stderr, "error has branch already\n");
+            /*
+            exit(1);
+            */
+        }
         ctx->cell->branch = next;
     }else{
+        if(ctx->cell->next){
+            fprintf(stderr, "error has next cell already\n");
+            /*
+            exit(1);
+            */
+        }
         ctx->cell->next = next;
     }
 }
@@ -52,6 +64,8 @@ void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
     struct cell *stack_cell = new_cell(new_value());
     stack_cell->is_head = 1;
 
+    struct cell *name_stack_cell = new_cell(new_value());
+
     if(debug){
         printf("setup func cells: stack/next/new\n");
         print_cell(stack_cell);
@@ -62,18 +76,23 @@ void setup_func_cell(struct parse_ctx *ctx, struct cell *new){
         printf("\n---------\n");
     }
     if(ctx->next_func_into == 1){
+
+        resolve_next(ctx, name_stack_cell);
+        ctx->stack = push_parse_stack(ctx->stack, name_stack_cell, NULL);
+        ctx->cell = name_stack_cell;
+
         struct cell *func_name = ctx->next;
         func_name->value->accent = GKA_PARSE_DEF;
+        func_name->is_head = 1;
         struct cell *func_cell = new_cell(new_cell_value_obj(stack_cell));
-        new->is_head = 1;
         ctx->stack = push_parse_stack(ctx->stack, func_cell, NULL);
-        
 
         func_name->next = func_cell;
 
         resolve_next(ctx, func_name);
         ctx->cell = stack_cell;
         
+        new->is_head = 1;
         ctx->next = new;
 
         printf("\x1b[36m");
