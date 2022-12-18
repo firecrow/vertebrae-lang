@@ -72,7 +72,7 @@ static bool condition_handle(struct operator_ifc *_op, struct crw_state *ctx){
         next_or_jump(op, ctx);
     }
 
-    if(1 || debug){
+    if(debug){
         printf("\x1b[33mending on: ");
         print_cell(ctx->cell);
         printf("\x1b[0m\n");
