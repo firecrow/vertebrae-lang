@@ -19,7 +19,8 @@ enum OPERATOR_TYPE {
     SAVE_VALUE,
     SAVE_COUNT,
     GREATER_THAN,
-    LESS_THAN
+    LESS_THAN,
+    TRUTHY 
 };
 
 enum gka_op_lifecycle {
@@ -60,6 +61,7 @@ struct operator_ifc * new_context_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_head_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_cell_operator(enum OPERATOR_TYPE type);
 struct operator_ifc * new_save_value_operator(enum OPERATOR_TYPE type);
+struct operator_ifc * new_boolean_operator(enum OPERATOR_TYPE type);
 
 struct operator_ifc * new_save_count_operator(enum OPERATOR_TYPE type);
 
@@ -73,3 +75,22 @@ struct def_operator {
     void (*handle_value)(struct crw_state *ctx, struct value_obj *value, struct value_obj *key);
     struct value_obj *key;
 };
+
+struct arithmetic_operator {
+    enum OPERATOR_TYPE type;
+    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
+    operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
+    struct value *value;
+};
+
+struct equal_operator {
+    enum OPERATOR_TYPE type;
+    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
+    operator_handle_func *handle;
+    operator_handle_func *close;
+    enum gka_op_lifecycle lifecycle;
+    struct value_obj *value;
+};
+

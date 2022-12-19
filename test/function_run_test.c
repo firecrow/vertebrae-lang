@@ -44,7 +44,7 @@ void test_run_functions(){
     test(suite, state->data->slot.value->type == SL_TYPE_INT, "mock value is int");
     test(suite, state->data->slot.value->slot.integer == 1, "mock value is the number");
 
-    script = ":hi < \"there\",\n    :func ->\n        print hi.";
+    script = ":hi < \"there\",\n    :func ->\n        print < hi.";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -55,17 +55,20 @@ void test_run_functions(){
     printf("no print runs");
     test(suite, state->context == NULL, "mock never runs");
 
-    script = ":hi \"there\",\n:func ->\n    print hi.\nfunc < _";
+    script = ":hi < \"there\",\n:func ->\n    print < hi.\nfunc < _";
     printf("%s\n", script);
 
     root = parse_all(script);
+
     state = crw_new_state_context();
     run_root(state, root);
 
-    script = ":hi < \"there\",\n:func ->\n    mock < print < \"hello, \" value,.\nfunc < \"one\" \"two\" \"three\".";
+    script = ":hi < \"there\",\n:func ->\n    mock < print < \"hello, \" value.\nfunc < \"one\" \"two\" \"three\".";
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
+
     state = crw_new_state_context();
     run_root(state, root);
 

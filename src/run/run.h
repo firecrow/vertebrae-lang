@@ -1,6 +1,7 @@
 enum CRW_STATUS {
     CRW_CONTINUE = 0,
-    CRW_DONE = 1
+    CRW_PENDING,
+    CRW_DONE  
 };
 
 enum CRW_HANDLE_STATE {
@@ -42,6 +43,7 @@ void close_branch(struct crw_state *ctx);
 void run_root(struct crw_state *ctx, struct cell *root);
 void cell_incr(struct crw_state *ctx);
 void cell_next(struct crw_state *ctx);
+void start_new_branch(struct crw_state *ctx, struct cell *cell, struct closure *closure);
 
 /* utils */
 struct cell *get_next(struct cell *cell);

@@ -13,6 +13,9 @@ struct save_count_operator {
 
 static bool save_count_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct save_count_operator *op = (struct save_count_operator *)_op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     op->count++;
     
     if(debug){

@@ -9,6 +9,9 @@ struct string_concat_operator {
 }
 
 int string_concat_handle(struct operator_ifc *_op, struct crw_state *ctx;){
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     if(!ctx->cell->value || ctx->cell->value->type != STRING){
         fprintf(stderr, "Cannot concatonate non string value");
         exit(1);

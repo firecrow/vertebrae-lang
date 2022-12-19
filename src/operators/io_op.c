@@ -1,4 +1,5 @@
 #include "../gekkota.h"
+static int debug = 1;
 
 /* =========== print ==========*/
 struct print_operator {
@@ -11,6 +12,16 @@ struct print_operator {
 
 static bool print_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct print_operator *op = (struct print_operator *) _op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
+
+    if(debug){
+        printf("in print for value: ");
+        print_value(ctx->value);
+        print_cell(ctx->cell);
+        printf("\n");
+    }
 
     if(tree_get(ctx->head->closure->symbols, str("head")) != NULL){
         printf("\x1b[34m");

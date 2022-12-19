@@ -1,3 +1,9 @@
-count -> print < "hi".
+:hi < "there",
+:you < "brainiac",
+:fruit < "apple",
+:count < 10,
 
-count < 10 
+hl -> 
+    print < add < count value,.
+
+hl < 1 5 17

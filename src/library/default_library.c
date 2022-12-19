@@ -6,6 +6,7 @@ void init_basic_library(struct closure *closure){
     closure_add_value(closure, str("false"), new_result_value_obj(FALSE));
     closure_add_value(closure, str("nil"), new_result_value_obj(NIL));
     closure_add_value(closure, str("error"), new_result_value_obj(ERROR));
+
     closure_add_function(closure, str("save-head"), new_save_head_operator(SAVE_HEAD));
     closure_add_function(closure, str("save-cell"), new_save_cell_operator(SAVE_CELL));
     closure_add_function(closure, str("save-value"), new_save_value_operator(SAVE_VALUE));
@@ -13,12 +14,13 @@ void init_basic_library(struct closure *closure){
 
     /*----- logic -----*/
     closure_add_function(closure, str("if"), new_condition_operator(CONDITION));
-    closure_add_function(closure, str("="), new_equal_operator(EQUAL));
+    closure_add_function(closure, str("eq"), new_equal_operator(EQUAL));
+    closure_add_function(closure, str("t"), new_boolean_operator(TRUTHY));
     /*
     closure_add_function(closure, str("and"), new_and_operator(CONDITION));
     closure_add_function(closure, str("or"), new_or_operator(CONDITION));
-    closure_add_function(closure, str("!"), new_not_operator(CONDITION));
-    closure_add_function(closure, str("?"), new_nil_operator(CONDITION));
+    closure_add_function(closure, str("not"), new_not_operator(CONDITION));
+    closure_add_function(closure, str("isnil"), new_nil_operator(CONDITION));
     */
 
     /** ---------- arithemtic --------= */

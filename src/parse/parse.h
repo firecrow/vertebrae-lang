@@ -11,11 +11,11 @@ struct parse_ctx;
 typedef int (*pattern_incr_func)(struct match_pattern *pattern, struct parse_ctx *ctx, char c);
 
 struct match_pattern {
-  enum match_state state;
-  bool in_escape;
-  struct string *token;
-  pattern_incr_func incr; 
-  void *data;
+    enum match_state state;
+    bool in_escape;
+    struct string *token;
+    pattern_incr_func incr; 
+    void *data;
 };
 
 #define GKA_PATTERN_START 0 
@@ -23,12 +23,15 @@ struct match_pattern {
 
 struct parse_ctx {
     struct cell *cell;
+    struct cell *next;
     struct cell *root;
     struct cell *previous;
     struct cell *grand_previous;
     bool next_is_branch;
     bool next_is_into;
+    bool next_is_outof;
     bool next_func_into;
+    bool in_branching;
     enum parse_accent accent;
     struct stack_item *stack;
     struct match_pattern *current;

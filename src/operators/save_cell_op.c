@@ -1,6 +1,9 @@
 #include "../gekkota.h"
 
 static bool save_cell_handle(struct operator_ifc *op, struct crw_state *ctx){
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     struct crw_ctx_data *data = new_data();
     data->type = SL_TYPE_CELL;
     data->slot.cell = ctx->cell;
