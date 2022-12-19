@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 0;
+int debug = 1;
 int indent = 0;
 
 static void print_space(){
@@ -70,8 +70,12 @@ void crw_setup_state_context(struct crw_state *state, struct cell* root, struct 
 
 static void next_step(struct crw_state *ctx){
     if(debug){
-        printf("next step: with cell :");
+        printf("next step: with cell : -->\n");
+        printf("   ");
         print_cell(ctx->cell);
+        printf("\n");
+        printf("   ");
+        print_head(ctx->head);
         printf("\n");
     }
     if(ctx->cell){

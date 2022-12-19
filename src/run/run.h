@@ -1,6 +1,7 @@
 enum CRW_STATUS {
     CRW_CONTINUE = 0,
-    CRW_DONE = 1
+    CRW_PENDING,
+    CRW_DONE  
 };
 
 enum CRW_HANDLE_STATE {

@@ -24,17 +24,11 @@ void resolve_next(struct parse_ctx *ctx, struct cell *next){
     if(next->is_head){
         if(ctx->cell->branch){
             fprintf(stderr, "error has branch already\n");
-            /*
-            exit(1);
-            */
         }
         ctx->cell->branch = next;
     }else{
         if(ctx->cell->next){
             fprintf(stderr, "error has next cell already\n");
-            /*
-            exit(1);
-            */
         }
         ctx->cell->next = next;
     }
