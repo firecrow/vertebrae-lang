@@ -1,5 +1,5 @@
 #include "../gekkota.h"
-static int debug = 1;
+static int debug = 0;
 
 /* =========== print ==========*/
 struct print_operator {

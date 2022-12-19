@@ -57,7 +57,9 @@ int main(){
     test_steps();
     test_basic();
     test_pop_stack();
+    /*
     test_parse();
+    */
     test_swap_symbol();
     test_basic_run();
     test_arithmetic();

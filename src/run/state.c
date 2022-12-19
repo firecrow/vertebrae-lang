@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-int debug = 1;
+int debug = 0;
 int indent = 0;
 
 static void print_space(){

@@ -131,11 +131,15 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
     if(ctx->in_branching == 0){
         ctx->in_branching = 1;
 
-        stack_cell->is_head = next->is_head;
-        resolve_next(ctx, stack_cell);
+        if(ctx->cell->branch){
+            stack_cell->is_head = next->is_head;
+            resolve_next(ctx, stack_cell);
 
-        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-        ctx->cell = stack_cell;
+            ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
+            ctx->cell = stack_cell;
+        }else{
+            ctx->stack = push_parse_stack(ctx->stack, ctx->cell, NULL);
+        }
 
         next->is_head = 1;
         resolve_next(ctx, next);
@@ -143,13 +147,6 @@ static void setup_branch(struct parse_ctx *ctx, struct cell *new){
         ctx->cell = next;
         ctx->next = new;
     }else{
-        /*
-        stack_cell->is_head = 1;
-        resolve_next(ctx, stack_cell);
-
-        ctx->stack = push_parse_stack(ctx->stack, stack_cell, NULL);
-        ctx->cell = stack_cell;
-        */
 
         ctx->next->is_head = 1;
         resolve_next(ctx, next);
