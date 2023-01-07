@@ -4,7 +4,7 @@ void test_passthrough(){
     global = new_closure(NULL);
     init_basic_library(global); 
 
-    script = "(save-head (+ 7))";
+    script = "save-head < add < 7";
     printf("%s\n", script);
 
     root = parse_all(script);

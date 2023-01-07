@@ -1,30 +1,39 @@
 #include "../gekkota.h"
 
-struct arithmetic_operator {
-    enum OPERATOR_TYPE type;
-    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
-    operator_handle_func *handle;
-    operator_handle_func *close;
-    enum gka_op_lifecycle lifecycle;
-    struct value *value;
-};
+static int debug = 0;
 
 static bool arithmetic_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct arithmetic_operator *op = (struct arithmetic_operator*)_op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
+
+    if(debug){
+        printf("\x1b[32min arithmetic: ");
+        print_value(ctx->value);
+        printf("\x1b[0m\n");
+    }
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
+
     struct head *head = ctx->head;
     struct value_obj *value = ctx->value;
     if(!value){
-        printf(" returning no value ");
+        printf("returning no value \n");
         return 0;
     }
     if(value->type != SL_TYPE_INT){
-        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d ", value->type);
+        fprintf(stderr, "Cannot do arithmetic on non integer value recieved of type %d\n", value->type);
         print_value(value);
         printf("\n");
         return 0;
     }
     if(!head->value){
         head->value = clone_value(value);
+        if(debug){
+            printf("\x1b[32msetting original value\n\x1b[0m");
+        }
         return 0;
     }
 

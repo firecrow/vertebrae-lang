@@ -4,7 +4,7 @@ void test_namespaces(){
     global = new_closure(NULL);
     init_basic_library(global); 
 
-    script = "(save-head .hi \"there\")";
+    script = "save-head  < :hi < \"there\")";
     printf("%s\n", script);
 
     root = parse_all(script);

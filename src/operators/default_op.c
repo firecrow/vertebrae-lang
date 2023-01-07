@@ -1,6 +1,9 @@
 #include "../gekkota.h"
 
 static bool default_handle(struct operator_ifc *op, struct crw_state *ctx){
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
     ctx->head->value = ctx->value;
     return 0;
 }

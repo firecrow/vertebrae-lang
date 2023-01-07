@@ -1,6 +1,6 @@
 #include "../gekkota.h"
 
-static int debug = 0; 
+static int debug = 1; 
 
 struct function_operator {
     enum OPERATOR_TYPE type;
@@ -8,60 +8,44 @@ struct function_operator {
     operator_handle_func *handle;
     operator_handle_func *close;
     enum gka_op_lifecycle lifecycle;
+    bool is_open;
     struct cell *next;
 };
 
 static bool function_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct function_operator *op = (struct function_operator *)_op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
+    ctx->head->value = ctx->value;
 
     if(!ctx->cell){
         return 0;
     }
 
-    if(debug){
-        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> funcion called\n");
-        print_cell(ctx->cell);
-        printf("\n");
-        print_head(ctx->head);
-        printf("\n");
+    op->is_open = op->is_open ? 0 : 1;
+
+    if(op->is_open){
+        if(!op->next){
+            op->next = ctx->cell;
+        }else{
+            op->next = op->next->next;
+        }
+
+        tree_add(ctx->head->closure->symbols, str("value"), swap_for_symbol(ctx->head->closure, ctx->value));
+
+        ctx->stack = push_stack(ctx, op->next);
+
+        struct cell *func = ctx->head->cell;
+
+        ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
+        ctx->head->operator->handle(ctx->head->operator, ctx);
+        ctx->head->operator->lifecycle = GKA_OP_STARTED;
+
+        ctx->cell = func;
     }
 
-    tree_add(ctx->head->closure->symbols, str("value"), ctx->cell->value);
-    struct cell *func = ctx->head->cell;
-
-    if(!op->next){
-        op->next = ctx->cell;
-    }else if(op->next != NULL){
-        op->next = op->next->next;
-    }
-
-    if(op->next == NULL){
-        return 1;
-    }
-
-    if(debug){
-        printf(">>>>>>> op->next: ");
-        print_cell(op->next);
-        printf("\n");
-
-        printf("in func thing............\n");
-        print_cell(func);
-        printf(" ->\n    ");
-        print_cell(func->branch);
-        printf("\n");
-    }
-
-    /*
-    printf("\x1b[36mvalue befor branch: ");
-    print_value(ctx->cell->value);
-    printf("\n\x1b[0m");
-    */
-
-    ctx->stack = push_stack(ctx, op->next);
-    ctx->head = setup_new_head(new_head(), func->branch, ctx->head->closure);
-    ctx->cell = func->branch->next;
-
-    return 1;
+    return 0;
 }
 
 static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
@@ -69,7 +53,6 @@ static bool function_close(struct operator_ifc *_op, struct crw_state *ctx){
 
     if(!op->next){
         struct cell *func = ctx->head->cell;
-        ctx->stack = push_stack(ctx, NULL);
         ctx->head = setup_new_head(new_head(), func, ctx->head->closure);
         ctx->cell = func;
         return 1;
@@ -85,5 +68,6 @@ struct operator_ifc * new_function_operator(enum OPERATOR_TYPE type) {
     op->close = function_close;
     op->new = new_function_operator;
     op->lifecycle = GKA_OP_NOT_STARTED;
+    op->is_open = 0;
     return (struct operator_ifc *)op;
 }

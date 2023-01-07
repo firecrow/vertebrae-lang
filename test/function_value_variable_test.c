@@ -3,7 +3,7 @@ void test_function_value_variable(){
     global = new_closure(NULL);
     init_basic_library(global); 
     
-    script = "(.func '(save-value value) (func 13))";
+    script = ":func -> save-value < value.\nfunc < 13,";
     printf("%s\n", script);
 
     root = parse_all(script);

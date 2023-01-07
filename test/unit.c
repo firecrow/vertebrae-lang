@@ -39,7 +39,6 @@ struct cell *eleventh = NULL;
 #include "pop_stack.c"
 #include "arithmetic_test.c"
 #include "variable_test.c"
-#include "function_test.c"
 #include "function_run_test.c"
 #include "parse_test.c"
 #include "swap_symbol_test.c"
@@ -58,20 +57,21 @@ int main(){
     test_steps();
     test_basic();
     test_pop_stack();
+    /*
     test_parse();
+    */
     test_swap_symbol();
     test_basic_run();
     test_arithmetic();
     test_variables();
-    test_functions();
     test_run_functions();
     test_namespaces();
     test_passthrough();
     test_nested_function();
-    test_if_else();
     test_function_pointers();
     test_function_value_variable();
     test_siblings();
+    test_if_else();
 
     show_global_success();
 

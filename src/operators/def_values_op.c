@@ -1,16 +1,6 @@
 #include "../gekkota.h"
 
 static int debug = 0;
-
-struct def_operator {
-    int type;
-    struct operator_ifc *(*new)(enum OPERATOR_TYPE type);
-    operator_handle_func *handle;
-    operator_handle_func *close;
-    enum gka_op_lifecycle lifecycle;
-    void (*handle_value)(struct crw_state *ctx, struct value_obj *value, struct value_obj *key);
-    struct value_obj *key;
-};
  
 static void def_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
     if(debug){
@@ -24,12 +14,6 @@ static void def_value(struct crw_state *ctx, struct value_obj *key, struct value
 }
 
 static void set_value(struct crw_state *ctx, struct value_obj *key, struct value_obj *value){
-    if(debug){
-        printf("setting value: ");
-        print_value(value);
-        printf("\n");
-    }
-
     struct closure *closure = ctx->head->closure;
     struct closure *previous = closure;
     struct value_obj *result = NULL;
@@ -47,9 +31,12 @@ static void set_value(struct crw_state *ctx, struct value_obj *key, struct value
 
 static char def_handle(struct operator_ifc *_op, struct crw_state *ctx){
     struct def_operator *op = (struct def_operator *) _op;
+    if(op->lifecycle != GKA_OP_STARTED){
+        return 0;
+    }
 
     if(op->key == NULL){
-        if(ctx->value->type == SL_TYPE_SYMBOL){
+        if(ctx->value && (ctx->value->type == SL_TYPE_SYMBOL)){
             op->key = ctx->value;
         }
     }else if(!value_is_nil(ctx->value)){

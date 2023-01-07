@@ -7,7 +7,7 @@ void test_run_functions(){
 
     suite = new_suite("Function run tests");
 
-    script = "(\n    print (save-head (+ 1 2 3)))";
+    script = "print <\n    save-head <\n        add < 1 2 3.";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -19,7 +19,7 @@ void test_run_functions(){
     test(suite, state->data->slot.head->value->type == SL_TYPE_INT, "mock value is int");
     test(suite, state->data->slot.head->value->slot.integer == 6, "mock value is sum of numbers");
 
-    script = "(save-cell 10)";
+    script = "save-cell < 10";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -32,7 +32,7 @@ void test_run_functions(){
     test(suite, state->data->slot.cell->value->type == SL_TYPE_INT, "mock-cell value is int");
     test(suite, state->data->slot.cell->value->slot.integer == 10, "mock-cell value is sum of numbers");
 
-    script = "(save-value (+ 1))";
+    script = "save-value < + 1,";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -44,7 +44,7 @@ void test_run_functions(){
     test(suite, state->data->slot.value->type == SL_TYPE_INT, "mock value is int");
     test(suite, state->data->slot.value->slot.integer == 1, "mock value is the number");
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        print hi))";
+    script = ":hi < \"there\",\n    :func ->\n        print < hi.";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -55,17 +55,20 @@ void test_run_functions(){
     printf("no print runs");
     test(suite, state->context == NULL, "mock never runs");
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        print hi)\n    (func))";
+    script = ":hi < \"there\",\n:func ->\n    print < hi.\nfunc < _";
     printf("%s\n", script);
 
     root = parse_all(script);
+
     state = crw_new_state_context();
     run_root(state, root);
 
-    script = "(\n    .hi \"there\"\n    .func '(\n        mock (print \"hello, \" value))\n    (func \"one\" \"two\" \"three\"))";
+    script = ":hi < \"there\",\n:func ->\n    mock < print < \"hello, \" value.\nfunc < \"one\" \"two\" \"three\".";
     printf("%s\n", script);
 
     root = parse_all(script);
+    print_branches(root, 0);
+
     state = crw_new_state_context();
     run_root(state, root);
 

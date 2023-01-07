@@ -5,8 +5,7 @@ void test_if_else(){
     global = new_closure(NULL);
     init_basic_library(global); 
 
-    /* basic test of truthy runs next */
-    script = "(if true (save-cell \"yes\n\"))";
+    script = "if << t < true, save-cell < \"yes\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -17,10 +16,9 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of truthy runs next");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("yes\n")), "value yes should be assined indicating it ran");
+    test(suite, !string_cmp(value->slot.string, str("yes")), "value yes should be assined indicating it ran");
 
-    /* basic test of truthy does not run next */
-    script = "(if false (save-cell \"yes\n\"))";
+    script = "if << t < false, save-cell < \"yes\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -30,9 +28,8 @@ void test_if_else(){
 
     test(suite, state->data == NULL, "basic test of truthy does not run next");
 
-    /* basic test of else */
 
-    script = "(if false (save-cell \"yes\n\") (save-cell \"no\n\"))";
+    script = "if << eq < 1 2, save-cell < \"yes\", eq < 1 1, save-cell < \"no\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -43,9 +40,9 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "mock 'no' cell is set");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else");
+    test(suite, !string_cmp(value->slot.string, str("no")), "basic test of else");
 
-    script = "(if false (save-cell \"yes\n\") (\"no\n\"))";
+    script = "if << t < false, save-cell < \"yes\", print < \"no\".";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -55,9 +52,8 @@ void test_if_else(){
 
     test(suite, state->data == NULL, "mock 'yes' cell is not set");
 
-    /* basic test of else if else */
 
-    script = "(if false (save-cell \"yes\n\") true (save-cell \"again\n\") (save-cell \"no\n\"))";
+    script = "if <<\n    t < false, save-cell < \"yes\\n\",\n    t < true, save-cell < \"again\",\n    save-cell < \"no\"";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -68,11 +64,11 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else");
+    print_value(value);
+    test(suite, !string_cmp(value->slot.string, str("again")), "basic test of else if else II");
 
-    /* basic test of else if else with no second branch */
 
-    script = "(if false (save-cell \"yes\n\") false false true (save-cell \"again\n\") (save-cell \"no\n\"))";
+    script = "if <<\n    t < false, save-cell < \"yes\",\n    t < false, save-cell < false,\n    t < true, save-cell < \"again\",\n    save-cell < \"no\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -83,11 +79,10 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with no second branch");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("again\n")), "basic test of else if else with no second branch");
+    test(suite, !string_cmp(value->slot.string, str("again")), "basic test of else if else with no second branch II");
 
-    /* basic test of else if else with two false */
 
-    script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") (save-cell \"no\n\"))";
+    script = "if <<\n    t < false, save-cell < \"yes\",\n    t < false, save-cell < \"again\",\n    save-cell < \"no\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -98,11 +93,10 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "basic test of else if else with two false");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false");
+    test(suite, !string_cmp(value->slot.string, str("no")), "basic test of else if else with two false II");
 
-    /* basic test of else if else with two false and a true*/
 
-    script = "(if false (save-cell \"yes\n\") false (save-cell \"again\n\") true (save-cell \"no\n\"))";
+    script = "if <<\n    t < false, save-cell < \"yes\",\n    t < false, save-cell < \"again\",\n    t < true, save-cell < \"no\",";
     printf("%s\n", script);
 
     root = parse_all(script);
@@ -113,8 +107,7 @@ void test_if_else(){
     test(suite, state->data->type == SL_TYPE_CELL, "mock 'again' cell is set");
 
     value = state->data->slot.cell->value;
-    test(suite, !string_cmp(value->slot.string, str("no\n")), "basic test of else if else with two false and a true");
-
+    test(suite, !string_cmp(value->slot.string, str("no")), "basic test of else if else with two false and a true III");
 
     summerize(suite);
 }

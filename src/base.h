@@ -44,7 +44,10 @@ enum parse_accent {
   GKA_PARSE_QUOTE,
   GKA_PARSE_SUPER,
   GKA_PARSE_DOT,
-  GKA_PARSE_NOT
+  GKA_PARSE_NOT,
+  GKA_PARSE_DEF,
+  GKA_PARSE_SET,
+  GKA_PARSE_HEAD
 };
 
 #define bool char
@@ -104,7 +107,9 @@ struct cell {
     int id;
     struct value_obj *value;
     struct cell *next;
+    struct cell *prev;
     struct cell *branch;
+    bool is_head;
 };
 
 struct stack_item {
@@ -126,4 +131,4 @@ struct head {
 };
 
 struct value_obj *swap_for_symbol(struct closure *closure, struct value_obj *value);
-
+int gka_exec(char *cmd_path, char *args[]);

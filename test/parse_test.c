@@ -1,104 +1,126 @@
 void test_parse(){
+    struct cell *start;
+    struct cell *func;
+
     suite = new_suite("Parse tests");
-    char *script = "(+ 127)";
+
+    char *script = "add < 127,";
+
+    root = parse_all(script);
+    print_branches(root, 0);
+    start = root->branch->branch;
+
+    test(suite, start->value->type == SL_TYPE_SYMBOL, "add is symbol");
+    test(suite, string_cmp(start->value->slot.string, str("add")) == 0, "add is the content of the symbol");
+    test(suite, start->next->value->type == SL_TYPE_INT, "1 is an int");
+    test(suite, start->next->value->slot.integer == 127, "1 is 127");
+
+    script = ":hi < \"there\",";
 
     root = parse_all(script);
 
-    /*
-    printf("root: ");
-    print_cell(root);
-    printf("root->branch: ");
-    print_cell(root->branch);
-    printf("root->next: ");
-    print_cell(root->next);
-    printf("\n");
-    */
+    start = root->branch;
 
-    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "+ is symbol");
-    test(suite, string_cmp(root->branch->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
-    test(suite, root->branch->next->value->type == SL_TYPE_INT, "1 is an int");
-    test(suite, root->branch->next->value->slot.integer == 127, "1 is 127");
+    test(suite, start->branch->value->type == SL_TYPE_SYMBOL, "hi is symbol");
+    test(suite, string_cmp(start->branch->value->slot.string, str("hi")) == 0, "hi is the symbol name");
+    test(suite, string_cmp(start->branch->next->value->slot.string, str("there")) == 0, "string is the approprate value");
 
-    script = "(let .hi \"there\")";
-
+    script = "print < \"the sum is: \" add < 1 2 3, \" units\",";
+    printf("%s\n", script);
     root = parse_all(script);
 
-    test(suite, root->branch->value->type == SL_TYPE_SYMBOL, "let is symbol");
-    test(suite, string_cmp(root->branch->value->slot.string, str("let")) == 0, "let is the content of the symbol");
-    test(suite, root->branch->next->value->type == SL_TYPE_KEY, ".hi is a key");
-    test(suite, string_cmp(root->branch->next->value->slot.string, str("hi")) == 0, "key name is accurate");
-
-    script = "(print \"the sum is: \" (+ 1 2) \" units\")";
-
-    root = parse_all(script);
-
-    cell = root->branch;
+    cell = root->branch->branch;
     test(suite, cell->value->type == SL_TYPE_SYMBOL, "print is symbol");
     test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the content of the symbol");
 
-    cell = root->branch->next;
+    cell = cell->next;
+    struct cell *level = cell;
     test(suite, cell->value->type == SL_TYPE_STRING, "second is string");
     test(suite, string_cmp(cell->value->slot.string, str("the sum is: ")) == 0, "the sum is string is the content of the string");
-    
-    /*
-    printf("%s\n", script);
-    print_cell(root->branch);
-    printf("\n");
-    print_cell(root->branch->next);
-    printf("\n");
-    print_cell(root->branch->next->next);
-    printf("\n");
-    */
 
-    cell = root->branch->next->next->branch;
-    test(suite, cell->value->type == SL_TYPE_SYMBOL, "+ is symbol");
-    test(suite, string_cmp(cell->value->slot.string, str("+")) == 0, "+ is the content of the symbol");
+    cell = cell->next->branch;
+    test(suite, cell->value->type == SL_TYPE_SYMBOL, "add is symbol");
+    test(suite, string_cmp(cell->value->slot.string, str("add")) == 0, "add is the content of the symbol");
 
-    cell = root->branch->next->next->branch->next;
+    cell = cell->next;
     test(suite, cell->value->type == SL_TYPE_INT, "1 is an integer");
     test(suite, cell->value->slot.integer == 1, "1 is 1");
 
-    cell = root->branch->next->next->branch->next->next;
+    cell = cell->next;
     test(suite, cell->value->type == SL_TYPE_INT, "2 is an integer");
     test(suite, cell->value->slot.integer == 2, "2 is 2");
 
-    cell = root->branch->next->next->branch->next->next;
-    test(suite, cell->next == NULL, "next cell next is null");
+    cell = cell->next;
+    test(suite, cell->value->type == SL_TYPE_INT, "3 is an integer");
+    test(suite, cell->value->slot.integer == 3, "3 is 3");
 
-    /*
-    printf("root: ");
-    print_cell(root);
-    printf("root->branch: ");
-    print_cell(root->branch);
-    printf("root->branch->next: ");
-    print_cell(root->branch->next);
-    printf("\n");
-    */
+    cell = cell->next;
+    test(suite, cell == NULL, "next cell next is null");
 
-    cell = root->branch->next->next->next;
+    cell = level->next->next;
     test(suite, cell->value->type == SL_TYPE_STRING, "third section is string");
     test(suite, string_cmp(cell->value->slot.string, str(" units")) == 0, "units string is the content of the string");
 
-    /* double parens */
-    script = "(print ((+ 1 2 3)))";
-    printf("%s\n", script);
-
-    /*
-    test(suite, func->branch != NULL, "func branch exists");
-    test(suite, func->branch->branch != NULL, "func branch has another branch");
-    */
-    
-    /* parse a function pointer */
-    script = "(.func '((print \"hi\") (print \"there\")) (func))";
+    script = "print < add < 1 2 3,,";
     printf("%s\n", script);
 
     root = parse_all(script);
 
-    struct cell *func = root->branch->next->value->slot.cell;
-    test(suite, func->branch != NULL, "func branch exists");
-    test(suite, func->branch->branch == NULL, "func branch does not have an immediate branch");
-    test(suite, func->branch->next->branch->value->type == SL_TYPE_SYMBOL, "tymbol type is the second inset branch");
-    test(suite, !string_cmp(func->branch->next->branch->value->slot.string, str("print")), "print is the second inset branch");
+    start = root;
+
+    cell = start->branch->branch;
+    test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
+    test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");
+
+    func = cell->next->branch;
+    test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
+    test(suite, func->next->value->slot.integer == 1, "next is the first value");
+
+    script = "print << add < 1 2 3.";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+    print_branches(root, 0);
+
+    start = root;
+    cell = start->branch->branch;
+
+    test(suite, cell->value->type == SL_TYPE_SYMBOL, "first section is symbol");
+    test(suite, string_cmp(cell->value->slot.string, str("print")) == 0, "print is the label of the symbol");
+
+    func = cell->branch->branch;
+
+    test(suite, string_cmp(func->value->slot.string, str("add")) == 0 , "func add is the branch");
+    test(suite, func->next->value->slot.integer == 1, "next is the first value");
+    
+    script = "func ->\n    print < \"hi\", print < \"there\".\nfunc < _";
+    printf("%s\n", script);
+
+    root = parse_all(script);
+    print_branches(root, 0);
+
+    start = root->next->branch;
+
+    test(suite, start->value->type == SL_TYPE_SYMBOL, "starts with the function symbol");
+    test(suite, string_cmp(start->value->slot.string, str("func")) == 0, "first cell is func name");
+    test(suite, start->value->accent = GKA_PARSE_DEF, "first cell has set accent");
+
+    func = start->next;
+    test(suite, func->value->type == SL_TYPE_CELL, "func is cell");
+
+    struct cell *body = func->value->slot.cell;
+    struct cell *part1 = body->branch->branch;
+
+    test(suite, string_cmp(part1->value->slot.string, str("print")) == 0, "part1 starts with print");
+    test(suite, string_cmp(part1->next->value->slot.string, str("hi")) == 0, "part1 first arg is hi");
+
+    struct cell *part2 = body->branch->next->branch;
+    test(suite, string_cmp(part2->value->slot.string, str("print")) == 0, "part2 starts with print");
+    test(suite, string_cmp(part2->next->value->slot.string, str("there")) == 0, "part2 first arg is hello");
+
+    struct cell *call = root->next->branch->next->next->branch;
+    test(suite, string_cmp(call->value->slot.string, str("func")) == 0, "call starts with print");
+    test(suite, string_cmp(call->next->value->slot.string, str("_")) == 0, "call first arg is hello");
 
     summerize(suite);
 }

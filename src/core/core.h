@@ -17,6 +17,7 @@ void print_cell(struct cell *cell);
 void print_head(struct head *head);
 void print_tree(struct tree *tree);
 void print_state(struct crw_state *ctx, bool show_tree);
+void print_branches(struct cell *cell, int indent);
 
 /* head.c */
 struct head *new_head();

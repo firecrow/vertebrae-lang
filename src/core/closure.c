@@ -1,5 +1,7 @@
 #include "../gekkota.h"
 
+static int debug = 0;
+
 struct closure *new_closure(struct closure *parent){
     struct closure *closure = malloc(sizeof(struct closure));
     if(closure == NULL){
@@ -19,10 +21,16 @@ struct value_obj *closure_lookup(struct closure *closure, struct value_obj *key)
     if(!is_string_class(key)){
         return key;
     }
+    if(debug){
+        printf("\x1b[36mlooking for :%s\x1b[0m\n", key->slot.string->content);
+    }
     struct value_obj *result = NULL;
     while(closure && (!result || value_is_nil(result))){
         result = tree_get(closure->symbols, key->slot.string);
         closure = closure->parent;
+        if(debug && closure){
+            print_tree(closure->symbols);
+        }
     }
     if(result){
         return result;
@@ -62,3 +70,5 @@ void closure_add_function(struct closure *closure, struct string *key, struct op
     tree_add(closure->symbols, key, value);
     return;
 }
+
+

@@ -1,0 +1,7 @@
+print < "hi",
+print < "there",
+
+hello -> 
+    print < value.
+
+hello < 12 

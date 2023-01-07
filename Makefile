@@ -1,4 +1,6 @@
-CC := gcc -Wall
+CC := clang
+#CC := gcc -Wall
+
 INSTALL_DIR := /usr/local/bin
 COREOBJ := build/cell.o build/head.o \
 	build/closure.o build/debug.o build/stack.o \
@@ -11,13 +13,16 @@ OPOBJ := build/arithmetic_op.o build/io_op.o build/condition_op.o \
 	build/equal_op.o build/default_op.o build/function_op.o\
 	build/save_head_op.o build/save_cell_op.o \
 	build/save_value_op.o build/save_count_op.o \
-	build/def_values_op.o
+	build/def_values_op.o build/boolean_op.o
+
+COBJ := build/exec.o
 
 PARSEOBJ := build/run_parser.o
 
 LIBRARYOBJ := build/default_library.o
 
-OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) $(LIBRARYOBJ) 
+OBJECTS = $(COREOBJ) $(PARSEOBJ) $(TYPESOBJ) $(OPOBJ) \
+    $(LIBRARYOBJ)  $(COBJ)
 
 all: gekkota
 
@@ -40,6 +45,9 @@ build/%.o: src/operators/%.c
 	$(CC) -g -c $<  -o $@
 
 build/%.o: src/library/%.c
+	$(CC) -g -c $<  -o $@
+
+build/%.o: src/lib/%.c
 	$(CC) -g -c $<  -o $@
 
 dir:
