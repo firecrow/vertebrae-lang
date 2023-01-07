@@ -2,7 +2,7 @@
 Iteration Based Programming Language
 
 ## About
-Vertegrae is an iteration based language. As a default all functions accept variable length arguments, a design inspired by lisp. In practice, arguments can be chained to effectively produce programs which  require very little code to achieve data processing, and data minipulation tasks.
+Vertebrae is an iteration based language. As a default all functions accept variable length arguments, a design inspired by lisp. In practice, arguments can be chained to effectively produce programs which  require very little code to achieve data processing, and data minipulation tasks.
 
 Here are some examples of the langauge
 
@@ -69,7 +69,7 @@ print <- 1 2 3
 
 This is the flow of how functions (represented by the head of the set of cells) flow through the language.
 
-![Vertegrae cell flow](docs/vertegrae-cell-flow.png)
+![Vertegrae cell flow](docs/vertebrae-cell-flow.png)
 
 This code would look like:
 
@@ -85,7 +85,7 @@ And it would output `It's 14 Degrees Outside"`
 
 As each segment head is encountered, it is assigned an operator, these do everything from print content to a stream, do arithmetic based on cell values, or set the navigation of if/else conditions. Operators do most of the work in the language.
 
-![Vertegrae Head Flow](docs/vertegrae-head-value-flow.png)
+![Vertegrae Head Flow](docs/vertebrae-head-value-flow.png)
 
 # Status
 Presently the base set of functions are working (on the original syntax), this includes
