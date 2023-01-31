@@ -1,2 +1,0 @@
-- recursion limit
-- make sure values always have a type
