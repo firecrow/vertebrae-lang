@@ -17,7 +17,7 @@ print < hi "world",
 ```
 math (count to 10)
 ```
-:x < + 1 2 3 4,
+:x < add < 1 2 3 4,,
 print < x,
 ```
 
