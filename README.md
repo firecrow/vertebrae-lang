@@ -86,18 +86,6 @@ Presently the base set of functions are working (on the original syntax), this i
 * Basic types with toString and Truthy values
 * Functions and function pointers (lamngdas)
 
-# Roadmap 
-
-* Memory management -
-There is a design for a reference counting memeory manager that bakes into the `value_obj` system, but it has not yet been implemented.
-
-* Full arrow syntax support -
-Presently some functionality is still only supported on the navite '(' based syntax not the new '<-' based one.
-
-* System functionality -
-System utils, execvp and io are two main areas of development
-
-
 # Most influential objects
 
 ### Cell
@@ -198,7 +186,6 @@ struct value_obj {
 };
 ```
 
-
 # Tech debt
 
 These are areas where the work done so far is not sustainable for the upcoming features.
@@ -208,8 +195,9 @@ These are areas where the work done so far is not sustainable for the upcoming f
 * Parse src/parse/parse_utils:finalize could be broken down more. _Benefit: function pointers in the new syntax will need this._
 * The difference between models and behavior in the types library can be improved. _Benefit: structuring this will help the system features as the types for that are significantly more complex_
 
-# Roadmap
+# Roadmap 
 * Start/resume running routines, for cooperative multiprocessing.
 * Integrate system level posix calls, started in the `lib` directory, to enable utility integration with the linux/unix os.
 * Close expressions automatically with definition completion (newline or indentation?) less reliance on ',' and '.' at the end of expressions.
 * Memory management reference counting implementation.
+
