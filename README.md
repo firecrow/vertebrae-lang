@@ -207,3 +207,9 @@ These are areas where the work done so far is not sustainable for the upcoming f
 * Parse folder structure could use improvement, run_parser initiates the flow but parse_utils has most of the parsing functions in it. _Benefit, new syntax will be better with this._
 * Parse src/parse/parse_utils:finalize could be broken down more. _Benefit: function pointers in the new syntax will need this._
 * The difference between models and behavior in the types library can be improved. _Benefit: structuring this will help the system features as the types for that are significantly more complex_
+
+# Roadmap
+* Start/resume running routines, for cooperative multiprocessing.
+* Integrate system level posix calls, started in the `lib` directory, to enable utility integration with the linux/unix os.
+* Close expressions automatically with definition completion (newline or indentation?) less reliance on ',' and '.' at the end of expressions.
+* Memory management reference counting implementation.
