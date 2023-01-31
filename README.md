@@ -1,4 +1,4 @@
-# Vertebae 
+# Vertebrae 
 Iteration Based Programming Language
 
 ## About
