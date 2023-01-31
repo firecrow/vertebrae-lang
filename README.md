@@ -8,29 +8,29 @@ Here are some examples of the langauge
 
 hello world
 ```
-print <- "hello" "world"
+print < "hello" "world",
 ```
 or
 ```
-:hi <- "hello";
-print <- hi "world"
+:hi < "hello",
+print < hi "world",
 ```
 math (count to 10)
 ```
-:x < + 1 2 3 4 
-print < x
+:x < + 1 2 3 4,
+print < x,
 ```
 
 functions
 ```
-:available < 5
-:itemtype < "ducks"
+:available < 5,
+:itemtype < "ducks",
 
 :my-func <
-    ^available < sub < 1 available
-    print < value "has" available itemtype 
+    ^available < sub < 1 available,,
+    print < value "has" available itemtype.
 
-my-func < "sam" "danny" "kazaa" "kim" "shana"
+my-func < "sam" "danny" "kazaa" "kim" "shana",
 ```
 
 outputs:
