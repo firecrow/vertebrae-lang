@@ -12,25 +12,25 @@ print <- "hello" "world"
 ```
 or
 ```
-!hi <- "hello";
+:hi <- "hello";
 print <- hi "world"
 ```
 math (count to 10)
 ```
-!x <- + 1 2 3 4 
-print <- x
+:x < + 1 2 3 4 
+print < x
 ```
 
 functions
 ```
-!available <- 5
-!itemtype <- "ducks"
+:available < 5
+:itemtype < "ducks"
 
-#!my-func <-
-    ^available <- sub <- 1 available
-    print <- value "has" available itemtype 
+:my-func <
+    ^available < sub < 1 available
+    print < value "has" available itemtype 
 
-my-func <- "sam" "danny" "kazaa" "kim" "shana"
+my-func < "sam" "danny" "kazaa" "kim" "shana"
 ```
 
 outputs:
@@ -52,17 +52,6 @@ The main goal is to have something that can be cooperative multiprocessing so th
 
 Functions are run by being the first cell on the left hand side of an arrow, and functons are closed with a ',' or ';' character (implemented identically in the runtime).
 
-The lanagauge maps onto a more lisp-like structure underneith, and the natural syntax is still supported by the parser, and runtime.
-
-so this:
-```
-(print 1 2 3)
-```
-is still supported as is this: 
-```
-print <- 1 2 3
-```
-
 # Diagrams flows
 
 ### Cell/branch flow
@@ -74,7 +63,7 @@ This is the flow of how functions (represented by the head of the set of cells) 
 This code would look like:
 
 ```
-print <- "Its", 
+print < "Its", 
    + 10 4,
    "Degrees Outside"
 ```
