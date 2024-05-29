@@ -1,6 +1,10 @@
 # Vertebrae 
 Iteration Based Programming Language
 
+## Project Purpose
+
+This is a an experimental language, that I've used as a testing ground for Domain Specific Languages I have written for a FinTech company. This syntax is somewhat dysfunctional, but it helped me kick around a few good architectural ideas.
+
 ## About
 Vertebrae is an iteration based language. As a default all functions accept variable length arguments, a design inspired by lisp. In practice, arguments can be chained to effectively produce programs which  require very little code to achieve data processing, and data minipulation tasks.
 
